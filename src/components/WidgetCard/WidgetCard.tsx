@@ -8,6 +8,8 @@ import { positionToPixelPosition } from "@anori/utils/grid/utils";
 import { usePluginConfigValue } from "@anori/utils/plugins/define";
 import type { SomePlugin, SomeWidget } from "@anori/utils/plugins/types";
 import { WidgetMetadataContext, type WidgetMetadataContextType } from "@anori/utils/plugins/widget";
+import { anoriSchema } from "@anori/utils/storage";
+import { useStorageValue } from "@anori/utils/storage-lib";
 import type { Mapping } from "@anori/utils/types";
 import { useDraggable } from "@dnd-kit/react";
 import { m } from "motion/react";
@@ -60,6 +62,9 @@ const cardCss = css({
   },
 });
 
+const cardBackgroundCss = css({
+  background: "color-mix(in srgb, var(--ds-surface) calc(var(--anori-widget-opacity, 1) * 100%), transparent)!",
+});
 const cardPaddedCss = css({ padding: "4" });
 const cardFlushCss = css({ padding: 0 });
 const overflowProtectionCss = css({
@@ -158,6 +163,7 @@ export const WidgetCard = ({
 }: WidgetCardProps) => {
   const { isEditing, grid } = useParentFolder();
   const { gapSize } = useSizeSettings();
+  const [widgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -217,7 +223,7 @@ export const WidgetCard = ({
       id={instanceId ? `WidgetCard-${instanceId}` : undefined}
       ref={mergeRefs([ref, draggableRef as Ref<HTMLDivElement>])}
       key={`card-${instanceId}`}
-      className={cx(cardCss, withPadding ? cardPaddedCss : cardFlushCss, "WidgetCard", className)}
+      className={cx(cardCss, cardBackgroundCss, withPadding ? cardPaddedCss : cardFlushCss, "WidgetCard", className)}
       data-busy={isDragging || resize.isResizing ? true : undefined}
       data-resizing={resize.isResizing ? true : undefined}
       initial={
@@ -268,6 +274,9 @@ export const WidgetCard = ({
         margin: type === "widget" ? 0 : gapSize,
         position: type === "widget" ? "absolute" : undefined,
         ...(type === "widget" && isDragging ? { top: pixelPosition.y + gapSize, left: pixelPosition.x + gapSize } : {}),
+        ...(widgetBackgroundOpacity < 100
+          ? { ["--anori-widget-opacity" as string]: widgetBackgroundOpacity / 100 }
+          : {}),
         ...style,
       }}
       {...props}

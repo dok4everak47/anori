@@ -161,6 +161,13 @@ export const schemaV1 = defineSchemaVersion(1, {
     sync: "profile",
     includedInBackup: true,
   }),
+  widgetBackgroundOpacity: cell({
+    key: "widgetBackgroundOpacity",
+    schema: z.number().min(0).max(100),
+    defaultValue: 100,
+    sync: "profile",
+    includedInBackup: true,
+  }),
 
   // Layout settings
   sidebarOrientation: cell({

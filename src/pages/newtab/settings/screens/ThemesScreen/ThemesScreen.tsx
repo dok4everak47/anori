@@ -4,6 +4,7 @@ import { Field } from "@anori/design-system/components/Field/Field";
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Select } from "@anori/design-system/components/Select/Select";
+import { Slider } from "@anori/design-system/components/Slider/Slider";
 import { anoriSchema, type CustomTheme } from "@anori/utils/storage";
 import { useStorageValue } from "@anori/utils/storage-lib";
 import {
@@ -37,6 +38,7 @@ export const ThemesScreen = (props: ComponentProps<typeof m.div>) => {
   const [customThemes, setCustomThemes] = useStorageValue(anoriSchema.customThemes);
   const [currentTheme, setTheme] = useStorageValue(anoriSchema.theme);
   const [colorScheme, setColorScheme] = useStorageValue(anoriSchema.colorScheme);
+  const [widgetBackgroundOpacity, setWidgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
   const [editorActive, setEditorActive] = useState(false);
   const [editorTheme, setEditorTheme] = useState<CustomTheme | undefined>(undefined);
 
@@ -102,6 +104,13 @@ export const ThemesScreen = (props: ComponentProps<typeof m.div>) => {
               getOptionKey={(s) => s}
               getOptionLabel={(s) => t(COLOR_SCHEME_LABEL_KEY[s])}
             />
+          </Field>
+
+          <Field
+            label={`${t("settings.theme.widgetBackgroundOpacity")}: ${widgetBackgroundOpacity}%`}
+            description={t("settings.theme.widgetBackgroundOpacityHint")}
+          >
+            <Slider value={widgetBackgroundOpacity} min={0} max={100} step={5} onChange={setWidgetBackgroundOpacity} />
           </Field>
         </>
       )}

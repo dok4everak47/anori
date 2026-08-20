@@ -207,7 +207,9 @@
                 "anchorBottomRight": "Bottom right",
                 "colorSchemeSystem": "System",
                 "colorSchemeLight": "Light",
-                "colorSchemeDark": "Dark"
+                "colorSchemeDark": "Dark",
+                "widgetBackgroundOpacity": "Widget background opacity",
+                "widgetBackgroundOpacityHint": "Make widgets more or less see-through. This changes only the widget surface; text and icons stay opaque."
             },
             "importExport": {
                 "title": "Import & export",
