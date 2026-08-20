@@ -58,7 +58,7 @@ export type LayoutChange =
 
 export type WidgetsGridProps = {
   isEditing: boolean;
-  gridDimensions: GridDimensions;
+  gridDimensions: GridDimensions & { isMeasured: boolean };
   gapSize: number;
   layout: WidgetInFolderWithMeta[];
   onEditWidget: (w: WidgetInFolderWithMeta) => void;
@@ -207,34 +207,37 @@ export const WidgetsGrid = memo(function WidgetsGrid({
               opacity: 0,
             }}
           />
-          {layout.map((w) => {
-            return (
-              <WidgetCard
-                type="widget"
-                widget={w.widget}
-                plugin={w.plugin}
-                instanceId={w.instanceId}
-                config={w.configuration}
-                key={w.instanceId}
-                size={w}
-                position={w}
-                onUpdateConfig={onUpdateWidgetConfig}
-                onRemove={() => onLayoutUpdate([{ type: "remove", instanceId: w.instanceId }])}
-                onEdit={w.widget.configurationScreen ? () => onEditWidget(w) : undefined}
-                onResize={(width, height) => tryResizeWidget(w, width, height)}
-                onResizePreview={(previewSize) =>
-                  setResizePreview(
-                    previewSize ? { instanceId: w.instanceId, ...clampSizeToExtendedGrid(w, previewSize) } : null,
-                  )
-                }
-                onMoveToFolder={(folderId) =>
-                  onLayoutUpdate([{ type: "move-to-folder", instanceId: w.instanceId, folderId: folderId }])
-                }
-                onPositionChange={(p) => tryRepositionWidget(w, p)}
-                dragSnapPosition={snap && snap.instanceId === w.instanceId ? undefined : snapOverrideFor(w.instanceId)}
-              />
-            );
-          })}
+          {gridDimensions.isMeasured &&
+            layout.map((w) => {
+              return (
+                <WidgetCard
+                  type="widget"
+                  widget={w.widget}
+                  plugin={w.plugin}
+                  instanceId={w.instanceId}
+                  config={w.configuration}
+                  key={w.instanceId}
+                  size={w}
+                  position={w}
+                  onUpdateConfig={onUpdateWidgetConfig}
+                  onRemove={() => onLayoutUpdate([{ type: "remove", instanceId: w.instanceId }])}
+                  onEdit={w.widget.configurationScreen ? () => onEditWidget(w) : undefined}
+                  onResize={(width, height) => tryResizeWidget(w, width, height)}
+                  onResizePreview={(previewSize) =>
+                    setResizePreview(
+                      previewSize ? { instanceId: w.instanceId, ...clampSizeToExtendedGrid(w, previewSize) } : null,
+                    )
+                  }
+                  onMoveToFolder={(folderId) =>
+                    onLayoutUpdate([{ type: "move-to-folder", instanceId: w.instanceId, folderId: folderId }])
+                  }
+                  onPositionChange={(p) => tryRepositionWidget(w, p)}
+                  dragSnapPosition={
+                    snap && snap.instanceId === w.instanceId ? undefined : snapOverrideFor(w.instanceId)
+                  }
+                />
+              );
+            })}
         </AnimatePresence>
 
         {ghost && (

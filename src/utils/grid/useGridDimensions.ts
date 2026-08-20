@@ -43,23 +43,15 @@ export const useGridDimensions = (
     [desiredSize, minSize, layout],
   );
 
-  const setDimensions = useCallback(
-    (newDimensions: GridDimensions & { position: GridPixelPosition; pixelSize: GridItemSize }) => {
-      _setDimensions((prev) => {
-        return isEqual(newDimensions, prev) ? prev : newDimensions;
-      });
-    },
-    [],
-  );
-
   const [dimensions, _setDimensions] = useState<
-    GridDimensions & { position: GridPixelPosition; pixelSize: GridItemSize }
+    GridDimensions & { position: GridPixelPosition; pixelSize: GridItemSize; isMeasured: boolean }
   >({
     boxSize: desiredSize,
     columns: 0,
     rows: 0,
     minColumns: 0,
     minRows: 0,
+    isMeasured: false,
     position: {
       x: 0,
       y: 0,
@@ -69,6 +61,16 @@ export const useGridDimensions = (
       height: 0,
     },
   });
+
+  const setDimensions = useCallback(
+    (newDimensions: GridDimensions & { position: GridPixelPosition; pixelSize: GridItemSize }) => {
+      _setDimensions((prev) => {
+        const withMeasured = { ...newDimensions, isMeasured: true };
+        return isEqual(withMeasured, prev) ? prev : withMeasured;
+      });
+    },
+    [],
+  );
 
   useLayoutEffect(() => {
     if (ref.current) {

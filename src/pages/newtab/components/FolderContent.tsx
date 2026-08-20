@@ -12,7 +12,11 @@ type FolderContentProps = {
   animationDirection: "up" | "down" | "left" | "right" | null;
   isEditing: boolean;
   widgets: WidgetInFolderWithMeta[];
-  gridDimensions: GridDimensions & { position: GridPixelPosition; pixelSize: GridItemSize };
+  gridDimensions: GridDimensions & {
+    position: GridPixelPosition;
+    pixelSize: GridItemSize;
+    isMeasured: boolean;
+  };
   gridRef: Ref<HTMLDivElement>;
   scrollAreaRef: Ref<HTMLDivElement>;
   onLayoutUpdate: (changes: LayoutChange[]) => void;
