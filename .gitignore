@@ -112,3 +112,6 @@ dist
 ## Panda
 styled-system
 styled-system-studio
+
+## direnv / nix
+.direnv/
