@@ -100,6 +100,7 @@ const control = cva({
 type WidgetCardProps = {
   widget: SomeWidget;
   plugin: SomePlugin;
+  entranceDelay?: number;
 } & (
   | {
       type: "mock";
@@ -152,6 +153,7 @@ export const WidgetCard = ({
   onPositionChange,
   onMoveToFolder,
   dragSnapPosition,
+  entranceDelay,
   ...props
 }: WidgetCardProps) => {
   const { isEditing, grid } = useParentFolder();
@@ -218,14 +220,34 @@ export const WidgetCard = ({
       className={cx(cardCss, withPadding ? cardPaddedCss : cardFlushCss, "WidgetCard", className)}
       data-busy={isDragging || resize.isResizing ? true : undefined}
       data-resizing={resize.isResizing ? true : undefined}
-      transition={{ ease: "easeInOut", duration: 0.15, top: positionSpring, left: positionSpring }}
-      initial={false}
+      initial={
+        type === "widget" && entranceDelay !== undefined
+          ? {
+              top: pixelPosition.y + gapSize,
+              left: pixelPosition.x + gapSize,
+              opacity: 0,
+              y: 8,
+            }
+          : false
+      }
       animate={
         type === "widget" && !isDragging
-          ? { top: pixelPosition.y + gapSize, left: pixelPosition.x + gapSize }
+          ? {
+              top: pixelPosition.y + gapSize,
+              left: pixelPosition.x + gapSize,
+              ...(entranceDelay !== undefined ? { opacity: 1, y: 0 } : {}),
+            }
           : undefined
       }
-      exit={isEditing ? { scale: 0 } : undefined}
+      transition={{
+        ease: "easeInOut",
+        duration: 0.15,
+        top: positionSpring,
+        left: positionSpring,
+        opacity: { duration: 0.3, ease: "easeOut", delay: entranceDelay ?? 0 },
+        y: { duration: 0.3, ease: "easeOut", delay: entranceDelay ?? 0 },
+      }}
+      exit={isEditing ? { scale: 0, opacity: 0 } : undefined}
       whileHover={
         widget.appearance.withHoverAnimation
           ? {

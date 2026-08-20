@@ -65,6 +65,7 @@ export type WidgetsGridProps = {
   onUpdateWidgetConfig: (instaceId: string, config: Partial<Mapping>) => void;
   onLayoutUpdate?: (changes: LayoutChange[]) => void;
   showOnboarding?: boolean;
+  animateEntrance?: boolean;
   gridRef?: Ref<HTMLDivElement>;
   scrollAreaRef?: Ref<HTMLDivElement>;
 };
@@ -76,6 +77,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
   onUpdateWidgetConfig,
   onEditWidget,
   showOnboarding,
+  animateEntrance = false,
   onLayoutUpdate = () => {},
   gridRef,
   scrollAreaRef,
@@ -209,6 +211,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
           />
           {gridDimensions.isMeasured &&
             layout.map((w) => {
+              const entranceDelay = animateEntrance ? Math.min((w.x + w.y) * 0.03, 0.4) : undefined;
               return (
                 <WidgetCard
                   type="widget"
@@ -219,6 +222,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
                   key={w.instanceId}
                   size={w}
                   position={w}
+                  entranceDelay={entranceDelay}
                   onUpdateConfig={onUpdateWidgetConfig}
                   onRemove={() => onLayoutUpdate([{ type: "remove", instanceId: w.instanceId }])}
                   onEdit={w.widget.configurationScreen ? () => onEditWidget(w) : undefined}

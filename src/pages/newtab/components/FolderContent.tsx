@@ -63,7 +63,6 @@ const variants = {
 };
 
 const folderChangeTransition = { type: "spring", duration: 0.4, bounce: 0.17 } as const;
-const appearTransition = { ease: "easeOut", duration: 0.1 } as const;
 
 const rootClass = css({
   display: "flex",
@@ -90,15 +89,16 @@ export const FolderContent = ({
   showOnboarding,
 }: FolderContentProps) => {
   const { blockSize, minBlockSize, gapSize } = useSizeSettings();
+  const animateEntrance = animationDirection === null;
 
   return (
     <m.div
       key={`FolderContent-${folder.id}`}
       data-folder-id={folder.id}
       className={cx(rootClass, "FolderContent")}
-      transition={animationDirection ? folderChangeTransition : appearTransition}
+      transition={animationDirection ? folderChangeTransition : { duration: 0 }}
       variants={variants}
-      initial="initial"
+      initial={animationDirection ? "initial" : false}
       animate="visible"
       custom={animationDirection}
       style={
@@ -119,6 +119,7 @@ export const FolderContent = ({
         onEditWidget={onEditWidget}
         onUpdateWidgetConfig={onUpdateWidgetConfig}
         onLayoutUpdate={onLayoutUpdate}
+        animateEntrance={animateEntrance}
         showOnboarding={showOnboarding}
       />
     </m.div>
