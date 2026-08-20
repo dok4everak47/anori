@@ -100,6 +100,74 @@ browser.runtime.onInstalled.addListener(async (details) => {
   }
 });
 
+const NEWTAB_URL = browser.runtime.getURL("/pages/newtab/start.html");
+const RELOAD_WATCH_KEY = "anori:reload-watch";
+const HEARTBEAT_INTERVAL_MS = 5000;
+const STALE_THRESHOLD_MS = 15000;
+
+type WatchEntry = { tabId: number; lastSeen: number };
+
+const isDefaultNewtabUrl = (url: string) =>
+  url === "" ||
+  url === "about:newtab" ||
+  url === "about:home" ||
+  url === "about:blank" ||
+  url === "chrome://newtab/" ||
+  /newtab|home\.brave|search\.brave/i.test(url);
+
+const bringTabBack = (tabId: number) => {
+  browser.tabs.update(tabId, { url: NEWTAB_URL, active: false }).catch(() => {
+    browser.tabs.create({ url: NEWTAB_URL, active: false }).catch(() => {});
+  });
+};
+
+const recoverNewtabsAfterReload = async () => {
+  const stored = (await browser.storage.local.get(RELOAD_WATCH_KEY))[RELOAD_WATCH_KEY] as WatchEntry[] | undefined;
+  await browser.storage.local.remove(RELOAD_WATCH_KEY);
+  if (!stored || stored.length === 0) return;
+  const now = Date.now();
+  const fresh = stored.filter((entry) => now - (entry.lastSeen ?? 0) <= STALE_THRESHOLD_MS);
+
+  for (const entry of fresh) {
+    try {
+      const tab = await browser.tabs.get(entry.tabId);
+      const url = tab.url ?? "";
+      if (url.startsWith(browser.runtime.getURL("/pages/newtab/"))) continue;
+      if (isDefaultNewtabUrl(url)) setTimeout(() => bringTabBack(entry.tabId), 300);
+    } catch {
+      setTimeout(() => bringTabBack(entry.tabId), 300);
+    }
+  }
+};
+
+void recoverNewtabsAfterReload();
+
+browser.runtime.onConnect.addListener((port) => {
+  if (port.name !== "anori-reload-watcher") return;
+  const tabId = port.sender?.tab?.id;
+  if (tabId === undefined) return;
+
+  const writeEntry = () => {
+    void browser.storage.local.get(RELOAD_WATCH_KEY).then((res) => {
+      const entries = (res[RELOAD_WATCH_KEY] as WatchEntry[] | undefined) ?? [];
+      const next = entries.filter((entry) => entry.tabId !== tabId);
+      next.push({ tabId, lastSeen: Date.now() });
+      void browser.storage.local.set({ [RELOAD_WATCH_KEY]: next });
+    });
+  };
+  writeEntry();
+  const heartbeat = setInterval(writeEntry, HEARTBEAT_INTERVAL_MS);
+
+  port.onDisconnect.addListener(() => {
+    clearInterval(heartbeat);
+    void browser.storage.local.get(RELOAD_WATCH_KEY).then((res) => {
+      const entries = (res[RELOAD_WATCH_KEY] as WatchEntry[] | undefined) ?? [];
+      const next = entries.filter((entry) => entry.tabId !== tabId);
+      void browser.storage.local.set({ [RELOAD_WATCH_KEY]: next });
+    });
+  });
+});
+
 browser.runtime.onMessage.addListener(async (rawMessage: unknown, sender: Runtime.MessageSender) => {
   const message = rawMessage as BackgroundMessage;
   if (message.type === "plugin-command") {

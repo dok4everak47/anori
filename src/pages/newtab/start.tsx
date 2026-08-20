@@ -1,3 +1,4 @@
+import { installExtensionReloadWatcher } from "@anori/utils/handle-extension-reload";
 import { setPageTitle } from "@anori/utils/page";
 import { mountPage } from "@anori/utils/react";
 import "../../panda.css";
@@ -173,6 +174,8 @@ const waitForBackgroundImage = (timeoutMs = 1000) => {
     });
   return (preloadReady ?? Promise.resolve()).then(waitForUrl);
 };
+
+installExtensionReloadWatcher();
 
 getAnoriStorage().then(async (storage) => {
   // Kick off translation loading immediately (the active language may be a lazily-loaded chunk), then
