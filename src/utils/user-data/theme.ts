@@ -2,12 +2,22 @@ import { type AnoriStorage, anoriSchema, getAnoriStorage } from "@anori/utils/st
 import isEqual from "lodash/isEqual";
 import { applyTheme, registerThemeBackgroundResolver, resolveColorScheme, themes } from "./theme-base";
 
-export type { BuiltinTheme, ColorScheme, CustomTheme, PartialCustomTheme, Theme, ThemeDecorations } from "./theme-base";
+export type {
+  BackgroundAnchor,
+  BackgroundFit,
+  BuiltinTheme,
+  ColorScheme,
+  CustomTheme,
+  PartialCustomTheme,
+  Theme,
+  ThemeDecorations,
+} from "./theme-base";
 export {
   applyBuiltinTheme,
   applyTheme,
   applyThemeColors,
   applyThemeDecorations,
+  BACKGROUND_ANCHOR_CSS,
   defaultTheme,
   resolveColorScheme,
   themes,

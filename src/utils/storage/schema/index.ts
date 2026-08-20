@@ -66,12 +66,27 @@ const CustomThemeSchemaV1 = z.object({
 
 const OklchColorSchema = z.object({ l: z.number(), c: z.number(), h: z.number() });
 
+const BackgroundFitSchema = z.enum(["cover", "contain", "tile"]);
+const BackgroundAnchorSchema = z.enum([
+  "top-left",
+  "top-center",
+  "top-right",
+  "center-left",
+  "center",
+  "center-right",
+  "bottom-left",
+  "bottom-center",
+  "bottom-right",
+]);
+
 const CustomThemeSchema = z.object({
   name: z.string(),
   type: z.literal("custom"),
   blur: z.number(),
   accent: OklchColorSchema,
   hideDotPattern: z.boolean().optional(),
+  backgroundFit: BackgroundFitSchema.optional(),
+  backgroundAnchor: BackgroundAnchorSchema.optional(),
 });
 
 export type CustomTheme = z.infer<typeof CustomThemeSchema>;

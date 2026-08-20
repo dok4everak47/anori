@@ -16,6 +16,9 @@ import {
   applyTheme,
   applyThemeColors,
   applyThemeDecorations,
+  BACKGROUND_ANCHOR_CSS,
+  type BackgroundAnchor,
+  type BackgroundFit,
   getThemeBackground,
   getThemeBackgroundOriginal,
   type PartialCustomTheme,
@@ -33,6 +36,36 @@ const PREVIEW_MODE_LABEL_KEY: Record<Mode, string> = {
   dark: "settings.theme.colorSchemeDark",
 };
 
+const BACKGROUND_FITS: BackgroundFit[] = ["cover", "contain", "tile"];
+const BACKGROUND_FIT_LABEL_KEY: Record<BackgroundFit, string> = {
+  cover: "settings.theme.fitCover",
+  contain: "settings.theme.fitContain",
+  tile: "settings.theme.fitTile",
+};
+
+const BACKGROUND_ANCHORS: BackgroundAnchor[] = [
+  "top-left",
+  "top-center",
+  "top-right",
+  "center-left",
+  "center",
+  "center-right",
+  "bottom-left",
+  "bottom-center",
+  "bottom-right",
+];
+const BACKGROUND_ANCHOR_LABEL_KEY: Record<BackgroundAnchor, string> = {
+  "top-left": "settings.theme.anchorTopLeft",
+  "top-center": "settings.theme.anchorTopCenter",
+  "top-right": "settings.theme.anchorTopRight",
+  "center-left": "settings.theme.anchorCenterLeft",
+  center: "settings.theme.anchorCenter",
+  "center-right": "settings.theme.anchorCenterRight",
+  "bottom-left": "settings.theme.anchorBottomLeft",
+  "bottom-center": "settings.theme.anchorBottomCenter",
+  "bottom-right": "settings.theme.anchorBottomRight",
+};
+
 const editorPanel = css({ display: "flex", flexDirection: "column", gap: "4" });
 const preview = css({
   position: "relative",
@@ -43,7 +76,7 @@ const preview = css({
   background: "repeating-conic-gradient(var(--ds-frosted-strong) 0% 25%, transparent 0% 50%) 50% / 18px 18px",
 });
 
-const previewImage = css({ position: "absolute", backgroundSize: "cover", backgroundPosition: "center" });
+const previewImage = css({ position: "absolute" });
 const backgroundSection = css({ display: "flex", flexDirection: "column", gap: "2" });
 const editorActions = css({ display: "flex", justifyContent: "flex-end", gap: "3" });
 
@@ -119,6 +152,8 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
       blur: theme.blur,
       accent: theme.accent,
       hideDotPattern: theme.hideDotPattern,
+      backgroundFit: theme.backgroundFit ?? "cover",
+      backgroundAnchor: theme.backgroundAnchor ?? "center",
     };
     const storage = await getAnoriStorage();
     let customThemes = storage.get(anoriSchema.customThemes);
@@ -253,6 +288,10 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
                   inset: `-${previewBlur * 2}px`,
                   backgroundImage: `url(${originalUrl})`,
                   filter: `blur(${previewBlur}px)`,
+                  backgroundSize:
+                    (theme.backgroundFit ?? "cover") === "tile" ? "auto" : (theme.backgroundFit ?? "cover"),
+                  backgroundPosition: BACKGROUND_ANCHOR_CSS[theme.backgroundAnchor ?? "center"],
+                  backgroundRepeat: (theme.backgroundFit ?? "cover") === "tile" ? "repeat" : "no-repeat",
                 }}
               />
             )}
@@ -271,6 +310,40 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
           max={50}
           onChange={(val) => setTheme((p) => ({ ...p, blur: val }))}
           onCommit={(val) => applyBlur(val)}
+        />
+      </Field>
+
+      <Field label={`${t("settings.theme.fit")}:`}>
+        <Select<BackgroundFit>
+          options={BACKGROUND_FITS}
+          value={theme.backgroundFit ?? "cover"}
+          onChange={(fit) => {
+            setTheme((p) => ({ ...p, backgroundFit: fit }));
+            applyThemeDecorations({
+              hideDotPattern: theme.hideDotPattern,
+              fit,
+              anchor: theme.backgroundAnchor ?? "center",
+            });
+          }}
+          getOptionKey={(o) => o}
+          getOptionLabel={(o) => t(BACKGROUND_FIT_LABEL_KEY[o])}
+        />
+      </Field>
+
+      <Field label={`${t("settings.theme.anchor")}:`}>
+        <Select<BackgroundAnchor>
+          options={BACKGROUND_ANCHORS}
+          value={theme.backgroundAnchor ?? "center"}
+          onChange={(anchor) => {
+            setTheme((p) => ({ ...p, backgroundAnchor: anchor }));
+            applyThemeDecorations({
+              hideDotPattern: theme.hideDotPattern,
+              fit: theme.backgroundFit ?? "cover",
+              anchor,
+            });
+          }}
+          getOptionKey={(o) => o}
+          getOptionLabel={(o) => t(BACKGROUND_ANCHOR_LABEL_KEY[o])}
         />
       </Field>
 

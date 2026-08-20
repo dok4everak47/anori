@@ -11,8 +11,9 @@ body {
   height: 100dvh;
   /* The user's wallpaper, set at runtime. */
   background: var(--background-image);
-  background-size: cover;
-  background-position: center;
+  background-size: var(--background-size, cover);
+  background-position: var(--background-position, center);
+  background-repeat: var(--background-repeat, no-repeat);
   overflow: hidden;
 }
 

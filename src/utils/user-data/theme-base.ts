@@ -13,12 +13,26 @@ export type BuiltinTheme = {
   accent: OklchColor;
 };
 
+export type BackgroundFit = "cover" | "contain" | "tile";
+export type BackgroundAnchor =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "center-left"
+  | "center"
+  | "center-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
+
 export type CustomTheme = {
   name: string;
   type: "custom";
   blur: number;
   accent: OklchColor;
   hideDotPattern?: boolean;
+  backgroundFit?: BackgroundFit;
+  backgroundAnchor?: BackgroundAnchor;
 };
 
 export type PartialCustomTheme = {
@@ -27,6 +41,8 @@ export type PartialCustomTheme = {
   blur: number;
   accent: OklchColor;
   hideDotPattern?: boolean;
+  backgroundFit?: BackgroundFit;
+  backgroundAnchor?: BackgroundAnchor;
   background?: string;
   originalBackground?: string;
 };
@@ -115,16 +131,49 @@ export const applyTheme = async (theme: Theme, mode: Mode) => {
   }
 
   applyThemeColors(theme.accent, mode);
-  applyThemeDecorations(theme.type === "custom" ? theme : {});
+  applyThemeDecorations(
+    theme.type === "custom"
+      ? { hideDotPattern: theme.hideDotPattern, fit: theme.backgroundFit, anchor: theme.backgroundAnchor }
+      : {},
+  );
   await prom;
 };
 
 export type ThemeDecorations = {
   hideDotPattern?: boolean;
+  fit?: BackgroundFit;
+  anchor?: BackgroundAnchor;
+};
+
+const BACKGROUND_SIZE: Record<BackgroundFit, string> = {
+  cover: "cover",
+  contain: "contain",
+  tile: "auto",
+};
+
+export const BACKGROUND_ANCHOR_CSS: Record<BackgroundAnchor, string> = {
+  "top-left": "left top",
+  "top-center": "center top",
+  "top-right": "right top",
+  "center-left": "left center",
+  center: "center center",
+  "center-right": "right center",
+  "bottom-left": "left bottom",
+  "bottom-center": "center bottom",
+  "bottom-right": "right bottom",
 };
 
 export const applyThemeDecorations = (decorations: ThemeDecorations) => {
   document.documentElement.classList.toggle("theme-hide-dot-pattern", !!decorations.hideDotPattern);
+  document.documentElement.style.setProperty("--background-size", BACKGROUND_SIZE[decorations.fit ?? "cover"]);
+  document.documentElement.style.setProperty(
+    "--background-position",
+    BACKGROUND_ANCHOR_CSS[decorations.anchor ?? "center"],
+  );
+  document.documentElement.style.setProperty(
+    "--background-repeat",
+    decorations.fit === "tile" ? "repeat" : "no-repeat",
+  );
 };
 
 export const applyThemeColors = (accent: OklchColor, mode: Mode) => {
