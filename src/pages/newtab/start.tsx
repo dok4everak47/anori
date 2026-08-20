@@ -143,6 +143,37 @@ const Start = () => {
 
 watchForPermissionChanges();
 
+const waitForBackgroundImage = (timeoutMs = 1000) => {
+  const started = performance.now();
+  const findBg = () => {
+    const bg = document.documentElement.style.getPropertyValue("--background-image");
+    const match = /url\(['"]?(.+?)['"]?\)/.exec(bg);
+    return match?.[1];
+  };
+  const preloadReady = window.__anoriThemeReady;
+  const waitForUrl = () =>
+    new Promise<void>((resolve) => {
+      const src = findBg();
+      if (!src) {
+        const remaining = timeoutMs - (performance.now() - started);
+        if (remaining <= 0) return resolve();
+        return setTimeout(() => waitForUrl().then(resolve), 16);
+      }
+      const img = new Image();
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        resolve();
+      };
+      img.onload = finish;
+      img.onerror = finish;
+      setTimeout(finish, Math.max(0, timeoutMs - (performance.now() - started)));
+      img.src = src;
+    });
+  return (preloadReady ?? Promise.resolve()).then(waitForUrl);
+};
+
 getAnoriStorage().then(async (storage) => {
   // Kick off translation loading immediately (the active language may be a lazily-loaded chunk), then
   // await it just before mount so React never renders raw i18n keys.
@@ -154,16 +185,20 @@ getAnoriStorage().then(async (storage) => {
 
   const showLoadAnimation = storage.get(anoriSchema.showLoadAnimation);
   const div = document.querySelector(".loading-cover");
-  if (div) {
+
+  watchForThemeUpdates(storage);
+
+  const removeCover = () => {
+    if (!div) return;
     if (!showLoadAnimation) {
       div.remove();
-    } else {
+    } else if (!div.classList.contains("active")) {
       div.addEventListener("animationend", () => div.remove());
       div.classList.add("active");
     }
-  }
+  };
 
-  watchForThemeUpdates(storage);
+  waitForBackgroundImage().then(removeCover);
 
   performSync(storage);
 

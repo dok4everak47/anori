@@ -18,5 +18,5 @@ browser.storage.local.get({
 
     const themeName = theme.value;
     const activeTheme = [...themes, ...(customThemes.value || [])].find((t) => t.name === themeName && t.accent);
-    return applyTheme(activeTheme || defaultTheme, resolveColorScheme(colorScheme.value || "dark"));
+    window.__anoriThemeReady = applyTheme(activeTheme || defaultTheme, resolveColorScheme(colorScheme.value || "dark"));
 });
