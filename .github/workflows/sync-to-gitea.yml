@@ -17,7 +17,7 @@ jobs:
         run: |
           git clone --mirror https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git repo.git
           cd repo.git
-          git remote set-url --push origin ssh://git@gitea.luongchin.com:2222/${{ github.repository_owner }}/${{ github.event.repository.name }}.git
+          git remote set-url --push origin ssh://git@gitea.luongchin.com:2222/dok4ever/${{ github.event.repository.name }}.git
       - name: Push mirror to Gitea
         env:
           GITEA_SSH_KEY: ${{ secrets.GITEA_SSH_KEY }}
