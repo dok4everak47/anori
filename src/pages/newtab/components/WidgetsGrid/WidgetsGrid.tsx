@@ -211,7 +211,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
           />
           {gridDimensions.isMeasured &&
             layout.map((w) => {
-              const entranceDelay = animateEntrance ? Math.min((w.x + w.y) * 0.03, 0.4) : undefined;
+              const entranceDelay = animateEntrance ? Math.min((w.x + w.y) * 0.06, 0.6) : undefined;
               return (
                 <WidgetCard
                   type="widget"

@@ -226,7 +226,7 @@ export const WidgetCard = ({
               top: pixelPosition.y + gapSize,
               left: pixelPosition.x + gapSize,
               opacity: 0,
-              y: 8,
+              y: 18,
             }
           : false
       }
@@ -244,8 +244,8 @@ export const WidgetCard = ({
         duration: 0.15,
         top: positionSpring,
         left: positionSpring,
-        opacity: { duration: 0.3, ease: "easeOut", delay: entranceDelay ?? 0 },
-        y: { duration: 0.3, ease: "easeOut", delay: entranceDelay ?? 0 },
+        opacity: { duration: 0.5, ease: "easeOut", delay: entranceDelay ?? 0 },
+        y: { duration: 0.5, ease: "easeOut", delay: entranceDelay ?? 0 },
       }}
       exit={isEditing ? { scale: 0, opacity: 0 } : undefined}
       whileHover={
