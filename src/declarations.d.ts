@@ -34,4 +34,5 @@ declare const X_BROWSER: "chrome" | "firefox";
 
 interface Window {
   __anoriThemeReady?: Promise<unknown>;
+  __anoriEntranceReady?: Promise<void>;
 }

@@ -5,6 +5,19 @@
 
 html {
   height: 100dvh;
+  background: #121615;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    background: #f4f7f5;
+    color-scheme: light;
+  }
+
+  .loading-cover {
+    background: var(--ds-surface-elevated, #f7faf8);
+  }
 }
 
 body {
@@ -47,7 +60,7 @@ html.theme-hide-dot-pattern #root::before {
 .loading-cover {
   position: fixed;
   inset: 0;
-  background: var(--ds-surface-elevated);
+  background: var(--ds-surface-elevated, #181d1b);
   pointer-events: none;
   /* Matches the app-cover z-index rung (plain CSS can't reference the Panda token). */
   z-index: 9000;

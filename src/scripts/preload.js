@@ -1,8 +1,11 @@
 // Runs before the main page script: applies the saved theme as early as possible and warms the
 // active language's lazily-loaded chunks so the page resolves them from cache.
 import { momentLocaleLoaders, translationLoaders } from "@anori/translations/loaders";
-import { applyTheme, defaultTheme, resolveColorScheme, themes } from "@anori/utils/user-data/theme-base";
+import { applyTheme, applyThemeColors, defaultTheme, resolveColorScheme, themes } from "@anori/utils/user-data/theme-base";
 import browser from 'webextension-polyfill';
+
+const prefersLight = window.matchMedia?.("(prefers-color-scheme: light)").matches === true;
+applyThemeColors(defaultTheme.accent, prefersLight ? "light" : "dark");
 
 browser.storage.local.get({
     theme: { value: defaultTheme.name },

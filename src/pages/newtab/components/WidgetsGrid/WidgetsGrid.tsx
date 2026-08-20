@@ -66,6 +66,7 @@ export type WidgetsGridProps = {
   onLayoutUpdate?: (changes: LayoutChange[]) => void;
   showOnboarding?: boolean;
   animateEntrance?: boolean;
+  deferWidgets?: boolean;
   gridRef?: Ref<HTMLDivElement>;
   scrollAreaRef?: Ref<HTMLDivElement>;
 };
@@ -78,6 +79,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
   onEditWidget,
   showOnboarding,
   animateEntrance = false,
+  deferWidgets = false,
   onLayoutUpdate = () => {},
   gridRef,
   scrollAreaRef,
@@ -210,6 +212,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
             }}
           />
           {gridDimensions.isMeasured &&
+            !deferWidgets &&
             layout.map((w) => {
               const entranceDelay = animateEntrance ? Math.min((w.x + w.y) * 0.06, 0.6) : undefined;
               return (

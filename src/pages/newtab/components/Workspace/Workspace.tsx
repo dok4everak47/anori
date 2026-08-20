@@ -13,7 +13,7 @@ import { useStorageValue } from "@anori/utils/storage-lib";
 import { tryMoveWidgetToFolder, useFolderWidgets } from "@anori/utils/user-data/hooks";
 import type { Folder, WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { AnimatePresence, m } from "motion/react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useMeasure from "react-use-motion-measure";
 import { css, cva } from "styled-system/css";
@@ -86,6 +86,7 @@ export const Workspace = ({
   const [shortcutsHelpVisible, setShortcutsHelpVisible] = useState(false);
   const [whatsNewVisible, setWhatsNewVisible] = useState(false);
   const [hasUnreadReleaseNotes, setHasUnreadReleaseNotes] = useStorageValue(anoriSchema.hasUnreadReleaseNotes);
+  const [widgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
   const { isConnected } = useCloudAccount();
   const isBehindCloudSchema = useIsBehindCloudSchema();
 
@@ -184,7 +185,15 @@ export const Workspace = ({
             onOpenSettings={handleOpenSettings}
           />
 
-          <div ref={panelRef} className={widgetsArea({ orientation, bookmarksBar: bookmarksBarVisible })}>
+          <div
+            ref={panelRef}
+            className={widgetsArea({ orientation, bookmarksBar: bookmarksBarVisible })}
+            style={
+              {
+                "--anori-widget-opacity": (widgetBackgroundOpacity ?? 100) / 100,
+              } as CSSProperties
+            }
+          >
             <FolderContentContext.Provider value={parentFolderContext}>
               <FolderContent
                 key={activeFolder.id}

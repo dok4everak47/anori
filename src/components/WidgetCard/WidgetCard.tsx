@@ -8,8 +8,6 @@ import { positionToPixelPosition } from "@anori/utils/grid/utils";
 import { usePluginConfigValue } from "@anori/utils/plugins/define";
 import type { SomePlugin, SomeWidget } from "@anori/utils/plugins/types";
 import { WidgetMetadataContext, type WidgetMetadataContextType } from "@anori/utils/plugins/widget";
-import { anoriSchema } from "@anori/utils/storage";
-import { useStorageValue } from "@anori/utils/storage-lib";
 import type { Mapping } from "@anori/utils/types";
 import { useDraggable } from "@dnd-kit/react";
 import { m } from "motion/react";
@@ -163,7 +161,6 @@ export const WidgetCard = ({
 }: WidgetCardProps) => {
   const { isEditing, grid } = useParentFolder();
   const { gapSize } = useSizeSettings();
-  const [widgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -274,9 +271,6 @@ export const WidgetCard = ({
         margin: type === "widget" ? 0 : gapSize,
         position: type === "widget" ? "absolute" : undefined,
         ...(type === "widget" && isDragging ? { top: pixelPosition.y + gapSize, left: pixelPosition.x + gapSize } : {}),
-        ...(widgetBackgroundOpacity < 100
-          ? { ["--anori-widget-opacity" as string]: widgetBackgroundOpacity / 100 }
-          : {}),
         ...style,
       }}
       {...props}

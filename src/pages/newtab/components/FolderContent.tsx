@@ -3,7 +3,7 @@ import type { GridDimensions, GridItemSize, GridPixelPosition } from "@anori/uti
 import type { Mapping } from "@anori/utils/types";
 import type { Folder, WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { m } from "motion/react";
-import type { CSSProperties, Ref } from "react";
+import { type CSSProperties, type Ref, useEffect, useState } from "react";
 import { css, cx } from "styled-system/css";
 import { type LayoutChange, WidgetsGrid } from "./WidgetsGrid/WidgetsGrid";
 
@@ -89,7 +89,22 @@ export const FolderContent = ({
   showOnboarding,
 }: FolderContentProps) => {
   const { blockSize, minBlockSize, gapSize } = useSizeSettings();
-  const animateEntrance = animationDirection === null;
+  const [entranceReady, setEntranceReady] = useState(() => window.__anoriEntranceReady === undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (window.__anoriEntranceReady) {
+      window.__anoriEntranceReady.then(() => {
+        if (!cancelled) setEntranceReady(true);
+      });
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const deferWidgets = animationDirection === null && !entranceReady;
+  const animateEntrance = animationDirection === null && entranceReady;
 
   return (
     <m.div
@@ -120,6 +135,7 @@ export const FolderContent = ({
         onUpdateWidgetConfig={onUpdateWidgetConfig}
         onLayoutUpdate={onLayoutUpdate}
         animateEntrance={animateEntrance}
+        deferWidgets={deferWidgets}
         showOnboarding={showOnboarding}
       />
     </m.div>

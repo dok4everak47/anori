@@ -177,6 +177,12 @@ const waitForBackgroundImage = (timeoutMs = 1000) => {
 
 installExtensionReloadWatcher();
 
+let releaseEntranceAnimation = () => {};
+window.__anoriEntranceReady = new Promise<void>((resolve) => {
+  releaseEntranceAnimation = resolve;
+});
+setTimeout(releaseEntranceAnimation, 1200);
+
 getAnoriStorage().then(async (storage) => {
   // Kick off translation loading immediately (the active language may be a lazily-loaded chunk), then
   // await it just before mount so React never renders raw i18n keys.
@@ -199,9 +205,10 @@ getAnoriStorage().then(async (storage) => {
       div.addEventListener("animationend", () => div.remove());
       div.classList.add("active");
     }
+    releaseEntranceAnimation?.();
   };
 
-  waitForBackgroundImage().then(removeCover);
+  waitForBackgroundImage().then(removeCover).catch(releaseEntranceAnimation);
 
   performSync(storage);
 
