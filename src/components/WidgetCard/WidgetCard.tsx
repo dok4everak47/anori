@@ -61,11 +61,13 @@ const cardCss = css({
 });
 
 const cardBackgroundCss = css({
-  background: "color-mix(in srgb, var(--ds-surface) calc(var(--anori-widget-opacity, 1) * 100%), transparent)!",
+  backgroundColor: "color-mix(in srgb, var(--ds-surface) calc(var(--anori-widget-opacity, 1) * 100%), transparent)!",
   "[data-glass] &": {
-    backdropFilter: "blur(18px) saturate(150%)",
+    backgroundImage:
+      "linear-gradient(180deg, var(--ds-frosted-strong) 0%, transparent 40%), linear-gradient(180deg, var(--ds-frosted-strong) 0%, transparent 15%)",
+    backdropFilter: "blur(20px) saturate(200%)",
     boxShadow:
-      "{shadows.surface.edge}, inset 0 1px 0 0 color-mix(in srgb, var(--ds-surface-elevated) 45%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--ds-surface-elevated) 18%, transparent)",
+      "{shadows.surface.edge}, inset 0 1px 0 0 var(--ds-frosted-strong), inset 0 0 0 1px color-mix(in srgb, var(--ds-frosted-strong) 45%, transparent)",
     "&[data-busy]": {
       backdropFilter: "none",
     },
