@@ -58,3 +58,19 @@ Current project name is Anori. It's browser extension (web extension) which enab
 # Git
 
 - Before doing any complex or dangerous operations with git branch (e.g. hard reset), make its backup.
+
+# Changelogs
+
+After each batch of user-facing changes (feature, fix, breaking change) that is pushed or otherwise delivered, produce a Kami-styled changelog:
+
+- Copy `~/.agents/skills/kami/assets/templates/changelog.html` (Chinese) or `changelog-en.html` (English). Match the user's language; default to Chinese in this project.
+- Save the filled source as `docs/changelog/<version>.html` and render `docs/changelog/<version>.pdf` via WeasyPrint (see the `render.render_pdf` helper in the skill).
+- Fill project name, version, date, one-line highlight, Breaking (each entry must name the migration path), Features, and Fixes. One sentence per entry, verb-led, user-facing language, no internal jargon. 4–8 entries per version; fewer entries share a page with the prior version.
+- Verification (run from the skill directory or with absolute script paths):
+  - `python3 scripts/build.py --check-placeholders <file>`
+  - `python3 scripts/build.py --check-fonts <pdf>`
+  - `python3 scripts/build.py --check-density <pdf>`
+  - `python3 scripts/build.py --check-visual <pdf>`
+- Mention the produced paths and the check results in the closing message. If the host cannot view the rendered page images, report "build verified, visuals unconfirmed" rather than claiming a visual pass.
+
+This applies only to real delivered changes, not to Q&A, planning, or pure investigation.

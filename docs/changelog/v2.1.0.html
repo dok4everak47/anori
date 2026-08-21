@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!-- ==================================================================
+     CHANGELOG TEMPLATE · parchment design system
+     1-2 页 A4 版本更新日志 / Release Notes
+     结构：版本标题 -> Breaking -> Features -> Fixes -> 致谢
+     遵循 tw93/Mole release note 格式
+     ================================================================== -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Anori · v2.1.0 更新日志</title>
+<meta name="author" content="Anori">
+<meta name="description" content="Anori v2.1.0：新增全局 Widget 背景透明度，修复启动白屏与入场动画，并下线 Anori Plus 云同步。">
+<meta name="keywords" content="Anori, 更新日志, Widget 透明度, 启动白屏, 入场动画, Anori Plus">
+<meta name="generator" content="Kami">
+<style>
+  /* Regular weight */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("../fonts/TsangerJinKai02-W04.ttf") format("truetype"),
+       url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* Bold weight - W05 for all bold variants */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("../fonts/TsangerJinKai02-W05.ttf") format("truetype"),
+       url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+    --breaking-bg:#f0e0d8;
+    --breaking-fg:#8b4513;
+    --serif: "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+    --sans: var(--serif);
+    --mono:  "JetBrains Mono", "SF Mono", "Fira Code", Consolas, Monaco, "TsangerJinKai02", "Source Han Serif SC", monospace;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.3pt;
+    widows: 3;
+    orphans: 3;
+  }
+
+  strong { font-weight: 500; }
+  .hl { color: var(--brand); font-weight: 500; }
+
+  /* ========== HEADER (left-aligned editorial, matches one-pager) ========== */
+  .header {
+    margin-bottom: 20pt;
+    padding-bottom: 13pt;
+    border-bottom: 0.5pt solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20pt;
+  }
+  .title-block { flex: 1; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7pt;
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 1.5pt;
+    font-weight: 500;
+    margin-bottom: 8pt;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8pt;
+    height: 1.5pt;
+    border-radius: 0.75pt;
+    background: var(--brand);
+    flex-shrink: 0;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: 26pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.15;
+    margin-bottom: 7pt;
+  }
+  .subtitle {
+    font-size: 11.5pt;
+    color: var(--olive);
+    line-height: 1.5;
+    max-width: 150mm;
+  }
+  .meta {
+    font-size: 10pt;
+    color: var(--stone);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ========== SECTION HEAD - brand left bar ========== */
+  h2 {
+    font-family: var(--serif);
+    font-size: 14pt;
+    font-weight: 500;
+    color: var(--near-black);
+    margin: 20pt 0 10pt 0;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 9pt;
+    break-after: avoid;
+  }
+  h2:first-of-type { margin-top: 0; }
+
+  p { margin: 0 0 8pt 0; line-height: 1.55; widows: 2; orphans: 2; }
+  code { font-family: var(--mono); font-size: 0.92em; }
+
+  /* ========== CHANGE LIST - numbered, brand markers, bold lead-in ========== */
+  ol.changes { margin: 0; padding-left: 18pt; }
+  ol.changes li {
+    margin-bottom: 7pt;
+    padding-left: 3pt;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+  ol.changes li:last-child { margin-bottom: 0; }
+  ol.changes li::marker { color: var(--brand); font-weight: 500; }
+  ol.changes li strong { font-weight: 500; color: var(--near-black); }
+  ol.changes li .hl { color: var(--brand); font-weight: 500; }
+
+  /* ========== TAG ========== */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    margin-right: 3pt;
+  }
+  .tag.breaking {
+    background: var(--breaking-bg);
+    color: var(--breaking-fg);
+  }
+
+  /* ========== ACKNOWLEDGEMENTS - quiet labelled note, not a filled card ========== */
+  .thanks {
+    margin-top: 18pt;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: var(--olive);
+    break-inside: avoid;
+  }
+  .thanks .hl { color: var(--brand); font-weight: 500; }
+  .thanks-label {
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  /* ========== FOOTER ========== */
+  .changelog-footer {
+    margin-top: 20pt;
+    padding-top: 8pt;
+    border-top: 0.3pt dotted var(--border);
+    font-size: 9pt;
+    color: var(--stone);
+    line-height: 1.5;
+    display: flex;
+    justify-content: space-between;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3pt;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="title-block">
+    <div class="eyebrow">更新日志</div>
+    <h1>Anori v2.1.0</h1>
+    <div class="subtitle">可调节的 Widget 背景、更顺滑的启动体验，以及一次彻底的本地化瘦身</div>
+  </div>
+  <div class="meta">2026-08-21</div>
+</div>
+
+<!-- 每条：加粗引导词 + 全角冒号 + 描述。编号承担顺序，每节从 1 重新计数；不适用的节直接删掉。 -->
+<h2>破坏性变更</h2>
+<ol class="changes">
+  <li><span class="tag breaking">Breaking</span> <strong>下线 Anori Plus 与云同步</strong>：账号、设备同步、支付订阅、同步标签页小组件全部移除；本地 Widget、文件夹、设置与备份不受影响，旧备份中残留的云字段会在导入时被自动过滤。</li>
+</ol>
+
+<h2>新功能</h2>
+<ol class="changes">
+  <li><strong>全局 Widget 背景透明度</strong>：在主题设置中新增一个滑块，统一调节所有 Widget 卡片的背景不透明度，文字、图标与控件始终保持完全清晰。</li>
+  <li><strong>首屏背景内联</strong>：把默认主题背景写入新标签页 HTML 头部，样式表加载前不再出现白色闪烁。</li>
+  <li><strong>启动入口门控</strong>：通过 <span class="hl">__anoriEntranceReady</span> 把卡片渲染推迟到首帧就绪，入场动画不再被加载遮罩盖住。</li>
+  <li><strong>图标选择器缓存</strong>：替换掉 React Query 之后，为 Iconify 图标列表补回模块级缓存，切换筛选时不再重复请求或短暂闪空。</li>
+</ol>
+
+<h2>修复</h2>
+<ol class="changes">
+  <li><strong>设置面板</strong>：修复主题屏幕缺少 Slider 导入导致左下角设置弹窗无法打开的问题。</li>
+  <li><strong>启动白屏</strong>：默认主题颜色改为在 <span class="hl">preload.js</span> 同步注入，并在全局 CSS 中补齐暗色/亮色兜底，F5 不再先闪白页再出现 Anori。</li>
+  <li><strong>入场动画</strong>：卡片在加载遮罩淡出后再挂载，原本被遮住的 stagger 入场动画恢复可见。</li>
+  <li><strong>翻译完整度</strong>：补齐 14 个主题相关的本地化键，并清理 19 种语言中残留的 67 个云端/Plus 文案，CI 的 strict 翻译检查保持通过。</li>
+  <li><strong>存储兼容</strong>：旧版 storage 迁移不再带入 <span class="hl">cloudAccount</span>，从老备份恢复时也会过滤已删除的云相关键，避免凭据残留。</li>
+</ol>
+
+<div class="thanks">
+  <div class="thanks-label">备注</div>
+  本次更新不主动清理你本地已有的旧云字段；它们只是不再被代码读取。想彻底清除，可在浏览器扩展管理中删除 Anori 的本地存储后再导入一次备份。
+</div>
+
+<!-- FOOTER -->
+<div class="changelog-footer">
+  <span>Anori · 可自由组合的新标签页</span>
+  <span>https://github.com/dok4everak47/anori</span>
+</div>
+
+</body>
+</html>

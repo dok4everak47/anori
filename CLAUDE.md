@@ -24,7 +24,15 @@ Detailed rules live in `.ai/`. Summaries below:
 
 ### General
 TypeScript only. Use `assertValue()` from `@anori/utils/asserts` instead of `!` non-null assertions. Before dangerous git operations, backup the branch.
+Once a change has been validated and pushed, do not revisit, refactor, or tweak it unless the user asks or a clear new bug requires it.
 Full rules: @.ai/base.md
+
+### Changelogs
+After each batch of user-facing changes (feature, fix, breaking change), write a Kami-styled changelog using the `kami` skill:
+- Copy `~/.agents/skills/kami/assets/templates/changelog.html` (Chinese → `changelog.html`, English → `changelog-en.html`).
+- Save source + PDF under `docs/changelog/<version>.html` and `docs/changelog/<version>.pdf`.
+- Fill the project name, version, date, one-line highlight, Breaking (with migration path), Features, and Fixes; one sentence per entry, verb-led, no internal jargon.
+- Run `python3 ~/.agents/skills/kami/scripts/build.py --check-placeholders <file>`, render the PDF (WeasyPrint, see the skill's `render.render_pdf`), then `--check-fonts`, `--check-density`, and `--check-visual` before declaring done.
 
 ### Comments
 **Do not write new code comments — at all.** This is a hard rule, not a preference. When you write or change code, add zero comments; put the effort into clear names and structure instead. If you feel a comment is needed to explain something, treat that as a signal to make the code clearer.
