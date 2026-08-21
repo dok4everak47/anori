@@ -115,3 +115,4 @@ styled-system-studio
 
 ## direnv / nix
 .direnv/
+.pi/
