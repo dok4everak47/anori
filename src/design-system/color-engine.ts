@@ -233,6 +233,7 @@ export function buildPalette(accentColor: OklchInput, mode: Mode, gamut: Gamut):
     "frosted-subtle": withAlpha(neutral[byMode(mode, 13, 11)], byMode(mode, 0.04, 0.1)),
     frosted: withAlpha(neutral[byMode(mode, 13, 11)], byMode(mode, 0.1, 0.2)),
     "frosted-strong": withAlpha(neutral[byMode(mode, 13, 10)], byMode(mode, 0.18, 0.3)),
+    "glass-highlight": withAlpha(neutral[13], byMode(mode, 0.4, 0.5)),
 
     divider: withAlpha(neutral[byMode(mode, 13, 1)], 0.15),
     "ghost-hover": withAlpha(neutral[byMode(mode, 13, 0)], byMode(mode, 0.07, 0.05)),
