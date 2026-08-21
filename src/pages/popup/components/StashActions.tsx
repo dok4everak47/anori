@@ -15,7 +15,6 @@ import {
 } from "@anori/plugins/tabs/capture";
 import { DEFAULT_STASH_ID } from "@anori/plugins/tabs/consts";
 import { sendMessage } from "@anori/plugins/tabs/messaging";
-import { trackPopupInteraction } from "@anori/utils/analytics";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { iconOf, list, Row, SectionHeading } from "./PopupRow";
@@ -31,7 +30,6 @@ const StashTabSection = () => {
   }, []);
 
   const stashTab = async (tab: OpenTab) => {
-    trackPopupInteraction("Stash tab");
     await sendMessage("stashLinks", { stashId: DEFAULT_STASH_ID, links: [tabToLink(tab)] });
     window.close();
   };
@@ -73,7 +71,6 @@ const StashGroupSection = () => {
   const stashGroup = async (group: NamedGroup) => {
     const links = await getGroupLinks(group.id);
     if (links.length === 0) return;
-    trackPopupInteraction("Stash group");
     await sendMessage("stashGroup", { stashId: DEFAULT_STASH_ID, name: group.title, links });
     window.close();
   };
@@ -101,7 +98,6 @@ const TabActions = () => {
   const stashWindow = async () => {
     const links = await getWindowLinks();
     if (links.length === 0) return;
-    trackPopupInteraction("Stash window");
     await sendMessage("stashGroup", {
       stashId: DEFAULT_STASH_ID,
       name: `${t("tabs-plugin.popup.window")} · ${dateLabel()}`,

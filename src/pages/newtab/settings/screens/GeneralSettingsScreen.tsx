@@ -11,7 +11,7 @@ import { anoriSchema } from "@anori/utils/storage";
 import { useStorageValue } from "@anori/utils/storage-lib";
 import { m } from "motion/react";
 import { type ComponentProps, useEffect, useMemo } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { css } from "styled-system/css";
 
 const screen = css({
@@ -35,7 +35,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
   const [newTabTitle, setNewTabTitle] = useStorageValue(anoriSchema.newTabTitle);
   const [sidebarOrientation, setSidebarOrientation] = useStorageValue(anoriSchema.sidebarOrientation);
   const [autoHideSidebar, setAutoHideSidebar] = useStorageValue(anoriSchema.autoHideSidebar);
-  const [analyticsEnabled, setAnalyticsEnabled] = useStorageValue(anoriSchema.analyticsEnabled);
   const [, setLastFolder] = useStorageValue(anoriSchema.lastFolder);
   const screenWidth = useScreenWidth();
   const { t } = useTranslation();
@@ -70,23 +69,14 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
         <Input value={newTabTitle} onValueChange={setNewTabTitle} />
       </Field>
 
-      <Checkbox checked={analyticsEnabled} onChange={setAnalyticsEnabled}>
-        {t("settings.general.enableAnalytics")}
-        <Hint
-          hasClickableContent
-          content={
-            <>
-              <div>{t("settings.general.analyticsHintP1")}</div>
-
-              <div style={{ marginTop: "0.5rem" }}>
-                <Trans t={t} i18nKey="settings.general.analyticsHintP2">
-                  {/* biome-ignore lint/a11y/useAnchorContent: will be programatically injected by i18n */}
-                  <a href="https://anori.app/privacy#analytics" target="_blank" rel="noreferrer" />
-                </Trans>
-              </div>
-            </>
-          }
-        />
+      <Checkbox
+        checked={rememberLastFolder}
+        onChange={(v) => {
+          setRememberLastFolder(v);
+          if (!v) setLastFolder(undefined);
+        }}
+      >
+        {t("settings.general.rememberLastFolder")}
       </Checkbox>
 
       <Checkbox

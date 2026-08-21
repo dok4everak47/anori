@@ -99,13 +99,6 @@ export type SidebarOrientation = z.infer<typeof SidebarOrientationSchema>;
 
 const LanguageSchema: z.ZodType<Language> = z.enum(availableTranslations);
 
-const DailyUsageMetricsSchema = z.record(z.string(), z.number());
-
-const PerformanceAvgLcpSchema = z.object({
-  avg: z.number(),
-  n: z.number(),
-});
-
 // ============================================================================
 // Schema Definition
 // ============================================================================
@@ -251,50 +244,6 @@ export const schemaV1 = defineSchemaVersion(1, {
     key: "finishedOnboarding",
     schema: z.boolean(),
     defaultValue: false,
-    sync: "off",
-    includedInBackup: true,
-  }),
-
-  // Analytics (not synced)
-  userId: cell({
-    key: "userId",
-    schema: z.string(),
-    defaultValue: "",
-    sync: "off",
-    includedInBackup: true,
-  }),
-  analyticsEnabled: cell({
-    key: "analyticsEnabled",
-    schema: z.boolean(),
-    defaultValue: false,
-    sync: "off",
-    includedInBackup: true,
-  }),
-  analyticsLastSend: cell({
-    key: "analyticsLastSend",
-    schema: z.number(),
-    defaultValue: 0,
-    sync: "off",
-    includedInBackup: true,
-  }),
-  dailyUsageMetrics: cell({
-    key: "dailyUsageMetrics",
-    schema: DailyUsageMetricsSchema,
-    defaultValue: {},
-    sync: "off",
-    includedInBackup: true,
-  }),
-  performanceAvgLcp: cell({
-    key: "performanceAvgLcp",
-    schema: PerformanceAvgLcpSchema,
-    defaultValue: { avg: 0, n: 0 },
-    sync: "off",
-    includedInBackup: true,
-  }),
-  performanceRawInp: cell({
-    key: "performanceRawInp",
-    schema: z.array(z.number()),
-    defaultValue: [],
     sync: "off",
     includedInBackup: true,
   }),

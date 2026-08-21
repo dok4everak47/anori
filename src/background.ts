@@ -1,15 +1,11 @@
 import { availablePlugins } from "@anori/plugins/all";
-import { incrementDailyUsageMetric, sendAnalyticsIfEnabled, trackEvent } from "@anori/utils/analytics";
-import type { AnalyticEvents, UsageQuantifiableMetrics } from "@anori/utils/analytics-events";
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import { runOrphanGc } from "@anori/utils/storage/orphan-gc";
 import browser, { type Runtime } from "webextension-polyfill";
 
 type BackgroundMessage =
   | { type: "plugin-command"; pluginId: string; command: string; args: unknown }
-  | { type: "open-url"; url: string; inNewTab?: boolean; active?: boolean }
-  | { type: "track-event"; eventName: keyof AnalyticEvents; props: AnalyticEvents[keyof AnalyticEvents] }
-  | { type: "increment-daily-usage-metric"; name: UsageQuantifiableMetrics };
+  | { type: "open-url"; url: string; inNewTab?: boolean; active?: boolean };
 
 console.log("Background init");
 
@@ -181,12 +177,6 @@ browser.runtime.onMessage.addListener(async (rawMessage: unknown, sender: Runtim
     return browser.tabs.update(sender.tab.id, {
       url: message.url,
     });
-  } else if (message.type === "track-event") {
-    trackEvent(message.eventName, message.props);
-    return null;
-  } else if (message.type === "increment-daily-usage-metric") {
-    incrementDailyUsageMetric(message.name);
-    return null;
   }
 
   return true;
@@ -229,9 +219,6 @@ browser.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "scheduledCallbacks") {
     runScheduledCallbacks();
   }
-  if (alarm.name === "sendAnalytics") {
-    sendAnalyticsIfEnabled();
-  }
   if (alarm.name === "orphanGc") {
     getAnoriStorage().then((storage) => {
       runOrphanGc(storage).then((result) => {
@@ -260,10 +247,6 @@ browser.alarms.onAlarm.addListener((alarm) => {
 browser.alarms.create("scheduledCallbacks", {
   periodInMinutes: 5,
   delayInMinutes: 5,
-});
-
-browser.alarms.create("sendAnalytics", {
-  periodInMinutes: 60,
 });
 
 browser.alarms.create("orphanGc", {

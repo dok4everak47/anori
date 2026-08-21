@@ -46,14 +46,6 @@ type LegacyStorageContent = {
   // User state
   hasUnreadReleaseNotes?: boolean;
   finishedOnboarding?: boolean;
-
-  // Analytics
-  userId?: string;
-  analyticsEnabled?: boolean;
-  analyticsLastSend?: number;
-  dailyUsageMetrics?: Record<string, number>;
-  performanceAvgLcp?: { avg: number; n: number };
-  performanceRawInp?: number[];
 };
 
 /**
@@ -125,16 +117,6 @@ export async function migrateFromLegacy(): Promise<void> {
   // User state
   newData.hasUnreadReleaseNotes = wrapValue(allData.hasUnreadReleaseNotes ?? false, hlc.tick());
   newData.finishedOnboarding = wrapValue(allData.finishedOnboarding ?? false, hlc.tick());
-
-  // Analytics
-  if (allData.userId) {
-    newData.userId = wrapValue(allData.userId, hlc.tick());
-  }
-  newData.analyticsEnabled = wrapValue(allData.analyticsEnabled ?? false, hlc.tick());
-  newData.analyticsLastSend = wrapValue(allData.analyticsLastSend ?? 0, hlc.tick());
-  newData.dailyUsageMetrics = wrapValue(allData.dailyUsageMetrics ?? {}, hlc.tick());
-  newData.performanceAvgLcp = wrapValue(allData.performanceAvgLcp ?? { avg: 0, n: 0 }, hlc.tick());
-  newData.performanceRawInp = wrapValue(allData.performanceRawInp ?? [], hlc.tick());
 
   const keysToDelete = new Set<string>();
   keysToDelete.add(LEGACY_STORAGE_VERSION_KEY);

@@ -4,7 +4,6 @@ import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons
 import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
 import { Popover } from "@anori/design-system/components/Popover/Popover";
 import { ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
 import { useWidgetMetadata } from "@anori/utils/plugins/widget";
 import { anoriSchema } from "@anori/utils/storage";
@@ -36,7 +35,6 @@ export const StashWidget = memo(function StashWidget({ config }: WidgetRenderPro
   const {
     size: { width },
   } = useWidgetMetadata();
-  const trackInteraction = useWidgetInteractionTracker();
   const stashId = config.stashId ?? DEFAULT_STASH_ID;
   const allEntries = useStorageCollectionAllValue(anoriSchema.stashEntries.entry.all());
   const showHost = width >= HOST_MIN_WIDTH;
@@ -52,7 +50,7 @@ export const StashWidget = memo(function StashWidget({ config }: WidgetRenderPro
       <WidgetHeader
         title={t("tabs-plugin.stash.title")}
         action={
-          <Popover component={AddToStashPopover} additionalData={{ stashId, trackInteraction }}>
+          <Popover component={AddToStashPopover} additionalData={{ stashId }}>
             <IconButton size="medium" icon={builtinIcons.add} label={t("tabs-plugin.stash.stashTab")} variant="ghost" />
           </Popover>
         }
@@ -65,12 +63,7 @@ export const StashWidget = memo(function StashWidget({ config }: WidgetRenderPro
         />
       ) : (
         <ScrollArea className={list} type="hover">
-          <StashEntryList
-            entries={entries}
-            showHost={showHost}
-            handlers={handlers}
-            trackInteraction={trackInteraction}
-          />
+          <StashEntryList entries={entries} showHost={showHost} handlers={handlers} />
         </ScrollArea>
       )}
     </m.div>

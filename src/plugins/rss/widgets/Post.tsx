@@ -3,7 +3,6 @@ import { ClampTextToFit } from "@anori/design-system/components/ClampTextToFit/C
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useSizeSettings } from "@anori/utils/compact";
 import moment from "moment-timezone";
 import { useMemo } from "react";
@@ -50,7 +49,6 @@ export const Post = ({
 }) => {
   const { rem } = useSizeSettings();
   const { i18n } = useTranslation();
-  const trackInteraction = useWidgetInteractionTracker();
   // TODO: probably should refactor this so dependencies are explicit?
   // biome-ignore lint/correctness/useExhaustiveDependencies: we use i18n as reactive proxy for current locale which affect some of functions outside of components
   const postMoment = useMemo(() => moment(post.timestamp), [post.timestamp, i18n.language]);
@@ -59,7 +57,7 @@ export const Post = ({
   const subtitle = useMemo(() => decodeHtmlEntities(post.description), [post.description]);
 
   return (
-    <a className={cx(postRoot, className)} href={post.url} onClick={() => trackInteraction("Open post")}>
+    <a className={cx(postRoot, className)} href={post.url}>
       {clampTitle && (
         <ClampTextToFit withTooltip text={title} as={Heading} level={3} singleLine={false} className={postTitle} />
       )}

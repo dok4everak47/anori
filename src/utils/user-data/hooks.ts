@@ -4,7 +4,6 @@ import {
 } from "@anori/components/UnsupportedWidget/UnsupportedWidget";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { allPlugins, availablePluginsWithWidgets } from "@anori/plugins/all";
-import { incrementDailyUsageMetric, trackEvent } from "@anori/utils/analytics";
 import type { GridDimensions, GridItemSize, GridPosition } from "@anori/utils/grid/types";
 import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import { useLocationHash } from "@anori/utils/hooks";
@@ -34,7 +33,6 @@ export const useFolders = ({ includeHome = false, defaultFolderId }: UseFoldersO
       icon,
     };
     await setFolders((p) => [...p, newFolder]);
-    trackEvent("Folder created");
     return newFolder;
   };
 
@@ -47,7 +45,6 @@ export const useFolders = ({ includeHome = false, defaultFolderId }: UseFoldersO
       }
     }
     await storage.delete(anoriSchema.folderDetails.folder.byId(id));
-    trackEvent("Folder deleted");
     await setFolders((p) => p.filter((f) => f.id !== id));
   };
 
@@ -88,7 +85,6 @@ export const useFolders = ({ includeHome = false, defaultFolderId }: UseFoldersO
     (f: ID | Folder) => {
       const id = typeof f === "string" ? f : f.id;
       if (activeId !== id) {
-        incrementDailyUsageMetric("Times navigated to another folder");
       }
       setFolderIdInHash(id);
     },
@@ -169,51 +165,25 @@ export const useFolderWidgets = (folder: Folder) => {
         const prev = p ?? { widgets: [] };
         return { ...prev, widgets: [...prev.widgets, data] };
       });
-      trackEvent("Widget added", {
-        "Folder": folder.id === "home" ? "home" : "other",
-        "Plugin ID": plugin.id,
-        "Widget ID": widget.id,
-      });
 
       return data;
     },
-    [folder.id, setDetails],
+    [setDetails],
   );
 
   const removeWidget = useCallback(
     async (id: ID) => {
       clearWidgetStorage(id);
-      const removedWidget = getAnoriStorageNoWait()
-        .get(anoriSchema.folderDetails.folder.byId(folder.id))
-        ?.widgets.find((w) => w.instanceId === id);
-      if (removedWidget) {
-        trackEvent("Widget removed", {
-          "Folder": folder.id === "home" ? "home" : "other",
-          "Plugin ID": removedWidget.pluginId,
-          "Widget ID": removedWidget.widgetId,
-        });
-      }
       await setDetails((p) => {
         const prev = p ?? { widgets: [] };
         return { ...prev, widgets: prev.widgets.filter((w) => w.instanceId !== id) };
       });
     },
-    [folder.id, setDetails],
+    [setDetails],
   );
 
   const moveWidget = useCallback(
     async (id: ID, position: GridPosition) => {
-      const movedWidget = getAnoriStorageNoWait()
-        .get(anoriSchema.folderDetails.folder.byId(folder.id))
-        ?.widgets.find((w) => w.instanceId === id);
-      if (movedWidget) {
-        trackEvent("Widget moved", {
-          "Folder": folder.id === "home" ? "home" : "other",
-          "To another folder": false,
-          "Plugin ID": movedWidget.pluginId,
-          "Widget ID": movedWidget.widgetId,
-        });
-      }
       await setDetails((p) => {
         const prev = p ?? { widgets: [] };
         return {
@@ -227,21 +197,11 @@ export const useFolderWidgets = (folder: Folder) => {
         };
       });
     },
-    [folder.id, setDetails],
+    [setDetails],
   );
 
   const resizeWidget = useCallback(
     async (id: ID, size: GridItemSize) => {
-      const resizedWidget = getAnoriStorageNoWait()
-        .get(anoriSchema.folderDetails.folder.byId(folder.id))
-        ?.widgets.find((w) => w.instanceId === id);
-      if (resizedWidget) {
-        trackEvent("Widget resized", {
-          "Folder": folder.id === "home" ? "home" : "other",
-          "Plugin ID": resizedWidget.pluginId,
-          "Widget ID": resizedWidget.widgetId,
-        });
-      }
       await setDetails((p) => {
         const prev = p ?? { widgets: [] };
         return {
@@ -255,7 +215,7 @@ export const useFolderWidgets = (folder: Folder) => {
         };
       });
     },
-    [folder.id, setDetails],
+    [setDetails],
   );
 
   const updateWidgetConfig = useCallback(
@@ -280,12 +240,6 @@ export const useFolderWidgets = (folder: Folder) => {
       }
       const merged = { ...decoded, ...newConfig };
       const configuration = descriptor ? descriptor.encode(merged) : merged;
-
-      trackEvent("Widget configuration edited", {
-        "Folder": folder.id === "home" ? "home" : "other",
-        "Plugin ID": updatedWidget.pluginId,
-        "Widget ID": updatedWidget.widgetId,
-      });
 
       await setDetails((p) => {
         const prev = p ?? { widgets: [] };
@@ -367,13 +321,6 @@ export const tryMoveWidgetToFolder = async (
 
   await setFolderDetails(folderIdTo, updatedToDetails);
   await setFolderDetails(folderIdFrom, updatedFromDetails);
-
-  trackEvent("Widget moved", {
-    "Folder": folderIdFrom === "home" ? "home" : "other",
-    "To another folder": true,
-    "Plugin ID": widgetInfo.pluginId,
-    "Widget ID": widgetInfo.widgetId,
-  });
 
   return true;
 };

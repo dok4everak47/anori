@@ -6,7 +6,6 @@ import { IconButton } from "@anori/design-system/components/IconButton/IconButto
 import { Link } from "@anori/design-system/components/Link/Link";
 import { RequirePermissions } from "@anori/design-system/components/RequirePermissions/RequirePermissions";
 import { Tooltip } from "@anori/design-system/components/Tooltip/Tooltip";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useSizeSettings } from "@anori/utils/compact";
 import { useAsyncEffect, useLinkNavigationState } from "@anori/utils/hooks";
 import { normalizeUrl, parseHost } from "@anori/utils/misc";
@@ -45,7 +44,6 @@ export const BookmarkWidget = memo(function BookmarkWidget({
     e.preventDefault();
     e.stopPropagation();
     setShowExpandArea(true);
-    trackInteraction("Open iframe");
     if (hasDnrPermissions) {
       if (!showIframe) {
         ensureDnrRules(normalizedUrl).then(() => setShowIframe(true));
@@ -73,7 +71,6 @@ export const BookmarkWidget = memo(function BookmarkWidget({
   const { rem } = useSizeSettings();
   const store = useBookmarkStore();
   const { t, i18n } = useTranslation();
-  const trackInteraction = useWidgetInteractionTracker();
 
   const [status] = store.useValue("status", "loading");
   const [lastCheck] = store.useValue("lastCheck", undefined);
@@ -126,7 +123,6 @@ export const BookmarkWidget = memo(function BookmarkWidget({
         className={widget}
         href={isMock ? undefined : normalizedUrl}
         onClick={(e) => {
-          trackInteraction("Open bookmark");
           return onLinkClick(e);
         }}
         target={config.openInNewTab ? "_blank" : undefined}

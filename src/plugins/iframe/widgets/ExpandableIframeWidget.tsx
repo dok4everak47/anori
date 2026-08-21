@@ -3,7 +3,6 @@ import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
 import { LinkIconButton } from "@anori/design-system/components/LinkIconButton/LinkIconButton";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useSizeSettings } from "@anori/utils/compact";
 import { normalizeUrl, parseHost } from "@anori/utils/misc";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
@@ -70,7 +69,6 @@ export const ExpandableWidget = ({ config }: WidgetRenderProps<IframePluginExpan
   const { t } = useTranslation();
   const normalizedUrl = useMemo(() => normalizeUrl(config.url), [config.url]);
   const host = useMemo(() => parseHost(normalizedUrl), [normalizedUrl]);
-  const trackInteraction = useWidgetInteractionTracker();
 
   useEffect(() => {
     ensureDnrRules(config.url);
@@ -82,7 +80,6 @@ export const ExpandableWidget = ({ config }: WidgetRenderProps<IframePluginExpan
         type="button"
         className={widget}
         onClick={() => {
-          trackInteraction("Expand");
           setOpen(true);
         }}
       >

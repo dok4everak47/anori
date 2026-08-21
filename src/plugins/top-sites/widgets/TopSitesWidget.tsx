@@ -2,7 +2,6 @@ import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons
 import { Icon } from "@anori/design-system/components/Icon/Icon";
 import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
 import { Link } from "@anori/design-system/components/Link/Link";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useSizeSettings } from "@anori/utils/compact";
 import { useParentFolder } from "@anori/utils/FolderContentContext";
 import { useLinkNavigationState } from "@anori/utils/hooks";
@@ -74,7 +73,6 @@ const LinkPlate = ({
 }) => {
   const { onLinkClick, isNavigating } = useLinkNavigationState();
   const { isEditing } = useParentFolder();
-  const trackInteraction = useWidgetInteractionTracker();
   const { t } = useTranslation();
 
   return (
@@ -82,7 +80,6 @@ const LinkPlate = ({
       className={linkPlate}
       href={href}
       onClick={(e) => {
-        trackInteraction("Open website");
         onLinkClick(e);
       }}
     >

@@ -1,4 +1,3 @@
-import { incrementDailyUsageMetric } from "@anori/utils/analytics";
 import {
   type DependencyList,
   type EffectCallback,
@@ -112,7 +111,6 @@ export const useHotkeys = (
     const isEsc =
       typeof keys === "string" ? keys.toLowerCase() === "esc" : keys.length === 1 && keys[0].toLowerCase() === "esc";
     if (!isEsc) {
-      incrementDailyUsageMetric("Times hotkey used");
     }
     return callback(keyboardEvent, hotkeysEvent);
   };

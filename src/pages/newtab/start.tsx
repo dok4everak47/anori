@@ -8,7 +8,6 @@ import { BookmarksBar } from "@anori/components/BookmarksBar/BookmarksBar";
 import { TooltipProvider } from "@anori/design-system/components/Tooltip/Tooltip";
 import { languageDirections } from "@anori/translations/metadata";
 import { initTranslation } from "@anori/translations/utils";
-import { incrementDailyUsageMetric, plantPerformanceMetricsListeners } from "@anori/utils/analytics";
 import { CompactModeProvider } from "@anori/utils/compact";
 import { IS_ANDROID, IS_TOUCH_DEVICE } from "@anori/utils/device";
 import { useHotkeys, useMirrorStateToRef, usePrevious } from "@anori/utils/hooks";
@@ -208,9 +207,7 @@ getAnoriStorage().then(async (storage) => {
 
   waitForBackgroundImage().then(removeCover).catch(releaseEntranceAnimation);
 
-  plantPerformanceMetricsListeners();
   scheduleLazyComponentsPreload();
-  incrementDailyUsageMetric("Times new tab opened");
   await translationReady;
   mountPage(
     <StorageContext.Provider value={storage}>

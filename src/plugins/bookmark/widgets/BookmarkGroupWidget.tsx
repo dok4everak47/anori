@@ -1,7 +1,6 @@
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useSizeSettings } from "@anori/utils/compact";
 import { useLinkNavigationState } from "@anori/utils/hooks";
 import { normalizeUrl } from "@anori/utils/misc";
@@ -19,7 +18,6 @@ export const BookmarkGroupWidget = memo(function BookmarkGroupWidget({
   config,
 }: WidgetRenderProps<BookmarkGroupWidgetConfig> & { isMock?: boolean }) {
   const openGroup: MouseEventHandler<HTMLElement> = (e) => {
-    trackInteraction("Open group");
     e.preventDefault();
     // aux click but with another button, like rmb
     if (e.type === "auxclick" && e.button !== 1) {
@@ -40,7 +38,6 @@ export const BookmarkGroupWidget = memo(function BookmarkGroupWidget({
   const {
     size: { width },
   } = useWidgetMetadata();
-  const trackInteraction = useWidgetInteractionTracker();
   const size = width === 1 ? "s" : "m";
 
   return (

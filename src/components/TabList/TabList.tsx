@@ -4,7 +4,6 @@ import { Favicon } from "@anori/design-system/components/Icon/Favicon";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
 import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
 import { ListItem } from "@anori/design-system/components/ListItem/ListItem";
-import type { TrackInteraction } from "@anori/utils/analytics";
 import { isModifiedClick } from "@anori/utils/misc";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -68,7 +67,7 @@ const groupActions = css({
 });
 const groupBody = css({ display: "flex", flexDirection: "column", paddingLeft: "5" });
 
-const TabRow = ({ tab, trackInteraction }: { tab: TabListTab; trackInteraction?: TrackInteraction }) => {
+const TabRow = ({ tab }: { tab: TabListTab }) => {
   const inner = (
     <>
       {<Favicon url={tab.url} width={18} height={18} fallback={builtinIcons.globe} />}
@@ -83,7 +82,6 @@ const TabRow = ({ tab, trackInteraction }: { tab: TabListTab; trackInteraction?:
         as="a"
         href={tab.href}
         onClick={(e) => {
-          trackInteraction?.("Open tab");
           if (!onClick || isModifiedClick(e)) return;
           e.preventDefault();
           onClick();
@@ -98,7 +96,6 @@ const TabRow = ({ tab, trackInteraction }: { tab: TabListTab; trackInteraction?:
       as="button"
       type="button"
       onClick={() => {
-        trackInteraction?.("Open tab");
         tab.onClick?.();
       }}
     >
@@ -107,12 +104,11 @@ const TabRow = ({ tab, trackInteraction }: { tab: TabListTab; trackInteraction?:
   );
 };
 
-const GroupRow = ({ group, trackInteraction }: { group: TabListGroup; trackInteraction?: TrackInteraction }) => {
+const GroupRow = ({ group }: { group: TabListGroup }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   const handleOpenAll = () => {
-    trackInteraction?.("Open all in group");
     group.onOpenAll?.();
   };
 
@@ -145,7 +141,7 @@ const GroupRow = ({ group, trackInteraction }: { group: TabListGroup; trackInter
       {expanded && (
         <div className={groupBody}>
           {group.tabs.map((tab) => (
-            <TabRow key={tab.id} tab={tab} trackInteraction={trackInteraction} />
+            <TabRow key={tab.id} tab={tab} />
           ))}
         </div>
       )}
@@ -157,12 +153,10 @@ export const TabList = ({
   entries,
   collapsible = true,
   collapseAfter = DEFAULT_COLLAPSE_AFTER,
-  trackInteraction,
 }: {
   entries: TabListEntry[];
   collapsible?: boolean;
   collapseAfter?: number;
-  trackInteraction?: TrackInteraction;
 }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -175,11 +169,7 @@ export const TabList = ({
   return (
     <div className={root}>
       {visible.map((entry) =>
-        entry.type === "group" ? (
-          <GroupRow key={entry.id} group={entry} trackInteraction={trackInteraction} />
-        ) : (
-          <TabRow key={entry.id} tab={entry} trackInteraction={trackInteraction} />
-        ),
+        entry.type === "group" ? <GroupRow key={entry.id} group={entry} /> : <TabRow key={entry.id} tab={entry} />,
       )}
       {!expanded && showToggle && (
         <ListItem as="button" type="button" onClick={() => setExpanded(true)}>

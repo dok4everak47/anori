@@ -6,7 +6,6 @@ import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons
 import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
 import { Textarea } from "@anori/design-system/components/Input/Input";
 import { ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useRunAfterNextRender } from "@anori/utils/hooks";
 import { choose, guid } from "@anori/utils/misc";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
@@ -179,7 +178,6 @@ const TaskComponent = ({ task, onEdit, onComplete, onEnterKeyPress, ref }: TaskC
 export const TasksWidget = memo(function TasksWidget({ config }: WidgetRenderProps<TaskWidgetConfig>) {
   const addTask = () => {
     const id = guid();
-    trackInteraction("Add task");
     setTasks((p) => {
       return [...p, { id, text: X_MODE === "development" ? choose(devOnlyMockTasks) : "" }];
     });
@@ -189,7 +187,6 @@ export const TasksWidget = memo(function TasksWidget({ config }: WidgetRenderPro
   };
 
   const completeTask = (id: Task["id"]) => {
-    trackInteraction("Complete task");
     setTasks((p) => p.filter((t) => t.id !== id));
   };
 
@@ -206,7 +203,6 @@ export const TasksWidget = memo(function TasksWidget({ config }: WidgetRenderPro
   const [tasks, setTasks] = store.useValue("tasks", []);
   const { t } = useTranslation();
   const runAfterRender = useRunAfterNextRender();
-  const trackInteraction = useWidgetInteractionTracker();
 
   return (
     <m.div className={tasksWidget} layoutRoot>

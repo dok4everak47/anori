@@ -1,7 +1,6 @@
 import { WidgetExpandArea } from "@anori/components/WidgetExpandArea/WidgetExpandArea";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useSizeSettings } from "@anori/utils/compact";
 import { useRunAfterNextRender } from "@anori/utils/hooks";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
@@ -29,7 +28,6 @@ export const CalcWidgetExpandable = memo(function CalcWidgetExpandable(_props: W
   const runAfterRender = useRunAfterNextRender();
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
-  const trackInteraction = useWidgetInteractionTracker();
 
   return (
     <>
@@ -37,7 +35,6 @@ export const CalcWidgetExpandable = memo(function CalcWidgetExpandable(_props: W
         type="button"
         className={expandTrigger}
         onClick={() => {
-          trackInteraction("Expand");
           if (!show) {
             setShow(true);
             runAfterRender(() => {

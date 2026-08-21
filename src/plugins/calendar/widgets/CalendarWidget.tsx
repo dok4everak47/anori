@@ -1,7 +1,6 @@
 import { Button } from "@anori/design-system/components/Button/Button";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useOnChangeEffect, usePrevious } from "@anori/utils/hooks";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
 import { useDirection } from "@radix-ui/react-direction";
@@ -58,7 +57,6 @@ const calendarCell = cva({
 export const CalendarWidget = memo(function CalendarWidget({ config }: WidgetRenderProps<CalendarWidgetConfigType>) {
   const { t, i18n } = useTranslation();
   const dir = useDirection();
-  const trackInteraction = useWidgetInteractionTracker();
   const [today, setToday] = useState(() => moment());
   const [offsetMonths, setOffsetMonths] = useState(0);
   const prevOffset = usePrevious(offsetMonths, offsetMonths);
@@ -167,14 +165,12 @@ export const CalendarWidget = memo(function CalendarWidget({ config }: WidgetRen
           icon={dir === "ltr" ? builtinIcons.chevronBack : builtinIcons.chevronForward}
           label={t("calendar-plugin.previousMonth")}
           onClick={() => {
-            trackInteraction("Switch month");
             setOffsetMonths((p) => p - 1);
           }}
         />
         <Button
           variant="ghost"
           onClick={() => {
-            trackInteraction("Switch month");
             setOffsetMonths(0);
           }}
         >
@@ -185,7 +181,6 @@ export const CalendarWidget = memo(function CalendarWidget({ config }: WidgetRen
           icon={dir === "ltr" ? builtinIcons.chevronForward : builtinIcons.chevronBack}
           label={t("calendar-plugin.nextMonth")}
           onClick={() => {
-            trackInteraction("Switch month");
             setOffsetMonths((p) => p + 1);
           }}
         />

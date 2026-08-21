@@ -4,7 +4,6 @@ import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons
 import { Icon } from "@anori/design-system/components/Icon/Icon";
 import { ListItem } from "@anori/design-system/components/ListItem/ListItem";
 import { ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
 import type { EmptyObject } from "@anori/utils/types";
 import moment from "moment-timezone";
@@ -34,13 +33,11 @@ const lastModifiedText = css({
 
 const Session = ({ session }: { session: browser.Sessions.Session; isMock: boolean }) => {
   const restore = async () => {
-    trackInteraction("Restore tab");
     await browser.sessions.restore(session.tab ? session.tab.sessionId : session.window?.sessionId);
     window.close();
   };
   const { t, i18n } = useTranslation();
   const favIcon = session.tab ? session.tab.favIconUrl : "";
-  const trackInteraction = useWidgetInteractionTracker();
   // TODO: probably should refactor this so dependencies are explicit?
   // biome-ignore lint/correctness/useExhaustiveDependencies: we use i18n as reactive proxy for current locale which affect some of functions outside of components
   const lastModified = useMemo(() => {

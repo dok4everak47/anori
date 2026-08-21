@@ -1,7 +1,6 @@
 import { Button } from "@anori/design-system/components/Button/Button";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -70,10 +69,7 @@ export const AnkiWidget = memo(function AnkiWidget({ config }: WidgetRenderProps
     pullCards();
   }, [pullCards]);
 
-  const trackInteraction = useWidgetInteractionTracker();
-
   const answerCard = async (ease: number) => {
-    trackInteraction("Answer card");
     await callAnkiConnectApi("answerCards", 6, {
       answers: [
         {

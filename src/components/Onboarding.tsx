@@ -1,5 +1,4 @@
 import { Button } from "@anori/design-system/components/Button/Button";
-import { Checkbox } from "@anori/design-system/components/Checkbox/Checkbox";
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
@@ -13,13 +12,13 @@ import { useFolders, useFolderWidgets } from "@anori/utils/user-data/hooks";
 import { useDirection } from "@radix-ui/react-direction";
 import { AnimatePresence, LayoutGroup, m, useTransform } from "motion/react";
 import { type ComponentProps, useEffect, useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import useMeasure from "react-use-motion-measure";
 import { css, cx } from "styled-system/css";
 import { slidingScreensAnimation } from "./animations";
 import { applyOnboardingPreset } from "./apply-onboarding-preset";
 
-const screens = ["start", "folders", "customization", "analytics", "presets"] as const;
+const screens = ["start", "folders", "customization", "presets"] as const;
 
 const onboarding = css({
   padding: "6",
@@ -74,7 +73,6 @@ const navigationButtonVariants = {
 export const Onboarding = ({ gridDimensions }: { gridDimensions: GridDimensions }) => {
   const { t } = useTranslation();
   const storage = useAnoriStorage();
-  const [analyticsEnabled, setAnalyticsEnabled] = useStorageValue(anoriSchema.analyticsEnabled);
   const [, setFinishedOnboarding] = useStorageValue(anoriSchema.finishedOnboarding);
 
   const [screenIndex, setScreenIndex] = useState<number>(0);
@@ -164,23 +162,6 @@ export const Onboarding = ({ gridDimensions }: { gridDimensions: GridDimensions 
                   <p>{t("onboarding.customization.p1")}</p>
                   <p>{t("onboarding.customization.p2")}</p>
                   <p>{t("onboarding.customization.p3")}</p>
-                </Section>
-              )}
-              {screenName === "analytics" && (
-                <Section custom={direction} key="analytics">
-                  <Heading level={1}>{t("onboarding.analytics.title")}</Heading>
-                  <p>{t("onboarding.analytics.p1")}</p>
-                  <p>{t("onboarding.analytics.p2")}</p>
-                  <p>
-                    <Trans t={t} i18nKey="onboarding.analytics.p3">
-                      {/* biome-ignore lint/a11y/useAnchorContent: will be programatically injected by i18n */}
-                      <a href="https://anori.app/privacy#analytics" target="_blank" rel="noreferrer" />
-                    </Trans>
-                  </p>
-
-                  <Checkbox checked={analyticsEnabled} onChange={setAnalyticsEnabled}>
-                    {t("settings.general.enableAnalytics")}
-                  </Checkbox>
                 </Section>
               )}
               {screenName === "presets" && (

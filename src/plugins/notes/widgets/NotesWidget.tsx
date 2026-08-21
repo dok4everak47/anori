@@ -3,7 +3,6 @@ import { Checkbox } from "@anori/design-system/components/Checkbox/Checkbox";
 import { Input, Textarea } from "@anori/design-system/components/Input/Input";
 import { Link } from "@anori/design-system/components/Link/Link";
 import { ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
-import { useWidgetInteractionTracker } from "@anori/utils/analytics";
 import { useRunAfterNextRender } from "@anori/utils/hooks";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
 import type { EmptyObject } from "@anori/utils/types";
@@ -194,7 +193,6 @@ export const NotesWidget = memo(function NotesWidget(_props: WidgetRenderProps<E
   const { t } = useTranslation();
   const runAfterNextRender = useRunAfterNextRender();
   const [remarkPlugins, setRemarkPlugins] = useState<NonNullable<Options["remarkPlugins"]>>([sequentialNewlinesPlugin]);
-  const trackInteraction = useWidgetInteractionTracker();
 
   useEffect(() => {
     Promise.all([import("remark-gfm"), import("remark-breaks")]).then(
@@ -212,7 +210,6 @@ export const NotesWidget = memo(function NotesWidget(_props: WidgetRenderProps<E
         placeholder={t("notes-plugin.noteTitle")}
         spellCheck={titleFocused}
         onFocus={() => {
-          trackInteraction("Initiate editing");
           setTitleFocused(true);
         }}
         onBlur={() => setTitleFocused(false)}
@@ -236,17 +233,14 @@ export const NotesWidget = memo(function NotesWidget(_props: WidgetRenderProps<E
           tabIndex={0}
           className={noteBodyRendered}
           onFocus={() => {
-            trackInteraction("Initiate editing");
             switchEditing(true);
           }}
           onClick={() => {
-            trackInteraction("Initiate editing");
             switchEditing(true);
           }}
           onKeyDown={(event) => {
             if (event.key !== "Enter" && event.key !== " ") return;
             event.preventDefault();
-            trackInteraction("Initiate editing");
             switchEditing(true);
           }}
         >

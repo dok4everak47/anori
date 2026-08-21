@@ -1,6 +1,5 @@
 import { Button } from "@anori/design-system/components/Button/Button";
 import { Heading } from "@anori/design-system/components/Heading/Heading";
-import { trackEvent } from "@anori/utils/analytics";
 import { downloadBlob, showOpenFilePicker } from "@anori/utils/files";
 import { createBackupZip, restoreBackupFromZip } from "@anori/utils/storage/backup";
 import { useStorage } from "@anori/utils/storage-lib";
@@ -20,7 +19,6 @@ export const ImportExportScreen = (props: ComponentProps<typeof m.div>) => {
     const zipBlob = await createBackupZip(storage);
     const datetime = moment().format("yyyy-MM-DD_HH-mm");
     downloadBlob(`anori-backup-${datetime}.zip`, zipBlob);
-    trackEvent("Configuration exported");
   };
 
   const importSettings = async () => {
@@ -30,7 +28,6 @@ export const ImportExportScreen = (props: ComponentProps<typeof m.div>) => {
 
     try {
       await restoreBackupFromZip(storage, file);
-      trackEvent("Configuration imported");
       window.location.reload();
     } catch (err) {
       console.error("Error while importing backup", err);

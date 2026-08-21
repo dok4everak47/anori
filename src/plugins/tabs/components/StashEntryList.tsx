@@ -5,7 +5,6 @@ import { Icon } from "@anori/design-system/components/Icon/Icon";
 import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
 import { Input } from "@anori/design-system/components/Input/Input";
 import { ListItem } from "@anori/design-system/components/ListItem/ListItem";
-import type { TrackInteraction } from "@anori/utils/analytics";
 import { isModifiedClick, parseHost } from "@anori/utils/misc";
 import type { StashEntry, StashGroupEntry, StashLink } from "@anori/utils/storage";
 import { AnimatePresence, m } from "motion/react";
@@ -99,24 +98,20 @@ const LinkRow = ({
   entry,
   showHost,
   handlers,
-  trackInteraction,
 }: {
   entry: Extract<StashEntry, { type: "link" }>;
   showHost: boolean;
   handlers: StashOpenHandlers;
-  trackInteraction: TrackInteraction;
 }) => {
   const { openLink } = handlers;
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    trackInteraction("Open stashed link");
     if (!openLink || isModifiedClick(e)) return;
     e.preventDefault();
     openLink(entry.url);
   };
 
   const handleRemove = () => {
-    trackInteraction("Remove entry");
     sendMessage("removeEntry", { entryId: entry.id });
   };
 
@@ -139,18 +134,15 @@ const GroupLinkRow = ({
   showHost,
   onRemove,
   handlers,
-  trackInteraction,
 }: {
   link: StashLink;
   showHost: boolean;
   onRemove: () => void;
   handlers: StashOpenHandlers;
-  trackInteraction: TrackInteraction;
 }) => {
   const { openLink } = handlers;
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    trackInteraction("Open stashed link");
     if (!openLink || isModifiedClick(e)) return;
     e.preventDefault();
     openLink(link.url);
@@ -174,12 +166,10 @@ const GroupRow = ({
   entry,
   showHost,
   handlers,
-  trackInteraction,
 }: {
   entry: StashGroupEntry;
   showHost: boolean;
   handlers: StashOpenHandlers;
-  trackInteraction: TrackInteraction;
 }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -194,17 +184,14 @@ const GroupRow = ({
   };
 
   const handleOpenAll = () => {
-    trackInteraction("Open all in group");
     handlers.openAll(entry.links);
   };
 
   const handleRemove = () => {
-    trackInteraction("Remove entry");
     sendMessage("removeEntry", { entryId: entry.id });
   };
 
   const handleRemoveGroupLink = (linkIndex: number) => {
-    trackInteraction("Remove entry");
     sendMessage("removeGroupLink", { entryId: entry.id, linkIndex });
   };
 
@@ -266,7 +253,6 @@ const GroupRow = ({
                 link={link}
                 showHost={showHost}
                 handlers={handlers}
-                trackInteraction={trackInteraction}
                 onRemove={() => handleRemoveGroupLink(index)}
               />
             ))}
@@ -281,32 +267,18 @@ export const StashEntryList = ({
   entries,
   showHost,
   handlers,
-  trackInteraction,
 }: {
   entries: StashEntry[];
   showHost: boolean;
   handlers: StashOpenHandlers;
-  trackInteraction: TrackInteraction;
 }) => {
   return (
     <AnimatePresence initial={false}>
       {entries.map((entry) =>
         entry.type === "group" ? (
-          <GroupRow
-            key={entry.id}
-            entry={entry}
-            showHost={showHost}
-            handlers={handlers}
-            trackInteraction={trackInteraction}
-          />
+          <GroupRow key={entry.id} entry={entry} showHost={showHost} handlers={handlers} />
         ) : (
-          <LinkRow
-            key={entry.id}
-            entry={entry}
-            showHost={showHost}
-            handlers={handlers}
-            trackInteraction={trackInteraction}
-          />
+          <LinkRow key={entry.id} entry={entry} showHost={showHost} handlers={handlers} />
         ),
       )}
     </AnimatePresence>
