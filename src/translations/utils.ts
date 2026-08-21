@@ -27,7 +27,7 @@ export const initTranslation = async () => {
   moment.locale("en");
 
   i18n.use(initReactI18next).init({
-    debug: true,
+    debug: false,
     returnNull: false,
     fallbackLng: "en",
     lng: "en",
