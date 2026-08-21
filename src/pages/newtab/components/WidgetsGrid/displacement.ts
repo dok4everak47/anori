@@ -32,6 +32,13 @@ export const computeDisplacedMoves = (
   }
   rects.set(item.instanceId, { x: position.x, y: position.y, width: item.width, height: item.height });
 
+  const band = gridDimensions.restrictedBand;
+  const bandRect: Rect | null = band
+    ? { x: band.colStart, y: 0, width: band.colEnd - band.colStart, height: gridDimensions.rows }
+    : null;
+  const itemRect: Rect = { x: position.x, y: position.y, width: item.width, height: item.height };
+  if (bandRect && rectsOverlap(itemRect, bandRect)) return null;
+
   // First preference: shift every overlapped widget as one block by the opposite of the drag vector,
   // into the space the dragged widget vacated — the whole group keeps its arrangement. Valid only when
   // each shifted widget stays in bounds and neither its destination nor its travel path crosses a
@@ -56,6 +63,7 @@ export const computeDisplacedMoves = (
           width: w.width + Math.abs(delta.x),
           height: w.height + Math.abs(delta.y),
         };
+        if (bandRect && (rectsOverlap(finalRect, bandRect) || rectsOverlap(sweep, bandRect))) return false;
         for (const other of layout) {
           if (other.instanceId === item.instanceId || groupIds.has(other.instanceId)) continue;
           if (rectsOverlap(finalRect, other) || rectsOverlap(sweep, other)) return false;
@@ -101,6 +109,7 @@ export const computeDisplacedMoves = (
           width: w.width + Math.abs(shift.x),
           height: w.height + Math.abs(shift.y),
         };
+        if (bandRect && (rectsOverlap(finalRect, bandRect) || rectsOverlap(sweep, bandRect))) return false;
         for (const other of layout) {
           if (other.instanceId === item.instanceId || memberIds.has(other.instanceId)) continue;
           if (rectsOverlap(finalRect, other) || rectsOverlap(sweep, other)) return false;
@@ -120,7 +129,7 @@ export const computeDisplacedMoves = (
   // right of) everything already settled that it overlaps — so a pushed widget pushes the ones
   // after it, and relative order along the axis is preserved.
   const targetRect: Rect = { x: position.x, y: position.y, width: item.width, height: item.height };
-  const placed: Rect[] = [targetRect];
+  const placed: Rect[] = [targetRect, ...(bandRect ? [bandRect] : [])];
   const sorted = layout
     .filter((w) => w.instanceId !== item.instanceId)
     .sort((a, b) => (pushDirection === "right" ? a.x - b.x || a.y - b.y : a.y - b.y || a.x - b.x));

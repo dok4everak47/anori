@@ -32,6 +32,16 @@ const ghostRect = css({
   pointerEvents: "none",
 });
 
+const restrictedBandVisual = css({
+  position: "absolute",
+  top: 0,
+  pointerEvents: "none",
+  background: "frosted",
+  borderInline: "1px dashed",
+  borderColor: "accent",
+  opacity: 0.7,
+});
+
 const ghostSpring = { type: "spring", duration: 0.25, bounce: 0.1 } as const;
 
 export type LayoutChange =
@@ -83,6 +93,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
   onLayoutUpdate = () => {},
   gridRef,
   scrollAreaRef,
+  isEditing,
 }: WidgetsGridProps) {
   const tryRepositionWidget = (widget: WidgetInFolderWithMeta, position: GridPosition) => {
     const canPlaceThere = canPlaceItemInGrid({
@@ -97,10 +108,14 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     }
   };
 
-  const clampSizeToExtendedGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => ({
-    width: Math.min(size.width, gridDimensions.columns + GRID_DRAG_EXTEND_SLOTS - widget.x),
-    height: Math.min(size.height, gridDimensions.rows + GRID_DRAG_EXTEND_SLOTS - widget.y),
-  });
+  const clampSizeToExtendedGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => {
+    const band = gridDimensions.restrictedBand;
+    const maxWidth = Math.min(size.width, gridDimensions.columns + GRID_DRAG_EXTEND_SLOTS - widget.x);
+    return {
+      width: band && widget.x < band.colStart ? Math.min(maxWidth, band.colStart - widget.x) : maxWidth,
+      height: Math.min(size.height, gridDimensions.rows + GRID_DRAG_EXTEND_SLOTS - widget.y),
+    };
+  };
 
   const tryResizeWidget = (widget: WidgetInFolderWithMeta, widthInBoxes: number, heightInBoxes: number) => {
     ({ width: widthInBoxes, height: heightInBoxes } = clampSizeToExtendedGrid(widget, {
@@ -246,6 +261,19 @@ export const WidgetsGrid = memo(function WidgetsGrid({
               );
             })}
         </AnimatePresence>
+
+        {gridDimensions.isMeasured && gridDimensions.restrictedBand && isEditing && (
+          <div
+            className={restrictedBandVisual}
+            style={{
+              left: gridDimensions.restrictedBand.colStart * gridDimensions.boxSize,
+              width:
+                (gridDimensions.restrictedBand.colEnd - gridDimensions.restrictedBand.colStart) *
+                gridDimensions.boxSize,
+              height: gridDimensions.rows * gridDimensions.boxSize,
+            }}
+          />
+        )}
 
         {ghost && (
           <m.div

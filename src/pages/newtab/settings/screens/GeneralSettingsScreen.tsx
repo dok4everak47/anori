@@ -79,16 +79,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
         {t("settings.general.rememberLastFolder")}
       </Checkbox>
 
-      <Checkbox
-        checked={rememberLastFolder}
-        onChange={(v) => {
-          setRememberLastFolder(v);
-          if (!v) setLastFolder(undefined);
-        }}
-      >
-        {t("settings.general.rememberLastFolder")}
-      </Checkbox>
-
       <Checkbox checked={autoHideSidebar} onChange={setAutoHideSidebar}>
         {t("settings.general.autoHideSidebar")}
       </Checkbox>

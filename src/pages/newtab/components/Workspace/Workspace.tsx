@@ -3,14 +3,16 @@ import { Modal } from "@anori/design-system/components/Modal/Modal";
 import { useSizeSettings } from "@anori/utils/compact";
 import { FolderContentContext } from "@anori/utils/FolderContentContext";
 import { useGridDimensions } from "@anori/utils/grid/useGridDimensions";
+import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import { useHotkeys } from "@anori/utils/hooks";
 import { useOverlayLayers } from "@anori/utils/overlay-layers";
 import { anoriSchema } from "@anori/utils/storage";
 import { useStorageValue } from "@anori/utils/storage-lib";
 import { tryMoveWidgetToFolder, useFolderWidgets } from "@anori/utils/user-data/hooks";
 import type { Folder, WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
+import { useWallpaperOrientation } from "@anori/utils/user-data/use-wallpaper-orientation";
 import { AnimatePresence, m } from "motion/react";
-import { type CSSProperties, useCallback, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useMeasure from "react-use-motion-measure";
 import { css, cva } from "styled-system/css";
@@ -87,10 +89,48 @@ export const Workspace = ({
   const [hasUnreadReleaseNotes, setHasUnreadReleaseNotes] = useStorageValue(anoriSchema.hasUnreadReleaseNotes);
   const [widgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
   const { blockSize, minBlockSize } = useSizeSettings();
+  const backgroundInfo = useWallpaperOrientation();
   const mainRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const gridDimensions = useGridDimensions(scrollAreaRef, blockSize, minBlockSize, widgets);
+  const isPortrait = backgroundInfo ? backgroundInfo.height > backgroundInfo.width : false;
+  const gridDimensions = useGridDimensions(
+    scrollAreaRef,
+    blockSize,
+    minBlockSize,
+    widgets,
+    isPortrait ? backgroundInfo : null,
+  );
   const [panelRef, panelBounds] = useMeasure();
+
+  const prevPortrait = useRef(false);
+
+  useEffect(() => {
+    if (!isPortrait) {
+      prevPortrait.current = false;
+      return;
+    }
+    if (prevPortrait.current) return;
+    prevPortrait.current = true;
+
+    const band = gridDimensions.restrictedBand;
+    if (!band) return;
+
+    const stuck = widgets.filter((w) => w.x < band.colEnd && w.x + w.width > band.colStart);
+    if (stuck.length === 0) return;
+
+    const pending = widgets.map((w) => ({ ...w }));
+    for (const widget of stuck) {
+      const remaining = pending.filter((p) => p.instanceId !== widget.instanceId);
+      const position = findPositionForItemInGrid({ grid: gridDimensions, layout: remaining, item: widget });
+      if (!position) continue;
+      const target = pending.find((p) => p.instanceId === widget.instanceId);
+      if (target) {
+        target.x = position.x;
+        target.y = position.y;
+      }
+      void moveWidget(widget.instanceId, position);
+    }
+  }, [isPortrait, gridDimensions, widgets, moveWidget]);
 
   const handleLayoutUpdate = useCallback(
     (changes: LayoutChange[]) => {

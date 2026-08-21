@@ -66,8 +66,6 @@ const cardBackgroundCss = css({
   backgroundImage:
     "linear-gradient(180deg, color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent) 0%, transparent 35%), linear-gradient(180deg, color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent) 0%, transparent 10%)",
   backdropFilter: "blur(calc(8px + var(--anori-widget-opacity, 1) * 26px)) saturate(190%)",
-  boxShadow:
-    "{shadows.surface.edge}, inset 0 1px 0 0 color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent), inset 0 0 0 1px color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 70%, transparent)",
   "&[data-busy]": {
     backdropFilter: "none",
   },
@@ -224,6 +222,11 @@ export const WidgetCard = ({
     return <widget.mainScreen instanceId={instanceId} config={parsedConfig} pluginConfig={pluginConfig} />;
   }, [type, widget, instanceId, configParseFailed, parsedConfig, pluginConfig]);
 
+  const glassHighlightBoxShadow =
+    !isDragging && !resize.isResizing
+      ? "var(--shadows-surface-edge), inset 0 1px 0 0 color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent), inset 0 0 0 1px color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 70%, transparent)"
+      : undefined;
+
   const card = (
     <m.div
       id={instanceId ? `WidgetCard-${instanceId}` : undefined}
@@ -275,6 +278,7 @@ export const WidgetCard = ({
           : undefined
       }
       style={{
+        boxShadow: glassHighlightBoxShadow,
         width: resize.width,
         height: resize.height,
         margin: type === "widget" ? 0 : gapSize,

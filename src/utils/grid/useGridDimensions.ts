@@ -1,5 +1,12 @@
-import type { GridContent, GridDimensions, GridItemSize, GridPixelPosition } from "@anori/utils/grid/types";
+import type {
+  GridContent,
+  GridDimensions,
+  GridItemSize,
+  GridPixelPosition,
+  GridRestrictedBand,
+} from "@anori/utils/grid/types";
 import { calculateColumnWidth } from "@anori/utils/grid/utils";
+import type { BackgroundInfo } from "@anori/utils/page";
 import isEqual from "lodash/isEqual";
 import { type RefObject, useCallback, useLayoutEffect, useState } from "react";
 
@@ -8,6 +15,7 @@ export const useGridDimensions = (
   desiredSize: number,
   minSize: number,
   layout: GridContent,
+  backgroundInfo: BackgroundInfo | null,
 ) => {
   const calculateDimensions = useCallback(
     (el: HTMLElement) => {
@@ -24,12 +32,26 @@ export const useGridDimensions = (
       const columns = Math.max(minColumns, maxColOccupied);
       const rows = Math.max(minRows, maxRowOccupied);
 
+      let restrictedBand: GridRestrictedBand | undefined;
+      if (backgroundInfo) {
+        const { width: imgW, height: imgH } = backgroundInfo;
+        const aspectRatio = imgW / imgH;
+        const bandWidth = Math.floor(box.height * aspectRatio);
+        const colStart = Math.floor((box.width - bandWidth) / 2 / boxSize);
+        const colEnd = Math.ceil((box.width + bandWidth) / 2 / boxSize);
+        const bandCols = colEnd - colStart;
+        if (bandCols >= 1 && minColumns - bandCols >= 2) {
+          restrictedBand = { colStart, colEnd };
+        }
+      }
+
       return {
         boxSize,
         columns,
         rows,
         minColumns,
         minRows,
+        restrictedBand,
         position: {
           x: box.left,
           y: box.top,
@@ -40,7 +62,7 @@ export const useGridDimensions = (
         },
       };
     },
-    [desiredSize, minSize, layout],
+    [desiredSize, minSize, layout, backgroundInfo],
   );
 
   const [dimensions, _setDimensions] = useState<

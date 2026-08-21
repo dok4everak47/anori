@@ -1,11 +1,17 @@
 import type { Mapping } from "@anori/utils/types";
 
+export type GridRestrictedBand = {
+  colStart: number;
+  colEnd: number;
+};
+
 export type GridDimensions = {
   boxSize: number;
   columns: number;
   rows: number;
   minColumns: number;
   minRows: number;
+  restrictedBand?: GridRestrictedBand;
 };
 
 export type GridItemSize = {
