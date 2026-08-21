@@ -51,7 +51,7 @@ Full rules: @.ai/plugins.md
 Full rules: @.ai/styling.md and @.ai/design-system-rules.md
 
 ### Localization
-i18next + react-i18next. `en` is the only source of truth; `uk` is hand-verified. Use `useTranslation` hook in React, `translate()` outside. Other languages are LLM-translated (OpenRouter) and committed: `pnpm translations:status`, `pnpm translations:translate <lang|all>`, `pnpm translations:clean`. Incremental re-translation is gated by `src/translations/fingerprints.json` (hash of the `en` value each translation derived from); `notes.json` holds optional per-key usage context for the model. New languages must also be added to `rspack.config.ts` (MomentLocalesPlugin), `translations-manager.ts` (FINISHED_TRANSLATIONS, LANGUAGE_ENGLISH_NAMES), and `src/translations/metadata.ts`.
+i18next + react-i18next, English-only. Use `useTranslation` hook in React, `translate()` outside. `src/translations/en.json` is the single source of truth; `src/translations/metadata.ts` lists `en` as the only available language. No translation manager, no fingerprints, no CI translation check. Full rules: @.ai/localization.md
 Full rules: @.ai/localization.md
 
 ### Storage & Sync

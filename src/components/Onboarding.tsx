@@ -3,9 +3,6 @@ import { Checkbox } from "@anori/design-system/components/Checkbox/Checkbox";
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
-import { Select } from "@anori/design-system/components/Select/Select";
-import { availableTranslations, availableTranslationsPrettyNames, type Language } from "@anori/translations/metadata";
-import { switchTranslationLanguage } from "@anori/translations/utils";
 import type { GridDimensions } from "@anori/utils/grid/types";
 import { useHotkeys, usePrevious } from "@anori/utils/hooks";
 import { useMotionTransition } from "@anori/utils/motion/hooks";
@@ -77,7 +74,6 @@ const navigationButtonVariants = {
 export const Onboarding = ({ gridDimensions }: { gridDimensions: GridDimensions }) => {
   const { t } = useTranslation();
   const storage = useAnoriStorage();
-  const [language, setLanguage] = useStorageValue(anoriSchema.language);
   const [analyticsEnabled, setAnalyticsEnabled] = useStorageValue(anoriSchema.analyticsEnabled);
   const [, setFinishedOnboarding] = useStorageValue(anoriSchema.finishedOnboarding);
 
@@ -146,23 +142,7 @@ export const Onboarding = ({ gridDimensions }: { gridDimensions: GridDimensions 
               {screenName === "start" && (
                 <Section custom={direction} key="start">
                   <Heading level={1}>{t("onboarding.start.title")}</Heading>
-                  <p>
-                    {t("onboarding.start.p1", {
-                      languages: availableTranslations.map((code) => availableTranslationsPrettyNames[code]).join(", "),
-                    })}
-                  </p>
-
-                  <Select<Language>
-                    value={language}
-                    onChange={(newLang) => {
-                      console.log("Saving new language", newLang);
-                      setLanguage(newLang);
-                      switchTranslationLanguage(newLang);
-                    }}
-                    options={availableTranslations}
-                    getOptionKey={(o) => o}
-                    getOptionLabel={(o) => availableTranslationsPrettyNames[o]}
-                  />
+                  <p>{t("onboarding.start.p1")}</p>
 
                   <p>{t("onboarding.start.p2")}</p>
 

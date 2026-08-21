@@ -4,7 +4,6 @@ import type { AnalyticEvents, UsageQuantifiableMetrics } from "@anori/utils/anal
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import { runOrphanGc } from "@anori/utils/storage/orphan-gc";
 import browser, { type Runtime } from "webextension-polyfill";
-import { availableTranslations, type Language } from "./translations/metadata";
 
 type BackgroundMessage =
   | { type: "plugin-command"; pluginId: string; command: string; args: unknown }
@@ -79,22 +78,6 @@ browser.runtime.onInstalled.addListener(async (details) => {
       url: "https://anori.app/welcome",
       active: true,
     });
-    const acceptedLanguages = await browser.i18n.getAcceptLanguages();
-    const userLocale = browser.i18n.getUILanguage().replace("_", "-");
-    const possibleLanguages = [userLocale, ...acceptedLanguages].map((l) => l.toLowerCase());
-    let bestCandidate = "en";
-    for (const lang of possibleLanguages) {
-      if ((availableTranslations as readonly string[]).includes(lang)) {
-        bestCandidate = lang;
-        break;
-      }
-      const withoutRegion = lang.split("-")[0];
-      if ((availableTranslations as readonly string[]).includes(withoutRegion)) {
-        bestCandidate = withoutRegion;
-        break;
-      }
-    }
-    storage.set(anoriSchema.language, bestCandidate as Language);
   }
 });
 

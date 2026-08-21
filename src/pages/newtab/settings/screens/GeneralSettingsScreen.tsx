@@ -1,13 +1,10 @@
 import { CheckboxWithPermission } from "@anori/components/CheckboxWithPermission";
-import { Alert } from "@anori/design-system/components/Alert/Alert";
 import { Checkbox } from "@anori/design-system/components/Checkbox/Checkbox";
 import { Field } from "@anori/design-system/components/Field/Field";
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { Hint } from "@anori/design-system/components/Hint/Hint";
 import { Input } from "@anori/design-system/components/Input/Input";
 import { Select } from "@anori/design-system/components/Select/Select";
-import { availableTranslations, availableTranslationsPrettyNames, type Language } from "@anori/translations/metadata";
-import { switchTranslationLanguage } from "@anori/translations/utils";
 import { useScreenWidth } from "@anori/utils/compact";
 import { setPageTitle } from "@anori/utils/page";
 import { anoriSchema } from "@anori/utils/storage";
@@ -27,7 +24,6 @@ const screen = css({
 const screenSizeHint = css({ marginLeft: "1" });
 
 export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
-  const [language, setLanguage] = useStorageValue(anoriSchema.language);
   const [isAutomaticCompact, setAutomaticCompact] = useStorageValue(anoriSchema.automaticCompactMode);
   const [automaticCompactModeThreshold, setAutomaticCompactModeThreshold] = useStorageValue(
     anoriSchema.automaticCompactModeThreshold,
@@ -61,26 +57,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
       <Heading level={2} size={1}>
         {t("settings.general.title")}
       </Heading>
-      <Field label={`${t("settings.general.language")}:`}>
-        <Select<Language>
-          value={language}
-          onChange={(newLang) => {
-            console.log("Saving new language", newLang);
-            setLanguage(newLang);
-            switchTranslationLanguage(newLang);
-          }}
-          options={[...availableTranslations]}
-          getOptionKey={(o) => o}
-          getOptionLabel={(o) => availableTranslationsPrettyNames[o]}
-        />
-      </Field>
-      <Alert variant="info">
-        <Trans t={t} i18nKey="settings.general.translationInfo">
-          {/* biome-ignore lint/a11y/useAnchorContent: will be programatically injected by i18n */}
-          <a href="https://github.com/OlegWock/anori/issues/104" />
-        </Trans>
-      </Alert>
-
       <Field label={`${t("settings.general.sidebarOrientation")}:`}>
         <Select<"auto" | "vertical" | "horizontal">
           value={sidebarOrientation}

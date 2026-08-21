@@ -1,6 +1,5 @@
-import { initTranslation, switchTranslationLanguage, translate } from "@anori/translations/utils";
+import { initTranslation, translate } from "@anori/translations/utils";
 import { cachedFunc } from "@anori/utils/misc";
-import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import browser from "webextension-polyfill";
 import { dateLabel, getGroupLinks, isCapturableUrl, supportsTabGroups } from "./capture";
 import { DEFAULT_STASH_ID } from "./consts";
@@ -78,14 +77,6 @@ async function handleMenuClick(info: browser.Menus.OnClickData, tab: browser.Tab
   }
 }
 
-async function watchLocaleChanges(): Promise<void> {
-  const storage = await getAnoriStorage();
-  storage.subscribe(anoriSchema.language, async (lang) => {
-    await switchTranslationLanguage(lang ?? "en");
-    await registerContextMenus();
-  });
-}
-
 export function registerTabsBackground(): void {
   ensureDefaultStash();
   registerContextMenus();
@@ -94,6 +85,5 @@ export function registerTabsBackground(): void {
     browser.contextMenus.onClicked.addListener((info, tab) => {
       handleMenuClick(info, tab);
     });
-    watchLocaleChanges();
   }
 }

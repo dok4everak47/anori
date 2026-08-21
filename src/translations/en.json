@@ -144,8 +144,8 @@
                 "colorSchemeSystem": "System",
                 "colorSchemeLight": "Light",
                 "colorSchemeDark": "Dark",
-                "widgetBackgroundOpacity": "Widget background opacity",
-                "widgetBackgroundOpacityHint": "Make widgets more or less see-through. This changes only the widget surface; text and icons stay opaque."
+                "widgetBackgroundOpacity": "Widget glass frost",
+                "widgetBackgroundOpacityHint": "Slide toward 0% for liquid glass (glossy, clear) or 100% for frosted glass (matte, blurred). Text and icons stay opaque."
             },
             "importExport": {
                 "title": "Import & export",
@@ -178,7 +178,7 @@
         "onboarding": {
             "start": {
                 "title": "Welcome to Anori!",
-                "p1": "Glad to see you! This introduction is available in {{languages}}.",
+                "p1": "Glad to see you! Let's take a quick tour.",
                 "p2": "You're on your way to setup your ideal new tab. Anori start page consists of different widgets, like notes, bookmarks, todo lists, etc. You choose what to add and how to organize them.",
                 "p3": "You can add your first widget by clicking on the pencil ('$t(editFolder)') in the sidebar. This will switch the page into editing mode. Here you can add new widgets and reposition or remove existing ones.",
                 "p4": "To add a new widget, click on the '$t(addWidget)' button, or click on '$t(done)' to exit editing mode. Once you add your first widget, this onboarding will disappear. You can add a widget right now and explore the extension on your own, or, if you'd like to know a bit more about the features Anori has to offer, click '$t(next)'."
