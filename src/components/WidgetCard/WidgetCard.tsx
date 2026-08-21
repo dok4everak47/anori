@@ -62,6 +62,14 @@ const cardCss = css({
 
 const cardBackgroundCss = css({
   background: "color-mix(in srgb, var(--ds-surface) calc(var(--anori-widget-opacity, 1) * 100%), transparent)!",
+  "[data-glass] &": {
+    backdropFilter: "blur(18px) saturate(150%)",
+    boxShadow:
+      "{shadows.surface.edge}, inset 0 1px 0 0 color-mix(in srgb, var(--ds-surface-elevated) 45%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--ds-surface-elevated) 18%, transparent)",
+    "&[data-busy]": {
+      backdropFilter: "none",
+    },
+  },
 });
 const cardPaddedCss = css({ padding: "4" });
 const cardFlushCss = css({ padding: 0 });
