@@ -16,12 +16,9 @@ export type SidebarProps = {
   orientation: "vertical" | "horizontal";
   bookmarksBarVisible?: boolean;
   hasUnreadReleaseNotes?: boolean;
-  cloudConnected?: boolean;
-  cloudBehindSchema?: boolean;
   onFolderClick: (folder: Folder) => void;
   onToggleEditMode: () => void;
   onOpenWhatsNew: () => void;
-  onOpenCloudAccount: () => void;
   onOpenSettings: () => void;
 };
 
@@ -78,12 +75,9 @@ export const Sidebar = memo(function Sidebar({
   orientation,
   bookmarksBarVisible,
   hasUnreadReleaseNotes,
-  cloudConnected,
-  cloudBehindSchema,
   onFolderClick,
   onToggleEditMode,
   onOpenWhatsNew,
-  onOpenCloudAccount,
   onOpenSettings,
 }: SidebarProps) {
   const { t } = useTranslation();
@@ -128,14 +122,6 @@ export const Sidebar = memo(function Sidebar({
               name={t("whatsNew")}
               withRedDot={hasUnreadReleaseNotes ?? false}
               onClick={onOpenWhatsNew}
-            />
-            <SidebarButton
-              sidebarOrientation={orientation}
-              layoutId="cloud-account"
-              icon={builtinIcons.personCircle}
-              name={cloudConnected ? t("cloud.account") : t("cloud.connect")}
-              withRedDot={cloudBehindSchema ?? false}
-              onClick={onOpenCloudAccount}
             />
             <SidebarButton
               sidebarOrientation={orientation}

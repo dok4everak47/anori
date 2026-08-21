@@ -32,7 +32,7 @@ const getThemeBackgroundKey = (themeName: string, variant: "original" | "blurred
 };
 
 export const getThemeBackground = async (themeName: string): Promise<Blob> => {
-  const storage = await getAnoriStorage({ sync: false });
+  const storage = await getAnoriStorage();
   const key = getThemeBackgroundKey(themeName, "blurred");
   const result = await storage.files.get(anoriSchema.themeBackgrounds.byId(key));
 

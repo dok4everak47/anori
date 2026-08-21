@@ -47,7 +47,7 @@ export const AppDragDropProvider = ({ children }: { children: ReactNode }) => {
       ]}
       onDragEnd={(event) => {
         const { source, target } = event.operation;
-        if (!source || source.type !== "widget" || event.canceled) return;
+        if (source?.type !== "widget" || event.canceled) return;
         if (target?.type !== "folder") return;
         const data = source.data as WidgetDragData | undefined;
         if (!data) return;

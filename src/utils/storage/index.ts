@@ -1,4 +1,4 @@
-export { type AnoriStorage, type AnoriStorageOptions, getAnoriStorage, getAnoriStorageNoWait } from "./init";
+export { type AnoriStorage, getAnoriStorage, getAnoriStorageNoWait } from "./init";
 export {
   anoriSchema,
   anoriVersionedSchema,

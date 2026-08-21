@@ -1,7 +1,7 @@
 import { readFile, type Storage } from "@anori/utils/storage-lib";
 import moment from "moment-timezone";
 import browser from "webextension-polyfill";
-import { anoriSchema, anoriVersionedSchema } from "./schema";
+import { anoriVersionedSchema } from "./schema";
 
 export const BACKUP_FORMAT_VERSION = 1;
 
@@ -79,12 +79,5 @@ export async function restoreBackupFromZip(storage: Storage, zipBlob: Blob): Pro
     }
   }
 
-  // Preserve cloud account credentials so user stays logged in
-  const currentCloudAccount = storage.get(anoriSchema.cloudAccount);
-
   await storage.importFromBackup({ kv: storageData, fileBlobs, schemaVersion: backupSchemaVersion });
-
-  if (currentCloudAccount) {
-    await storage.set(anoriSchema.cloudAccount, currentCloudAccount);
-  }
 }

@@ -9,7 +9,6 @@ import { settingsSections } from "./sections";
 
 export type SettingScreen =
   | "general"
-  | "anori-plus"
   | "custom-icons"
   | "folders"
   | "plugins"

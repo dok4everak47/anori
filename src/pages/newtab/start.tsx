@@ -3,7 +3,6 @@ import { setPageTitle } from "@anori/utils/page";
 import { mountPage } from "@anori/utils/react";
 import "../../panda.css";
 import "./globals.css";
-import { performSync } from "@anori/cloud-integration/sync-manager";
 import { AppDragDropProvider } from "@anori/components/AppDragDropProvider/AppDragDropProvider";
 import { BookmarksBar } from "@anori/components/BookmarksBar/BookmarksBar";
 import { TooltipProvider } from "@anori/design-system/components/Tooltip/Tooltip";
@@ -15,7 +14,6 @@ import { IS_ANDROID, IS_TOUCH_DEVICE } from "@anori/utils/device";
 import { useHotkeys, useMirrorStateToRef, usePrevious } from "@anori/utils/hooks";
 import { OverlayLayersProvider } from "@anori/utils/overlay-layers";
 import { watchForPermissionChanges } from "@anori/utils/permissions";
-import { QueryClientProvider } from "@anori/utils/react-query";
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import { StorageContext, useStorageValue } from "@anori/utils/storage-lib";
 import { useFolders } from "@anori/utils/user-data/hooks";
@@ -210,24 +208,20 @@ getAnoriStorage().then(async (storage) => {
 
   waitForBackgroundImage().then(removeCover).catch(releaseEntranceAnimation);
 
-  performSync(storage);
-
   plantPerformanceMetricsListeners();
   scheduleLazyComponentsPreload();
   incrementDailyUsageMetric("Times new tab opened");
   await translationReady;
   mountPage(
     <StorageContext.Provider value={storage}>
-      <QueryClientProvider>
-        <CompactModeProvider>
-          <OverlayLayersProvider>
-            {/* strict mode temporary disabled due to https://github.com/framer/motion/issues/2094 */}
-            <LazyMotion features={domMax}>
-              <Start />
-            </LazyMotion>
-          </OverlayLayersProvider>
-        </CompactModeProvider>
-      </QueryClientProvider>
+      <CompactModeProvider>
+        <OverlayLayersProvider>
+          {/* strict mode temporary disabled due to https://github.com/framer/motion/issues/2094 */}
+          <LazyMotion features={domMax}>
+            <Start />
+          </LazyMotion>
+        </OverlayLayersProvider>
+      </CompactModeProvider>
     </StorageContext.Provider>,
   );
 });

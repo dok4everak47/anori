@@ -106,14 +106,6 @@ const PerformanceAvgLcpSchema = z.object({
   n: z.number(),
 });
 
-const CloudAccountSchema = z
-  .object({
-    sessionToken: z.string(),
-    email: z.string(),
-    userId: z.string(),
-  })
-  .nullable();
-
 // ============================================================================
 // Schema Definition
 // ============================================================================
@@ -307,52 +299,6 @@ export const schemaV1 = defineSchemaVersion(1, {
     includedInBackup: true,
   }),
 
-  // Cloud integration (not synced)
-  cloudAccount: cell({
-    key: "cloudAccount",
-    schema: CloudAccountSchema,
-    defaultValue: null,
-    sync: "off",
-    includedInBackup: false,
-  }),
-  cloudSyncSettings: cell({
-    key: "cloudSyncSettings",
-    schema: z
-      .object({
-        profileId: z.string(),
-        latestSeq: z.number(),
-        // Observed current schema version of the cloud profile.
-        profileSchemaVersion: z.number().optional(),
-        // Cloud schema version our local data is reconciled to.
-        syncedSchemaVersion: z.number().optional(),
-      })
-      .nullable(),
-    defaultValue: null,
-    sync: "off",
-    includedInBackup: false,
-  }),
-  shareOpenTabs: cell({
-    key: "shareOpenTabs",
-    schema: z.boolean(),
-    defaultValue: false,
-    sync: "off",
-    includedInBackup: false,
-  }),
-  deviceId: cell({
-    key: "deviceId",
-    schema: z.string().nullable(),
-    defaultValue: null,
-    sync: "off",
-    includedInBackup: false,
-  }),
-  deviceRegisteredForUserId: cell({
-    key: "deviceRegisteredForUserId",
-    schema: z.string().nullable(),
-    defaultValue: null,
-    sync: "off",
-    includedInBackup: false,
-  }),
-
   // Plugin storage collections
   pluginConfig: collection({
     keyPrefix: "PluginConfig",
@@ -515,28 +461,6 @@ export const schemaV2 = defineSchemaVersion(2, {
     },
     sync: "user",
     includedInBackup: true,
-  }),
-
-  // User-scope sync cursor/version state. Deliberately separate from cloudSyncSettings: user
-  // cells are account-global, so this must survive profile switches.
-  cloudUserSyncState: cell({
-    key: "cloudUserSyncState",
-    schema: z
-      .object({
-        latestSeq: z.number(),
-        // Observed schema version of the account's user-cell store.
-        userSchemaVersion: z.number().optional(),
-        // User-store schema version our local user cells are reconciled to.
-        syncedSchemaVersion: z.number().optional(),
-        // Which account the local user-scope data was last synced against. Survives logout so
-        // a later login can tell "same account, resume" from "different account, ask what to
-        // do with the local copy".
-        ownerUserId: z.string().optional(),
-      })
-      .nullable(),
-    defaultValue: null,
-    sync: "off",
-    includedInBackup: false,
   }),
 });
 

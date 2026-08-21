@@ -13,7 +13,6 @@ const RELEASE = "releaseNotes.v2_1_0";
 
 const MINOR_CHANGES = [
   { tag: "tagNew", key: "minorPopup" },
-  { tag: "tagNew", key: "minorDevices" },
   { tag: "tagImproved", key: "minorTabsPlugin" },
   { tag: "tagImproved", key: "minorWidgetHeaders" },
   { tag: "tagImproved", key: "minorPlurals" },
@@ -128,11 +127,6 @@ export const WhatsNewImpl = () => {
 
           <Feature icon={builtinIcons.archive} title={t(`${RELEASE}.stashTitle`)}>
             <p>{t(`${RELEASE}.stashBody`)}</p>
-            <p>{t(`${RELEASE}.stashSync`)}</p>
-          </Feature>
-
-          <Feature icon={builtinIcons.tabsFill} title={t(`${RELEASE}.syncedTabsTitle`)}>
-            <p>{t(`${RELEASE}.syncedTabsBody`)}</p>
           </Feature>
 
           <Feature icon={builtinIcons.checklist} title={t("releaseNotes.alsoInThisRelease")}>

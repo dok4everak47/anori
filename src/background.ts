@@ -1,5 +1,3 @@
-import { ensureDeviceRegistered } from "@anori/cloud-integration/device-registration";
-import { performSync } from "@anori/cloud-integration/sync-manager";
 import { availablePlugins } from "@anori/plugins/all";
 import { incrementDailyUsageMetric, sendAnalyticsIfEnabled, trackEvent } from "@anori/utils/analytics";
 import type { AnalyticEvents, UsageQuantifiableMetrics } from "@anori/utils/analytics-events";
@@ -242,17 +240,12 @@ availablePlugins.forEach((plugin) => {
   }
 });
 
-ensureDeviceRegistered();
-
 browser.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "scheduledCallbacks") {
     runScheduledCallbacks();
   }
   if (alarm.name === "sendAnalytics") {
     sendAnalyticsIfEnabled();
-  }
-  if (alarm.name === "backgroundSync") {
-    getAnoriStorage().then((storage) => performSync(storage));
   }
   if (alarm.name === "orphanGc") {
     getAnoriStorage().then((storage) => {
@@ -286,10 +279,6 @@ browser.alarms.create("scheduledCallbacks", {
 
 browser.alarms.create("sendAnalytics", {
   periodInMinutes: 60,
-});
-
-browser.alarms.create("backgroundSync", {
-  periodInMinutes: 15,
 });
 
 browser.alarms.create("orphanGc", {

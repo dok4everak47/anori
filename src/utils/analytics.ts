@@ -174,7 +174,6 @@ const gatherDailyUsageData = async (): Promise<AnalyticEvents["Usage statistics"
   const dailyUsageMetrics = storage.get(anoriSchema.dailyUsageMetrics);
   const performanceAvgLcp = storage.get(anoriSchema.performanceAvgLcp);
   const performanceRawInp = storage.get(anoriSchema.performanceRawInp);
-  const shareOpenTabs = storage.get(anoriSchema.shareOpenTabs) ?? false;
 
   const { os } = await browser.runtime.getPlatformInfo();
   const extVersion = browser.runtime.getManifest().version;
@@ -195,7 +194,6 @@ const gatherDailyUsageData = async (): Promise<AnalyticEvents["Usage statistics"
     "Color mode": colorScheme,
     "Performance / Avg LCP": performanceAvgLcp.avg || null,
     "Performance / INP": aggregateInp(performanceRawInp),
-    "Tab sync enabled": shareOpenTabs,
     ...(await gatherStashMetrics()),
     ...dailyUsageMetrics,
     ...(await gatherUsedWidgetsCount()),

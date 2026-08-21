@@ -1,7 +1,6 @@
 import { CUSTOM_ICONS_SET_NAME, useCustomIcons } from "@anori/design-system/components/Icon/custom-icons";
 import type { IconifyInfo } from "@iconify/types";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const ICONIFY_API_BASE = `https://api.iconify.design`;
@@ -9,6 +8,12 @@ export const ICONIFY_API_BASE = `https://api.iconify.design`;
 type IconSetInfo = {
   id: string;
   name: string;
+};
+
+type RemoteState<T> = {
+  data: T | undefined;
+  isLoading: boolean;
+  isError: boolean;
 };
 
 const fetchRemoteIconSets = async (): Promise<IconSetInfo[]> => {
@@ -23,9 +28,31 @@ const fetchRemoteIconSets = async (): Promise<IconSetInfo[]> => {
     }));
 };
 
+const useRemoteState = <T>(queryFn: () => Promise<T>): RemoteState<T> => {
+  const [state, setState] = useState<RemoteState<T>>({ data: undefined, isLoading: true, isError: false });
+
+  useEffect(() => {
+    let cancelled = false;
+    setState({ data: undefined, isLoading: true, isError: false });
+    queryFn()
+      .then((data) => {
+        if (!cancelled) setState({ data, isLoading: false, isError: false });
+      })
+      .catch(() => {
+        if (!cancelled) setState({ data: undefined, isLoading: false, isError: true });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [queryFn]);
+
+  return state;
+};
+
 export const useIconSets = () => {
   const { t } = useTranslation();
-  const { data, isLoading, isError } = useQuery({ queryKey: ["icon", "sets"], queryFn: fetchRemoteIconSets });
+  const queryFn = useMemo(() => fetchRemoteIconSets, []);
+  const { data, isLoading, isError } = useRemoteState(queryFn);
   const iconSetIds = useMemo(() => [CUSTOM_ICONS_SET_NAME, ...(data ?? []).map((s) => s.id)], [data]);
   const prettyNames = useMemo(
     () => Object.fromEntries([[CUSTOM_ICONS_SET_NAME, t("customIcons")], ...(data ?? []).map((s) => [s.id, s.name])]),
@@ -80,16 +107,13 @@ const getRemoteIcons = async ({ set, searchQuery }: GetRemoteIconsOptions): Prom
 };
 
 export const useIconsSuspense = ({ set, searchQuery }: GetRemoteIconsOptions) => {
-  const { data, isLoading, isError } = useSuspenseQuery({
-    queryKey: ["icon", "list", set, searchQuery],
-
-    queryFn: () => {
-      if (!set && !searchQuery) return [];
-      if (set === CUSTOM_ICONS_SET_NAME) return [];
-      return getRemoteIcons({ set, searchQuery });
-    },
-  });
   const { customIcons } = useCustomIcons();
+  const enabled = Boolean(set || searchQuery);
+  const queryFn = useMemo(
+    () => () => (enabled ? getRemoteIcons({ set, searchQuery }) : Promise.resolve([])),
+    [enabled, searchQuery, set],
+  );
+  const { data, isLoading, isError } = useRemoteState(queryFn);
   const allIcons = useMemo(() => {
     const matchingCustomIcons =
       set && set !== CUSTOM_ICONS_SET_NAME

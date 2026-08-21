@@ -119,7 +119,6 @@ export const applyOnboardingPreset = async ({
       await storage.set(anoriSchema.tasksWidgetStore.store.byId(tasksWidget.instanceId), {
         tasks: [
           { id: guid(), text: t("onboarding.preset.task.themes") },
-          { id: guid(), text: t("onboarding.preset.task.anoriPlus") },
           { id: guid(), text: t("onboarding.preset.task.widgets") },
         ],
       });

@@ -55,70 +55,6 @@
             "title": "Oops",
             "description": "Widget failed to render, check console for details."
         },
-        "cloud": {
-            "connect": "Connect",
-            "connected": "Connected",
-            "disconnect": "Disconnect",
-            "cancel": "Cancel",
-            "account": "Anori Plus",
-            "login": "Log in",
-            "logout": "Log out",
-            "email": "Email",
-            "password": "Password",
-            "connectedAs": "Connected as",
-            "syncPausedBehind": "This copy of Anori is older than another device on this profile, so syncing is paused until it updates. Changes you make until then won't sync to your other devices, but they're saved to a backup before the update, in case you ever need them.",
-            "preUpdateBackup": "Backup from before your last update ({{date}})",
-            "downloadBackup": "Download",
-            "noAccount": "Don't have an account?",
-            "createAccount": "Create one here",
-            "userDataConflict": {
-                "description": "This browser has Anori Plus data — for example your Tab stash — that was synced to a different account than the one you're signing in to. What should happen to it?",
-                "upload": "Add it to this account",
-                "uploadHint": "Keeps this data and merges it into the account you're signing in to. Choose this if it's yours — for example if you switched to a new account.",
-                "discard": "Discard it",
-                "discardHint": "Removes it from this browser and uses whatever this account already has instead. Choose this if it belongs to the other account or you don't need it here."
-            },
-            "plusDescription": "Anori Plus is an additional service for Anori that lets you sync your configuration between multiple browsers and devices in real time.",
-            "learnMore": "Learn more",
-            "profiles": "Profiles",
-            "noProfiles": "No profiles found. Create your first profile to sync settings between browsers.",
-            "createProfile": "Create profile",
-            "profileName": "Profile name",
-            "createdAt": "Created {{date}}",
-            "lastSyncedAt": "Last used {{date}}",
-            "create": "Create",
-            "profileCreatedSuccess": "Profile created! You can now connect other browsers to this profile and your settings will be synced between them.",
-            "confirm": "Confirm",
-            "rename": "Rename",
-            "delete": "Delete",
-            "deleteConfirmation": "Are you sure you want to delete profile \"{{profileName}}\"? This action cannot be undone.",
-            "connectConfirmation": {
-                "message": "Connecting to profile \"{{profileName}}\" will overwrite your current local configuration with the one stored in the profile. Do you want to continue?"
-            },
-            "settings": {
-                "title": "Settings",
-                "shareOpenTabs": "Share open tabs with other connected devices",
-                "shareOpenTabsHint": "When enabled, the tabs open on this computer are shared with your other devices signed in to this Anori account — so you can see and reopen tabs from any of them."
-            },
-            "devices": {
-                "title": "Devices",
-                "thisDevice": "This device",
-                "rename": "Rename device",
-                "remove": "Remove device",
-                "removeConfirmation": "Remove \"{{name}}\" from your account? It will be signed out and stop syncing.",
-                "namePlaceholder": "Device name",
-                "lastActive": "active {{date}}",
-                "empty": "No devices are signed in to this account yet"
-            },
-            "error": {
-                "invalidCredentials": "Invalid email or password",
-                "unknown": "Something went wrong. Please try again.",
-                "failedToLoadProfiles": "Failed to load profiles",
-                "failedToLoadDevices": "Failed to load devices",
-                "profileNameRequired": "Profile name is required",
-                "failedToCreateProfile": "Failed to create profile"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Custom icons are icons which you upload for later use in Anori.",
             "customIconsAbsent": "Currently, you don't have any custom icons. To upload your first custom icon please head to settings.",
@@ -216,8 +152,6 @@
                 "info": "Here you can backup your settings or restore older backup.",
                 "import": "Import",
                 "export": "Export",
-                "cloudWarning": "You have cloud sync enabled. Importing a backup will disconnect you from your sync profile. You will need to reconnect after import. Continue?",
-                "cloudSyncHint": "Want to backup you configuration to cloud or sync it across devices in real time? Try <0>Anori Plus</0> — it does this seamlessly.",
                 "importError": "Couldn't import backup: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Try different themes in settings",
-                    "anoriPlus": "Check out Anori Plus",
                     "widgets": "Explore available widgets"
                 }
             }
@@ -375,16 +308,6 @@
                 "grantTabs": "Additional permissions are required for Tabs stash feature",
                 "recentlyStashed": "Recently stashed",
                 "nothingStashed": "Nothing stashed yet"
-            },
-            "syncedTabs": {
-                "title": "Synced tabs",
-                "loading": "Loading tabs...",
-                "unnamedGroup": "Group",
-                "notConnectedTitle": "See tabs from your other devices",
-                "notConnectedDescription": "Connect Anori Plus to sync open tabs across your devices.",
-                "connect": "Connect",
-                "emptyTitle": "No other devices are sharing tabs yet",
-                "emptyDescription": "Log into your Anori Plus account on another computer and turn on tab sync there."
             }
         },
         "tasks-plugin": {
@@ -500,11 +423,7 @@
                 "headline": "Now with extended Tabs plugin. Keep the links you mean to get back to, and pick up the tabs you left open on another device.",
                 "stashTitle": "Tab stash",
                 "stashBody": "Use this widget to store the links you mean to get back to later. Keep them on your new tab so you'll actually remember them. A tab can be stashed from the widget itself or from the new Anori popup window, just click on the Anori icon in the extension's toolbar.",
-                "stashSync": "With Anori Plus your stash is shared across every browser you're signed into, and across all profiles.",
-                "syncedTabsTitle": "Synced tabs",
-                "syncedTabsBody": "See what's open on your other devices, and effortlessly pick up where you left off on a previous device. Please note that this feature requires Anori Plus and an explicit opt-in in settings.",
                 "minorPopup": "Clicking the Anori icon in the toolbar now opens a popup instead of just opening a new tab.",
-                "minorDevices": "Settings gained a Devices section, where you can see everything signed into your Anori Plus account, and rename or remove it.",
                 "minorTabsPlugin": "The Recently closed tabs widget was folded into a new Tabs plugin alongside the two widgets above, and it can now be resized taller than before.",
                 "minorWidgetHeaders": "Tasks, Notes, RSS feed, Weather forecast and Recently closed tabs now share one header layout, so their titles and buttons line up side by side.",
                 "minorPlurals": "Translated languages now use correct plural forms, instead of borrowing English's one-or-many rule.",

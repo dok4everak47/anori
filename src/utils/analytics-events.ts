@@ -33,7 +33,6 @@ export type AnalyticEvents = {
     "Stash / Stashes count": number;
     "Stash / Entries count": number;
     "Stash / Group entries count": number;
-    "Tab sync enabled": boolean;
   } & DailyUsageMetrics &
     WidgetsCount;
   "Configuration imported": NoParams;
