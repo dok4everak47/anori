@@ -61,15 +61,15 @@ const cardCss = css({
 });
 
 const cardBackgroundCss = css({
-  backgroundColor: "color-mix(in srgb, var(--ds-surface) calc(var(--anori-widget-opacity, 1) * 100%), transparent)!",
-  "[data-glass] &": {
-    backgroundImage: "linear-gradient(180deg, var(--ds-glass-highlight) 0%, transparent 45%)",
-    backdropFilter: "blur(20px) saturate(200%)",
-    boxShadow:
-      "{shadows.surface.edge}, inset 0 1px 0 0 var(--ds-glass-highlight), inset 0 0 0 1px color-mix(in srgb, var(--ds-glass-highlight) 55%, transparent)",
-    "&[data-busy]": {
-      backdropFilter: "none",
-    },
+  backgroundColor:
+    "color-mix(in srgb, var(--ds-surface) calc(18% + var(--anori-widget-opacity, 1) * 30%), transparent)!",
+  backgroundImage:
+    "linear-gradient(180deg, color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent) 0%, transparent 35%), linear-gradient(180deg, color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent) 0%, transparent 10%)",
+  backdropFilter: "blur(calc(8px + var(--anori-widget-opacity, 1) * 26px)) saturate(190%)",
+  boxShadow:
+    "{shadows.surface.edge}, inset 0 1px 0 0 color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent), inset 0 0 0 1px color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 70%, transparent)",
+  "&[data-busy]": {
+    backdropFilter: "none",
   },
 });
 const cardPaddedCss = css({ padding: "4" });

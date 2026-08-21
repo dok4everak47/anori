@@ -85,7 +85,6 @@ export const Workspace = ({
   const [whatsNewVisible, setWhatsNewVisible] = useState(false);
   const [hasUnreadReleaseNotes, setHasUnreadReleaseNotes] = useStorageValue(anoriSchema.hasUnreadReleaseNotes);
   const [widgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
-  const glassEnabled = (widgetBackgroundOpacity ?? 100) < 100;
   const { blockSize, minBlockSize } = useSizeSettings();
   const mainRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -179,7 +178,6 @@ export const Workspace = ({
         <div
           ref={panelRef}
           className={widgetsArea({ orientation, bookmarksBar: bookmarksBarVisible })}
-          data-glass={glassEnabled ? "" : undefined}
           style={
             {
               "--anori-widget-opacity": (widgetBackgroundOpacity ?? 100) / 100,

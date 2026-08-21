@@ -221,7 +221,7 @@
 <!-- 每条：加粗引导词 + 全角冒号 + 描述。编号承担顺序，每节从 1 重新计数；不适用的节直接删掉。 -->
 <h2>新功能</h2>
 <ol class="changes">
-  <li><strong>液态玻璃背景</strong>：将透明度滑到 100% 以下，Widget 会自动启用 <span class="hl">backdrop-filter</span> 模糊并提亮背后的壁纸，叠加边缘高光，呈现 macOS Tahoe 式的液态玻璃质感；文字与图标仍保持完全清晰。</li>
+  <li><strong>液态玻璃背景</strong>：Widget 背景滑块现在是液态与磨砂之间的连续过渡——0% 是低模糊、强光泽与折射的液态玻璃，100% 是高模糊雾面的磨砂玻璃，中间平滑过渡；背景始终半透明，文字与图标保持清晰。</li>
   <li><strong>满不透明零成本</strong>：透明度为 100% 时不启用任何 backdrop-filter，不产生额外合成层，性能与以往一致。</li>
   <li><strong>拖动与调整时暂停模糊</strong>：拖拽或调整 Widget 尺寸期间，玻璃模糊会临时关闭，避免位置变化反复重算导致卡顿，松手后恢复。</li>
 </ol>
@@ -233,7 +233,7 @@
 
 <div class="thanks">
   <div class="thanks-label">备注</div>
-  想看到液态玻璃效果，请在「主题」设置里把「Widget 背景透明度」调到 95% 或更低；越低越通透。该效果依赖浏览器的 backdrop-filter，Chrome 与 Firefox 均已支持。
+  想看液态玻璃就把滑块拉到 0%，想看磨砂玻璃就拉到 100%，中间是两者的过渡。该效果依赖浏览器的 backdrop-filter，Chrome 与 Firefox 均已支持。
 </div>
 
 <!-- FOOTER -->
