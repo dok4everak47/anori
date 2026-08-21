@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.0
+
+- **New.** Custom theme backgrounds now have a fill color option. When a portrait photo is set to "Fit screen (whole image)", the letterbox areas on the sides are no longer stuck with the page background — pick a preset or any custom color, or restore the default.
+- **Fixed.** Entering the theme editor or changing the background image no longer makes the page flash — the new backdrop is preloaded before it replaces the current one, so the swap is seamless.
+
 ## 2.3.0
 
 - **Removed.** Anori Plus, cloud sync, and all payment/subscription features. Local widget data and settings are preserved; cross-device syncing is no longer available.

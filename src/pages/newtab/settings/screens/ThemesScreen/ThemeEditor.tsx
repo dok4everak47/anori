@@ -28,7 +28,7 @@ import {
 import { useCurrentTheme } from "@anori/utils/user-data/theme-hooks";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { css } from "styled-system/css";
+import { css, cva, cx } from "styled-system/css";
 
 const PREVIEW_MODES: Mode[] = ["light", "dark"];
 const PREVIEW_MODE_LABEL_KEY: Record<Mode, string> = {
@@ -80,6 +80,38 @@ const previewImage = css({ position: "absolute" });
 const backgroundSection = css({ display: "flex", flexDirection: "column", gap: "2" });
 const editorActions = css({ display: "flex", justifyContent: "flex-end", gap: "3" });
 
+const DEFAULT_FILL = "#121615";
+const FILL_PRESETS = ["#000000", DEFAULT_FILL, "#6e7a7f", "#f4f7f5", "#ffffff"];
+
+const fillSwatches = css({ display: "flex", alignItems: "center", gap: "2", flexWrap: "wrap" });
+const fillSwatch = cva({
+  base: {
+    position: "relative",
+    width: "1.75rem",
+    height: "1.75rem",
+    padding: 0,
+    borderRadius: "full",
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderColor: "frosted.strong",
+    overflow: "hidden",
+    cursor: "pointer",
+  },
+  variants: { active: { true: { borderColor: "accent" } } },
+});
+const fillNoneSwatch = css({
+  backgroundImage:
+    "linear-gradient(135deg, transparent calc(50% - 0.5px), var(--ds-text-subtle) calc(50% - 0.5px), var(--ds-text-subtle) calc(50% + 0.5px), transparent calc(50% + 0.5px))",
+});
+const fillColorInput = css({
+  position: "absolute",
+  inset: 0,
+  width: "100%",
+  height: "100%",
+  opacity: 0,
+  cursor: "pointer",
+});
+
 export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: CustomTheme; onClose: VoidFunction }) => {
   const loadBackground = async () => {
     const files = await showOpenFilePicker(false, ".jpg,.jpeg,.png");
@@ -121,8 +153,9 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
         if (!blob) return;
         blurredBackgroundBlob.current = blob;
         const url = URL.createObjectURL(blurredBackgroundBlob.current);
+        const previousUrl = backgroundUrlRef.current;
         setBackgroundUrl(url);
-        setPageBackground(url);
+        setPageBackground(url, previousUrl);
         URL.revokeObjectURL(bgUrl);
       }, "image/png");
     };
@@ -154,6 +187,7 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
       hideDotPattern: theme.hideDotPattern,
       backgroundFit: theme.backgroundFit ?? "cover",
       backgroundAnchor: theme.backgroundAnchor ?? "center",
+      backgroundColor: theme.backgroundColor,
     };
     const storage = await getAnoriStorage();
     let customThemes = storage.get(anoriSchema.customThemes);
@@ -220,9 +254,6 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
   const blurredBackgroundBlob = useRef<Blob | null>(null);
   const backgroundPickedRef = useRef(false);
   const [backgroundUrl, setBackgroundUrl] = useState<string | null>(null);
-  useEffect(() => {
-    return () => (backgroundUrl ? URL.revokeObjectURL(backgroundUrl) : undefined);
-  }, [backgroundUrl]);
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
   useEffect(() => {
     return () => (originalUrl ? URL.revokeObjectURL(originalUrl) : undefined);
@@ -260,6 +291,16 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
 
   const runAfterRender = useRunAfterNextRender();
   const previewBlur = theme.blur * previewScale;
+
+  const setFillColor = (color: string | undefined) => {
+    setTheme((p) => ({ ...p, backgroundColor: color }));
+    applyThemeDecorations({
+      hideDotPattern: theme.hideDotPattern,
+      fit: theme.backgroundFit ?? "cover",
+      anchor: theme.backgroundAnchor ?? "center",
+      backgroundColor: color,
+    });
+  };
 
   return (
     <div className={editorPanel}>
@@ -323,6 +364,7 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
               hideDotPattern: theme.hideDotPattern,
               fit,
               anchor: theme.backgroundAnchor ?? "center",
+              backgroundColor: theme.backgroundColor,
             });
           }}
           getOptionKey={(o) => o}
@@ -340,11 +382,46 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
               hideDotPattern: theme.hideDotPattern,
               fit: theme.backgroundFit ?? "cover",
               anchor,
+              backgroundColor: theme.backgroundColor,
             });
           }}
           getOptionKey={(o) => o}
           getOptionLabel={(o) => t(BACKGROUND_ANCHOR_LABEL_KEY[o])}
         />
+      </Field>
+
+      <Field label={`${t("settings.theme.fillColor")}:`} description={t("settings.theme.fillColorHint")}>
+        <div className={fillSwatches}>
+          <button
+            type="button"
+            className={cx(fillSwatch({ active: !theme.backgroundColor }), fillNoneSwatch)}
+            onClick={() => setFillColor(undefined)}
+            aria-label={t("settings.theme.fillColorNone")}
+          />
+          {FILL_PRESETS.map((color) => (
+            <button
+              key={color}
+              type="button"
+              className={fillSwatch({ active: theme.backgroundColor === color })}
+              style={{ backgroundColor: color }}
+              onClick={() => setFillColor(color)}
+              aria-label={color}
+            />
+          ))}
+          <div
+            className={cx(
+              fillSwatch({ active: !!theme.backgroundColor && !FILL_PRESETS.includes(theme.backgroundColor) }),
+            )}
+            style={{ backgroundColor: theme.backgroundColor ?? DEFAULT_FILL }}
+          >
+            <input
+              type="color"
+              className={fillColorInput}
+              value={theme.backgroundColor ?? DEFAULT_FILL}
+              onChange={(e) => setFillColor(e.target.value)}
+            />
+          </div>
+        </div>
       </Field>
 
       <HueChromaPicker

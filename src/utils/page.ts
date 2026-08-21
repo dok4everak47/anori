@@ -10,6 +10,15 @@ export const setPageTitle = (title: string) => {
   document.title = title;
 };
 
-export const setPageBackground = (bg: string) => {
-  document.documentElement.style.setProperty("--background-image", `url('${bg}')`);
+let pendingBackground: string | null = null;
+
+export const setPageBackground = (bg: string, revokePrevious?: string | null) => {
+  pendingBackground = bg;
+  const img = new Image();
+  img.onload = () => {
+    if (pendingBackground !== bg) return;
+    document.documentElement.style.setProperty("--background-image", `url('${bg}')`);
+    if (revokePrevious) URL.revokeObjectURL(revokePrevious);
+  };
+  img.src = bg;
 };

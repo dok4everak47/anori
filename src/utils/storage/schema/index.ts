@@ -89,7 +89,11 @@ const CustomThemeSchema = z.object({
   backgroundAnchor: BackgroundAnchorSchema.optional(),
 });
 
-export type CustomTheme = z.infer<typeof CustomThemeSchema>;
+const CustomThemeSchemaV4 = CustomThemeSchema.extend({
+  backgroundColor: z.string().optional(),
+});
+
+export type CustomTheme = z.infer<typeof CustomThemeSchemaV4>;
 
 const ColorSchemeSchema = z.enum(["light", "dark", "system"]);
 export type ColorScheme = z.infer<typeof ColorSchemeSchema>;
@@ -451,9 +455,27 @@ const migrateV2ToV3 = createMigration(schemaV2, schemaV3, async (ctx) => {
   );
 });
 
+export const schemaV4 = defineSchemaVersion(4, {
+  ...schemaV3.definition,
+  customThemes: cell({
+    key: "customThemes",
+    schema: z.array(CustomThemeSchemaV4),
+    defaultValue: [],
+    sync: "profile",
+    includedInBackup: true,
+  }),
+});
+
+export type AnoriSchemaV4 = typeof schemaV4.definition;
+
+const migrateV3ToV4 = createMigration(schemaV3, schemaV4, async (ctx) => {
+  const oldThemes = ctx.from.get(ctx.from.schema.customThemes) ?? [];
+  ctx.to.set(ctx.to.schema.customThemes, oldThemes);
+});
+
 export const anoriVersionedSchema = defineVersionedSchema({
-  versions: [schemaV1, schemaV2, schemaV3],
-  migrations: [migrateV1ToV2, migrateV2ToV3],
+  versions: [schemaV1, schemaV2, schemaV3, schemaV4],
+  migrations: [migrateV1ToV2, migrateV2ToV3, migrateV3ToV4],
 });
 
 export const anoriSchema = anoriVersionedSchema.latestSchema.definition;

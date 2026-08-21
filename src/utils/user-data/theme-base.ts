@@ -33,6 +33,7 @@ export type CustomTheme = {
   hideDotPattern?: boolean;
   backgroundFit?: BackgroundFit;
   backgroundAnchor?: BackgroundAnchor;
+  backgroundColor?: string;
 };
 
 export type PartialCustomTheme = {
@@ -43,6 +44,7 @@ export type PartialCustomTheme = {
   hideDotPattern?: boolean;
   backgroundFit?: BackgroundFit;
   backgroundAnchor?: BackgroundAnchor;
+  backgroundColor?: string;
   background?: string;
   originalBackground?: string;
 };
@@ -133,7 +135,12 @@ export const applyTheme = async (theme: Theme, mode: Mode) => {
   applyThemeColors(theme.accent, mode);
   applyThemeDecorations(
     theme.type === "custom"
-      ? { hideDotPattern: theme.hideDotPattern, fit: theme.backgroundFit, anchor: theme.backgroundAnchor }
+      ? {
+          hideDotPattern: theme.hideDotPattern,
+          fit: theme.backgroundFit,
+          anchor: theme.backgroundAnchor,
+          backgroundColor: theme.backgroundColor,
+        }
       : {},
   );
   await prom;
@@ -143,6 +150,7 @@ export type ThemeDecorations = {
   hideDotPattern?: boolean;
   fit?: BackgroundFit;
   anchor?: BackgroundAnchor;
+  backgroundColor?: string;
 };
 
 const BACKGROUND_SIZE: Record<BackgroundFit, string> = {
@@ -174,6 +182,11 @@ export const applyThemeDecorations = (decorations: ThemeDecorations) => {
     "--background-repeat",
     decorations.fit === "tile" ? "repeat" : "no-repeat",
   );
+  if (decorations.backgroundColor) {
+    document.documentElement.style.setProperty("--background-color", decorations.backgroundColor);
+  } else {
+    document.documentElement.style.removeProperty("--background-color");
+  }
 };
 
 export const applyThemeColors = (accent: OklchColor, mode: Mode) => {
