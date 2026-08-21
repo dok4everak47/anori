@@ -1,5 +1,4 @@
 import { ShortcutsHelp } from "@anori/components/ShortcutsHelp";
-import { WhatsNew } from "@anori/components/WhatsNew";
 import { Modal } from "@anori/design-system/components/Modal/Modal";
 import { useSizeSettings } from "@anori/utils/compact";
 import { FolderContentContext } from "@anori/utils/FolderContentContext";
@@ -15,6 +14,7 @@ import { type CSSProperties, useCallback, useMemo, useRef, useState } from "reac
 import { useTranslation } from "react-i18next";
 import useMeasure from "react-use-motion-measure";
 import { css, cva } from "styled-system/css";
+import browser from "webextension-polyfill";
 import { NewWidgetWizard, SettingsModal } from "../../lazy-components";
 import type { SettingScreen } from "../../settings/Settings";
 import { EditModeToolbar } from "../EditModeToolbar/EditModeToolbar";
@@ -22,6 +22,8 @@ import { EditWidgetModal } from "../EditWidgetModal";
 import { FolderContent } from "../FolderContent";
 import { Sidebar } from "../Sidebar";
 import type { LayoutChange } from "../WidgetsGrid/WidgetsGrid";
+
+const CHANGELOG_URL = "https://github.com/dok4everak47/anori/blob/master/CHANGELOG.md";
 
 type WorkspaceProps = {
   folders: Folder[];
@@ -82,7 +84,6 @@ export const Workspace = ({
   const [editingWidget, setEditingWidget] = useState<null | WidgetInFolderWithMeta>(null);
   const [settingsScreen, setSettingsScreen] = useState<SettingScreen | null>(null);
   const [shortcutsHelpVisible, setShortcutsHelpVisible] = useState(false);
-  const [whatsNewVisible, setWhatsNewVisible] = useState(false);
   const [hasUnreadReleaseNotes, setHasUnreadReleaseNotes] = useStorageValue(anoriSchema.hasUnreadReleaseNotes);
   const [widgetBackgroundOpacity] = useStorageValue(anoriSchema.widgetBackgroundOpacity);
   const { blockSize, minBlockSize } = useSizeSettings();
@@ -130,8 +131,8 @@ export const Workspace = ({
   const handleDoneEditing = useCallback(() => setIsEditing(false), []);
   const handleAddWidget = useCallback(() => setAddWidgetWizardVisible(true), []);
   const handleOpenWhatsNew = useCallback(() => {
-    setWhatsNewVisible(true);
     setHasUnreadReleaseNotes(false);
+    void browser.runtime.sendMessage({ type: "open-url", url: CHANGELOG_URL, inNewTab: true, active: true });
   }, [setHasUnreadReleaseNotes]);
   const handleOpenSettings = useCallback(() => setSettingsScreen("general"), []);
 
@@ -229,14 +230,6 @@ export const Workspace = ({
         {shortcutsHelpVisible && (
           <Modal title={t("shortcuts.title")} closable onClose={() => setShortcutsHelpVisible(false)}>
             <ShortcutsHelp />
-          </Modal>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {whatsNewVisible && (
-          <Modal title={t("whatsNew")} flush closable onClose={() => setWhatsNewVisible(false)}>
-            <WhatsNew />
           </Modal>
         )}
       </AnimatePresence>

@@ -1,5 +1,4 @@
 import { ReactMarkdown } from "@anori/components/ReactMarkdown";
-import { WhatsNew } from "@anori/components/WhatsNew";
 import { Combobox } from "@anori/design-system/components/Combobox/Combobox";
 import { Popover } from "@anori/design-system/components/Popover/Popover";
 import { Select } from "@anori/design-system/components/Select/Select";
@@ -16,7 +15,6 @@ export const scheduleLazyComponentsPreload = () =>
     Combobox.preload,
     Popover.preload,
     ReactMarkdown.preload,
-    WhatsNew.preload,
     SettingsModal.preload,
     NewWidgetWizard.preload,
   ]);

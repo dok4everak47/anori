@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.3.0
+
+- **Removed.** Anori Plus, cloud sync, and all payment/subscription features. Local widget data and settings are preserved; cross-device syncing is no longer available.
+- **Breaking.** Removed all non-English UI languages. The interface is now English-only; existing users on other languages switch to English.
+- **Fixed.** Removed moment locale dynamic imports to fix "Failed to fetch dynamically imported module" chunk loading errors.
+- **Fixed.** Silenced i18next debug logging that printed to the service worker console on every startup.
+
+## 2.2.0
+
+- **New.** Widget backgrounds now use a liquid-to-frost glass gradient. Slide the glass frost control toward 0% for liquid glass (glossy, clear) or 100% for frosted glass (matte, blurred). Text and icons stay opaque.
+- **Fixed.** Background rendering no longer disappears at 0% opacity; the glass blur and edge highlight are always present.
+
 ## 2.1.0
 
 - **New.** Tab stash widget. Use it to store the links you mean to get back to later, and keep them on your new tab so you'll actually remember them. A tab can be stashed from the widget itself or from the new Anori popup window — just click the Anori icon in the extension's toolbar. With Anori Plus your stash is shared across every browser you're signed into, and across all profiles.

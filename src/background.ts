@@ -39,6 +39,8 @@ const VERSIONS_WITH_CHANGES = [
   "2.0.0",
   "2.0.2",
   "2.1.0",
+  "2.2.0",
+  "2.3.0",
 ];
 
 const compareVersions = (v1: string, v2: string): -1 | 0 | 1 => {
