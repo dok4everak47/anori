@@ -55,70 +55,6 @@
             "title": "Ối",
             "description": "Widget không thể hiển thị, kiểm tra console để biết thêm chi tiết."
         },
-        "cloud": {
-            "connect": "Kết nối",
-            "connected": "Đã kết nối",
-            "disconnect": "Ngắt kết nối",
-            "cancel": "Hủy",
-            "account": "Anori Plus",
-            "login": "Đăng nhập",
-            "logout": "Đăng xuất",
-            "email": "Email",
-            "password": "Mật khẩu",
-            "connectedAs": "Đã kết nối với",
-            "syncPausedBehind": "Bản sao Anori này cũ hơn một thiết bị khác trên hồ sơ này, vì vậy đồng bộ hóa bị tạm dừng cho đến khi cập nhật. Các thay đổi bạn thực hiện trong thời gian đó sẽ không được đồng bộ với các thiết bị khác, nhưng chúng sẽ được lưu vào bản sao lưu trước khi cập nhật, phòng khi bạn cần.",
-            "preUpdateBackup": "Bản sao lưu trước lần cập nhật gần nhất của bạn ({{date}})",
-            "downloadBackup": "Tải xuống",
-            "noAccount": "Chưa có tài khoản?",
-            "createAccount": "Tạo tại đây",
-            "userDataConflict": {
-                "description": "Trình duyệt này có dữ liệu Anori Plus — ví dụ như Kho tab của bạn — đã được đồng bộ với một tài khoản khác với tài khoản bạn đang đăng nhập. Bạn muốn xử lý dữ liệu đó như thế nào?",
-                "upload": "Thêm vào tài khoản này",
-                "uploadHint": "Giữ dữ liệu này và hợp nhất vào tài khoản bạn đang đăng nhập. Chọn tùy chọn này nếu dữ liệu là của bạn — ví dụ nếu bạn đã chuyển sang tài khoản mới.",
-                "discard": "Xóa đi",
-                "discardHint": "Xóa dữ liệu khỏi trình duyệt này và sử dụng dữ liệu hiện có của tài khoản thay thế. Chọn tùy chọn này nếu dữ liệu thuộc về tài khoản kia hoặc bạn không cần nó ở đây."
-            },
-            "plusDescription": "Anori Plus giúp bạn đồng bộ cấu hình giữa các trình duyệt và thiết bị theo thời gian thực.",
-            "learnMore": "Tìm hiểu thêm",
-            "profiles": "Hồ sơ",
-            "noProfiles": "Không tìm thấy hồ sơ. Hãy tạo hồ sơ đầu tiên để đồng bộ cài đặt.",
-            "createProfile": "Tạo hồ sơ",
-            "profileName": "Tên hồ sơ",
-            "createdAt": "Đã tạo {{date}}",
-            "lastSyncedAt": "Dùng lần cuối {{date}}",
-            "create": "Tạo",
-            "profileCreatedSuccess": "Đã tạo hồ sơ! Bây giờ bạn có thể kết nối các trình duyệt khác để đồng bộ.",
-            "confirm": "Xác nhận",
-            "rename": "Đổi tên",
-            "delete": "Xóa",
-            "deleteConfirmation": "Bạn chắc chắn muốn xóa hồ sơ \"{{profileName}}\"? Hành động này không thể hoàn tác.",
-            "connectConfirmation": {
-                "message": "Kết nối với \"{{profileName}}\" sẽ ghi đè cấu hình hiện tại của bạn. Bạn có muốn tiếp tục?"
-            },
-            "settings": {
-                "title": "Cài đặt",
-                "shareOpenTabs": "Chia sẻ các tab đang mở với các thiết bị được kết nối khác",
-                "shareOpenTabsHint": "Khi được bật, các tab đang mở trên máy tính này sẽ được chia sẻ với các thiết bị khác đã đăng nhập vào tài khoản Anori này — để bạn có thể xem và mở lại các tab từ bất kỳ thiết bị nào."
-            },
-            "devices": {
-                "title": "Thiết bị",
-                "thisDevice": "Thiết bị này",
-                "rename": "Đổi tên thiết bị",
-                "remove": "Xóa thiết bị",
-                "removeConfirmation": "Xóa \"{{name}}\" khỏi tài khoản của bạn? Thiết bị sẽ bị đăng xuất và ngừng đồng bộ.",
-                "namePlaceholder": "Tên thiết bị",
-                "lastActive": "hoạt động {{date}}",
-                "empty": "Chưa có thiết bị nào đăng nhập vào tài khoản này"
-            },
-            "error": {
-                "invalidCredentials": "Email hoặc mật khẩu không hợp lệ",
-                "unknown": "Đã xảy ra lỗi. Vui lòng thử lại.",
-                "failedToLoadProfiles": "Không thể tải hồ sơ",
-                "failedToLoadDevices": "Không thể tải danh sách thiết bị",
-                "profileNameRequired": "Tên hồ sơ là bắt buộc",
-                "failedToCreateProfile": "Không thể tạo hồ sơ"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Biểu tượng tùy chỉnh là biểu tượng bạn tải lên để dùng trong Anori.",
             "customIconsAbsent": "Bạn chưa có biểu tượng tùy chỉnh nào. Hãy vào Cài đặt để tải lên.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Bảng màu",
                 "previewColorScheme": "Bảng màu xem trước",
                 "hideDotPattern": "Ẩn họa tiết chấm",
-                "colorSchemeSystem": "Hệ thống",
-                "colorSchemeLight": "Sáng",
-                "colorSchemeDark": "Tối",
-                "widgetBackgroundOpacity": "Độ mờ nền tiện ích",
-                "widgetBackgroundOpacityHint": "Làm các tiện ích trong suốt nhiều hơn hoặc ít hơn. Việc này chỉ thay đổi bề mặt tiện ích; văn bản và biểu tượng vẫn giữ độ mờ.",
                 "fit": "Vừa vặn",
                 "fitCover": "Lấp đầy màn hình (cắt)",
                 "fitContain": "Vừa màn hình (toàn bộ ảnh)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Bên phải",
                 "anchorBottomLeft": "Dưới cùng bên trái",
                 "anchorBottomCenter": "Phía dưới",
-                "anchorBottomRight": "Dưới cùng bên phải"
+                "anchorBottomRight": "Dưới cùng bên phải",
+                "colorSchemeSystem": "Hệ thống",
+                "colorSchemeLight": "Sáng",
+                "colorSchemeDark": "Tối",
+                "widgetBackgroundOpacity": "Độ mờ nền tiện ích",
+                "widgetBackgroundOpacityHint": "Làm các tiện ích trong suốt nhiều hơn hoặc ít hơn. Việc này chỉ thay đổi bề mặt tiện ích; văn bản và biểu tượng vẫn giữ độ mờ."
             },
             "importExport": {
                 "title": "Nhập & Xuất",
                 "info": "Bạn có thể sao lưu hoặc khôi phục cài đặt tại đây.",
                 "import": "Nhập",
                 "export": "Xuất",
-                "cloudWarning": "Bạn đang bật đồng bộ đám mây. Việc nhập sao lưu sẽ ngắt kết nối hồ sơ. Tiếp tục?",
-                "cloudSyncHint": "Muốn sao lưu hoặc đồng bộ theo thời gian thực? Hãy thử <0>Anori Plus</0>.",
                 "importError": "Không thể nhập bản sao lưu: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Thử đổi giao diện trong Cài đặt",
-                    "anoriPlus": "Tìm hiểu Anori Plus",
                     "widgets": "Khám phá các tiện ích"
                 }
             }
@@ -374,16 +307,6 @@
                 "grantTabs": "Cần có thêm quyền cho tính năng lưu thẻ",
                 "recentlyStashed": "Đã lưu gần đây",
                 "nothingStashed": "Chưa có gì được lưu"
-            },
-            "syncedTabs": {
-                "title": "Tab đã đồng bộ",
-                "loading": "Đang tải tab...",
-                "unnamedGroup": "Nhóm",
-                "notConnectedTitle": "Xem các tab từ thiết bị khác của bạn",
-                "notConnectedDescription": "Kết nối Anori Plus để đồng bộ các tab đang mở trên các thiết bị của bạn.",
-                "connect": "Kết nối",
-                "emptyTitle": "Chưa có thiết bị nào khác đang chia sẻ tab",
-                "emptyDescription": "Đăng nhập vào tài khoản Anori Plus của bạn trên máy tính khác và bật đồng bộ tab ở đó."
             }
         },
         "tasks-plugin": {
@@ -499,11 +422,7 @@
                 "headline": "Nay có plugin Tabs mở rộng. Lưu lại những liên kết bạn muốn quay lại, và tiếp tục các tab bạn đã để mở trên thiết bị khác.",
                 "stashTitle": "Tab stash",
                 "stashBody": "Dùng widget này để lưu các liên kết bạn muốn quay lại sau. Giữ chúng trên tab mới để bạn thực sự nhớ đến chúng. Một tab có thể được stash từ chính widget hoặc từ cửa sổ popup Anori mới, chỉ cần nhấp vào biểu tượng Anori trên thanh công cụ tiện ích.",
-                "stashSync": "Với Anori Plus, stash của bạn được chia sẻ trên mọi trình duyệt bạn đã đăng nhập và trên tất cả các hồ sơ.",
-                "syncedTabsTitle": "Tab đã đồng bộ",
-                "syncedTabsBody": "Xem những gì đang mở trên các thiết bị khác của bạn và dễ dàng tiếp tục từ nơi bạn đã dừng trên thiết bị trước. Lưu ý rằng tính năng này yêu cầu Anori Plus và phải bật thủ công trong cài đặt.",
                 "minorPopup": "Nhấp vào biểu tượng Anori trên thanh công cụ giờ đây mở một popup thay vì chỉ mở tab mới.",
-                "minorDevices": "Cài đặt có thêm mục Thiết bị, nơi bạn có thể xem tất cả thiết bị đã đăng nhập vào tài khoản Anori Plus của mình, và đổi tên hoặc xóa chúng.",
                 "minorTabsPlugin": "Widget Tab đã đóng gần đây đã được gộp vào plugin Tabs mới cùng với hai widget trên, và giờ đây có thể thay đổi kích thước cao hơn trước.",
                 "minorWidgetHeaders": "Nhiệm vụ, Ghi chú, Nguồn RSS, Dự báo thời tiết và Tab đã đóng gần đây giờ dùng chung một bố cục tiêu đề, nên tiêu đề và nút của chúng được căn thẳng hàng nhau.",
                 "minorPlurals": "Các ngôn ngữ đã dịch giờ sử dụng dạng số nhiều chính xác, thay vì dùng quy tắc một-hoặc-nhiều của tiếng Anh.",

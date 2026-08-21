@@ -55,70 +55,6 @@
             "title": "Jejda",
             "description": "Widget se nepodařilo vykreslit, podrobnosti najdete v konzoli."
         },
-        "cloud": {
-            "connect": "Připojit",
-            "connected": "Připojeno",
-            "disconnect": "Odpojit",
-            "cancel": "Zrušit",
-            "account": "Anori Plus",
-            "login": "Přihlásit se",
-            "logout": "Odhlásit se",
-            "email": "E-mail",
-            "password": "Heslo",
-            "connectedAs": "Přihlášen jako",
-            "syncPausedBehind": "Tato kopie Anori je starší než jiné zařízení v tomto profilu, takže synchronizace je pozastavena, dokud se neaktualizuje. Změny, které do té doby provedete, se nesynchronizují s ostatními zařízeními, ale před aktualizací se uloží do zálohy pro případ, že byste je někdy potřebovali.",
-            "preUpdateBackup": "Záloha před poslední aktualizací ({{date}})",
-            "downloadBackup": "Stáhnout",
-            "noAccount": "Nemáte účet?",
-            "createAccount": "Vytvořte si ho zde",
-            "userDataConflict": {
-                "description": "Tento prohlížeč obsahuje data Anori Plus — například váš Zásobník karet — která byla synchronizována s jiným účtem, než ke kterému se přihlašujete. Co se s nimi má stát?",
-                "upload": "Přidat do tohoto účtu",
-                "uploadHint": "Zachová tato data a sloučí je s účtem, do kterého se přihlašujete. Zvolte tuto možnost, pokud jsou vaše — například pokud jste přešli na nový účet.",
-                "discard": "Zahodit lokální data",
-                "discardHint": "Odstraní je z tohoto prohlížeče a místo nich použije data, která tento účet již má. Zvolte tuto možnost, pokud patří jinému účtu nebo je zde nepotřebujete."
-            },
-            "plusDescription": "Anori Plus je doplňková služba pro Anori, která umožňuje synchronizovat vaši konfiguraci mezi více prohlížeči a zařízeními v reálném čase.",
-            "learnMore": "Zjistit více",
-            "profiles": "Profily",
-            "noProfiles": "Žádné profily nenalezeny. Vytvořte svůj první profil pro synchronizaci nastavení mezi prohlížeči.",
-            "createProfile": "Vytvořit profil",
-            "profileName": "Název profilu",
-            "createdAt": "Vytvořeno {{date}}",
-            "lastSyncedAt": "Naposledy použito {{date}}",
-            "create": "Vytvořit",
-            "profileCreatedSuccess": "Profil vytvořen! Nyní můžete připojit další prohlížeče k tomuto profilu a vaše nastavení bude mezi nimi synchronizováno.",
-            "confirm": "Potvrdit",
-            "rename": "Přejmenovat",
-            "delete": "Smazat",
-            "deleteConfirmation": "Opravdu chcete smazat profil \"{{profileName}}\"? Tuto akci nelze vrátit zpět.",
-            "connectConfirmation": {
-                "message": "Připojení k profilu \"{{profileName}}\" přepíše vaši aktuální místní konfiguraci tou uloženou v profilu. Chcete pokračovat?"
-            },
-            "settings": {
-                "title": "Nastavení",
-                "shareOpenTabs": "Sdílet otevřené karty s ostatními připojenými zařízeními",
-                "shareOpenTabsHint": "Pokud je tato možnost zapnutá, karty otevřené na tomto počítači jsou sdíleny s vašimi ostatními zařízeními přihlášenými k tomuto účtu Anori — takže je můžete vidět a znovu otevřít na kterémkoli z nich."
-            },
-            "devices": {
-                "title": "Zařízení",
-                "thisDevice": "Toto zařízení",
-                "rename": "Přejmenovat zařízení",
-                "remove": "Odebrat zařízení",
-                "removeConfirmation": "Odebrat \"{{name}}\" z vašeho účtu? Zařízení bude odhlášeno a přestane synchronizovat.",
-                "namePlaceholder": "Název zařízení",
-                "lastActive": "aktivní {{date}}",
-                "empty": "K tomuto účtu zatím nejsou přihlášena žádná zařízení"
-            },
-            "error": {
-                "invalidCredentials": "Neplatný e-mail nebo heslo",
-                "unknown": "Něco se pokazilo. Zkuste to prosím znovu.",
-                "failedToLoadProfiles": "Nepodařilo se načíst profily",
-                "failedToLoadDevices": "Nepodařilo se načíst zařízení",
-                "profileNameRequired": "Název profilu je povinný",
-                "failedToCreateProfile": "Nepodařilo se vytvořit profil"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Vlastní ikony jsou ikony, které nahrajete pro pozdější použití v Anori.",
             "customIconsAbsent": "Momentálně nemáte žádné vlastní ikony. Chcete-li nahrát první vlastní ikonu, přejděte do nastavení.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Barevné schéma",
                 "previewColorScheme": "Barevné schéma náhledu",
                 "hideDotPattern": "Skrýt tečkovaný vzor",
-                "colorSchemeSystem": "Systém",
-                "colorSchemeLight": "Světlé",
-                "colorSchemeDark": "Tmavé",
-                "widgetBackgroundOpacity": "Neprůhlednost pozadí widgetu",
-                "widgetBackgroundOpacityHint": "Nastavte, jak moc mají widgety prosvítat. Mění se pouze povrch widgetu; text a ikony zůstávají neprůhledné.",
                 "fit": "Přizpůsobit",
                 "fitCover": "Vyplnit obrazovku (oříznout)",
                 "fitContain": "Přizpůsobit obrazovce (celý obrázek)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Vpravo",
                 "anchorBottomLeft": "Dole vlevo",
                 "anchorBottomCenter": "Dole",
-                "anchorBottomRight": "Dole vpravo"
+                "anchorBottomRight": "Dole vpravo",
+                "colorSchemeSystem": "Systém",
+                "colorSchemeLight": "Světlé",
+                "colorSchemeDark": "Tmavé",
+                "widgetBackgroundOpacity": "Neprůhlednost pozadí widgetu",
+                "widgetBackgroundOpacityHint": "Nastavte, jak moc mají widgety prosvítat. Mění se pouze povrch widgetu; text a ikony zůstávají neprůhledné."
             },
             "importExport": {
                 "title": "Import a export",
                 "info": "Zde můžete zálohovat svá nastavení nebo obnovit starší zálohu.",
                 "import": "Import",
                 "export": "Export",
-                "cloudWarning": "Máte povolenou cloudovou synchronizaci. Import zálohy vás odpojí od profilu synchronizace. Po importu se budete muset znovu připojit. Pokračovat?",
-                "cloudSyncHint": "Chcete zálohovat konfiguraci do cloudu nebo ji synchronizovat mezi zařízeními v reálném čase? Vyzkoušejte <0>Anori Plus</0> — dělá to bez námahy.",
                 "importError": "Zálohu se nepodařilo importovat: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Vyzkoušejte různá témata v nastavení",
-                    "anoriPlus": "Podívejte se na Anori Plus",
                     "widgets": "Prozkoumejte dostupné widgety"
                 }
             }
@@ -377,16 +310,6 @@
                 "grantTabs": "Pro funkci odložení záložek jsou vyžadována další oprávnění",
                 "recentlyStashed": "Nedávno uložené",
                 "nothingStashed": "Zatím nic neuloženo"
-            },
-            "syncedTabs": {
-                "title": "Synchronizované karty",
-                "loading": "Načítání karet...",
-                "unnamedGroup": "Skupina",
-                "notConnectedTitle": "Zobrazit karty z vašich ostatních zařízení",
-                "notConnectedDescription": "Připojte Anori Plus a synchronizujte otevřené karty napříč vašimi zařízeními.",
-                "connect": "Připojit",
-                "emptyTitle": "Žádná jiná zařízení zatím nesdílejí karty",
-                "emptyDescription": "Přihlaste se ke svému účtu Anori Plus na jiném počítači a tam zapněte synchronizaci karet."
             }
         },
         "tasks-plugin": {
@@ -502,11 +425,7 @@
                 "headline": "Nyní s rozšířeným pluginem Karty. Ukládejte si odkazy, ke kterým se chcete vrátit, a navažte na karty, které jste nechali otevřené na jiném zařízení.",
                 "stashTitle": "Úschovna karet",
                 "stashBody": "Tento widget použijte k ukládání odkazů, ke kterým se chcete vrátit později. Mějte je na nové kartě, abyste na ně skutečně nezapomněli. Kartu lze uložit přímo z widgetu nebo z nového vyskakovacího okna Anori – stačí kliknout na ikonu Anori na panelu nástrojů rozšíření.",
-                "stashSync": "S Anori Plus je vaše úschovna sdílena napříč všemi prohlížeči, do kterých jste přihlášeni, a napříč všemi profily.",
-                "syncedTabsTitle": "Synchronizované karty",
-                "syncedTabsBody": "Zjistěte, co máte otevřeno na jiných zařízeních, a plynule navažte tam, kde jste skončili. Upozorňujeme, že tato funkce vyžaduje Anori Plus a explicitní povolení v nastavení.",
                 "minorPopup": "Kliknutí na ikonu Anori na panelu nástrojů nyní otevře vyskakovací okno místo pouhého otevření nové karty.",
-                "minorDevices": "V nastavení přibyla sekce Zařízení, kde uvidíte vše přihlášené k vašemu účtu Anori Plus a můžete to přejmenovat nebo odebrat.",
                 "minorTabsPlugin": "Widget Nedávno zavřené karty byl začleněn do nového pluginu Karty spolu s výše uvedenými dvěma widgety a nyní ho lze zvětšit do větší výšky než dříve.",
                 "minorWidgetHeaders": "Úkoly, Poznámky, RSS kanál, Předpověď počasí a Nedávno zavřené karty nyní sdílejí jednotné rozložení záhlaví, takže jejich názvy a tlačítka jsou zarovnány vedle sebe.",
                 "minorPlurals": "Přeložené jazyky nyní používají správné tvary množného čísla místo přejímání anglického pravidla jeden-nebo-více.",

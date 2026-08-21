@@ -55,70 +55,6 @@
             "title": "おっと",
             "description": "ウィジェットのレンダリングに失敗しました。詳細はコンソールを確認してください。"
         },
-        "cloud": {
-            "connect": "クラウドに接続",
-            "connected": "接続済み",
-            "disconnect": "切断",
-            "cancel": "キャンセル",
-            "account": "Anori Plus",
-            "login": "ログイン",
-            "logout": "ログアウト",
-            "email": "メール",
-            "password": "パスワード",
-            "connectedAs": "接続中：",
-            "syncPausedBehind": "このAnoriのコピーは、このプロフィールの別のデバイスより古いため、更新されるまで同期が一時停止されています。それまでに行った変更は他のデバイスに同期されませんが、必要な場合に備えて更新前にバックアップに保存されます。",
-            "preUpdateBackup": "最後の更新前のバックアップ ({{date}})",
-            "downloadBackup": "ダウンロード",
-            "noAccount": "アカウントをお持ちでない方は",
-            "createAccount": "こちらから作成",
-            "userDataConflict": {
-                "description": "このブラウザには Anori Plus のデータ（例: タブスタッシュ）が保存されていますが、それはサインインしようとしているアカウントとは別のアカウントに同期されていたものです。このデータをどうしますか?",
-                "upload": "このアカウントに追加",
-                "uploadHint": "このデータを保持し、サインインするアカウントにマージします。たとえば新しいアカウントに切り替えた場合など、このデータが自分のものであればこちらを選択してください。",
-                "discard": "破棄する",
-                "discardHint": "このブラウザから削除し、代わりにこのアカウントが既に持っているデータを使用します。別のアカウントのデータである場合や、ここでは不要な場合はこちらを選択してください。"
-            },
-            "plusDescription": "Anori Plus は Anori の追加サービスで、複数のブラウザやデバイス間でリアルタイムに設定を同期できます。",
-            "learnMore": "詳細を見る",
-            "profiles": "プロファイル",
-            "noProfiles": "プロファイルが見つかりません。最初のプロファイルを作成して、ブラウザ間で設定を同期しましょう。",
-            "createProfile": "プロファイルを作成",
-            "profileName": "プロファイル名",
-            "createdAt": "作成日: {{date}}",
-            "lastSyncedAt": "最終使用: {{date}}",
-            "create": "作成",
-            "profileCreatedSuccess": "プロファイルを作成しました！他のブラウザをこのプロファイルに接続すると、設定が同期されます。",
-            "confirm": "確認",
-            "rename": "名前を変更",
-            "delete": "削除",
-            "deleteConfirmation": "プロファイル「{{profileName}}」を削除してもよろしいですか？この操作は元に戻せません。",
-            "connectConfirmation": {
-                "message": "プロファイル「{{profileName}}」に接続すると、現在のローカル設定がプロファイルに保存されている設定で上書きされます。続行しますか？"
-            },
-            "settings": {
-                "title": "設定",
-                "shareOpenTabs": "開いているタブを他の接続済みデバイスと共有する",
-                "shareOpenTabsHint": "有効にすると、このコンピューターで開いているタブが、同じ Anori アカウントにサインインしている他のデバイスと共有されます。これにより、どのデバイスからでもタブを確認して再度開くことができます。"
-            },
-            "devices": {
-                "title": "デバイス",
-                "thisDevice": "このデバイス",
-                "rename": "デバイス名を変更",
-                "remove": "デバイスを削除",
-                "removeConfirmation": "\"{{name}}\" をアカウントから削除しますか? サインアウトされ、同期が停止します。",
-                "namePlaceholder": "デバイス名",
-                "lastActive": "{{date}} にアクティブ",
-                "empty": "このアカウントにサインインしているデバイスはまだありません"
-            },
-            "error": {
-                "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
-                "unknown": "エラーが発生しました。もう一度お試しください。",
-                "failedToLoadProfiles": "プロファイルの読み込みに失敗しました",
-                "failedToLoadDevices": "デバイスの読み込みに失敗しました",
-                "profileNameRequired": "プロファイル名は必須です",
-                "failedToCreateProfile": "プロファイルの作成に失敗しました"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "カスタムアイコンは、Anoriで使用するためにアップロードしたアイコンです。",
             "customIconsAbsent": "カスタムアイコンがありません。最初のカスタムアイコンをアップロードするには設定をご覧ください。",
@@ -191,11 +127,6 @@
                 "colorScheme": "カラースキーム",
                 "previewColorScheme": "プレビューのカラースキーム",
                 "hideDotPattern": "ドットパターンを非表示",
-                "colorSchemeSystem": "システム",
-                "colorSchemeLight": "ライト",
-                "colorSchemeDark": "ダーク",
-                "widgetBackgroundOpacity": "ウィジェット背景の不透明度",
-                "widgetBackgroundOpacityHint": "ウィジェットの透け具合を調整します。変更されるのはウィジェットの表面だけで、テキストやアイコンは不透明のままです。",
                 "fit": "フィット",
                 "fitCover": "画面を埋める（切り抜き）",
                 "fitContain": "画面に収める（画像全体）",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "右",
                 "anchorBottomLeft": "左下",
                 "anchorBottomCenter": "下",
-                "anchorBottomRight": "右下"
+                "anchorBottomRight": "右下",
+                "colorSchemeSystem": "システム",
+                "colorSchemeLight": "ライト",
+                "colorSchemeDark": "ダーク",
+                "widgetBackgroundOpacity": "ウィジェット背景の不透明度",
+                "widgetBackgroundOpacityHint": "ウィジェットの透け具合を調整します。変更されるのはウィジェットの表面だけで、テキストやアイコンは不透明のままです。"
             },
             "importExport": {
                 "title": "インポート＆エクスポート",
                 "info": "設定のバックアップや過去のバックアップの復元ができます。",
                 "import": "インポート",
                 "export": "エクスポート",
-                "cloudWarning": "クラウド同期が有効になっています。バックアップをインポートすると、同期プロファイルから切断されます。インポート後に再接続が必要です。続行しますか？",
-                "cloudSyncHint": "設定をクラウドにバックアップしたり、デバイス間でリアルタイムに同期したいですか？<0>Anori Plus</0> を試してみてください — シームレスに実現できます。",
                 "importError": "バックアップをインポートできませんでした: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "設定でさまざまなテーマを試してみる",
-                    "anoriPlus": "Anori Plus を確認する",
                     "widgets": "利用可能なウィジェットを探索する"
                 }
             }
@@ -374,16 +307,6 @@
                 "grantTabs": "タブスタッシュ機能には追加の権限が必要です",
                 "recentlyStashed": "最近スタッシュしたもの",
                 "nothingStashed": "まだスタッシュされていません"
-            },
-            "syncedTabs": {
-                "title": "同期済みタブ",
-                "loading": "タブを読み込み中...",
-                "unnamedGroup": "グループ",
-                "notConnectedTitle": "他のデバイスのタブを確認する",
-                "notConnectedDescription": "Anori Plus を接続して、デバイス間で開いているタブを同期しましょう。",
-                "connect": "接続",
-                "emptyTitle": "他のデバイスがまだタブを共有していません",
-                "emptyDescription": "別のコンピューターで Anori Plus アカウントにログインし、そこでタブの同期を有効にしてください。"
             }
         },
         "tasks-plugin": {
@@ -499,11 +422,7 @@
                 "headline": "拡張されたタブプラグインが登場。後で戻りたいリンクを保存し、別のデバイスで開いたままのタブを引き継げます。",
                 "stashTitle": "タブスタッシュ",
                 "stashBody": "後で戻りたいリンクを保存するためのウィジェットです。新しいタブに表示しておけば、忘れずに済みます。タブはウィジェット自体から、または新しい Anori ポップアップウィンドウからスタッシュできます。拡張機能のツールバーにある Anori アイコンをクリックしてください。",
-                "stashSync": "Anori Plus をご利用の場合、スタッシュはサインイン済みのすべてのブラウザおよびすべてのプロファイルで共有されます。",
-                "syncedTabsTitle": "同期済みタブ",
-                "syncedTabsBody": "他のデバイスで開いているタブを確認し、前のデバイスの続きをスムーズに再開できます。この機能は Anori Plus が必要で、設定で明示的に有効にする必要があります。",
                 "minorPopup": "ツールバーの Anori アイコンをクリックすると、新しいタブを開く代わりにポップアップが表示されるようになりました。",
-                "minorDevices": "設定に「デバイス」セクションが追加され、Anori Plus アカウントにサインインしているすべてのデバイスを確認したり、名前の変更や削除ができるようになりました。",
                 "minorTabsPlugin": "「最近閉じたタブ」ウィジェットが、上記の2つのウィジェットとともに新しいタブプラグインに統合され、以前より縦に大きくリサイズできるようになりました。",
                 "minorWidgetHeaders": "タスク、メモ、RSSフィード、天気予報、最近閉じたタブが共通のヘッダーレイアウトを使用するようになり、タイトルとボタンが横並びに揃うようになりました。",
                 "minorPlurals": "翻訳済みの言語で、英語の単数・複数ルールを借用する代わりに、各言語固有の複数形が使用されるようになりました。",

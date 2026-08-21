@@ -5,6 +5,15 @@ import { anoriVersionedSchema } from "./schema";
 
 export const BACKUP_FORMAT_VERSION = 1;
 
+const REMOVED_CLOUD_BACKUP_KEYS = new Set([
+  "cloudAccount",
+  "cloudSyncSettings",
+  "cloudUserSyncState",
+  "deviceId",
+  "deviceRegisteredForUserId",
+  "shareOpenTabs",
+]);
+
 export type BackupMeta = {
   formatVersion: number;
   extensionVersion: string;
@@ -67,6 +76,9 @@ export async function restoreBackupFromZip(storage: Storage, zipBlob: Blob): Pro
     throw new Error("Invalid backup: missing storage.json");
   }
   const storageData = JSON.parse(await storageFile.async("string")) as Record<string, unknown>;
+  for (const key of REMOVED_CLOUD_BACKUP_KEYS) {
+    delete storageData[key];
+  }
 
   const fileBlobs = new Map<string, Blob>();
   const opfsFolder = zip.folder("opfs");

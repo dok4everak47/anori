@@ -55,70 +55,6 @@
             "title": "Ups",
             "description": "Widżet nie mógł zostać wyrenderowany, sprawdź konsolę po szczegóły."
         },
-        "cloud": {
-            "connect": "Połącz",
-            "connected": "Połączono",
-            "disconnect": "Rozłącz",
-            "cancel": "Anuluj",
-            "account": "Anori Plus",
-            "login": "Zaloguj się",
-            "logout": "Wyloguj się",
-            "email": "E-mail",
-            "password": "Hasło",
-            "connectedAs": "Zalogowano jako",
-            "syncPausedBehind": "Ta kopia Anori jest starsza niż inna wersja na tym profilu, więc synchronizacja jest wstrzymana do czasu aktualizacji. Zmiany wprowadzone do tego momentu nie zostaną zsynchronizowane z innymi urządzeniami, ale zostaną zapisane w kopii zapasowej przed aktualizacją, na wypadek gdybyś ich potrzebował.",
-            "preUpdateBackup": "Kopia zapasowa sprzed ostatniej aktualizacji ({{date}})",
-            "downloadBackup": "Pobierz",
-            "noAccount": "Nie masz konta?",
-            "createAccount": "Utwórz je tutaj",
-            "userDataConflict": {
-                "description": "Ta przeglądarka zawiera dane Anori Plus — na przykład Twój schowek kart — które zostały zsynchronizowane z innym kontem niż to, do którego się logujesz. Co powinno się z nimi stać?",
-                "upload": "Dodaj do tego konta",
-                "uploadHint": "Zachowuje te dane i scala je z kontem, do którego się logujesz. Wybierz tę opcję, jeśli są Twoje — na przykład jeśli przeszłeś na nowe konto.",
-                "discard": "Odrzuć lokalne dane",
-                "discardHint": "Usuwa je z tej przeglądarki i używa danych już przypisanych do tego konta. Wybierz tę opcję, jeśli należą do innego konta lub nie są Ci tu potrzebne."
-            },
-            "plusDescription": "Anori Plus to dodatkowa usługa dla Anori, która umożliwia synchronizację konfiguracji między wieloma przeglądarkami i urządzeniami w czasie rzeczywistym.",
-            "learnMore": "Dowiedz się więcej",
-            "profiles": "Profile",
-            "noProfiles": "Nie znaleziono profili. Utwórz swój pierwszy profil, aby synchronizować ustawienia między przeglądarkami.",
-            "createProfile": "Utwórz profil",
-            "profileName": "Nazwa profilu",
-            "createdAt": "Utworzono {{date}}",
-            "lastSyncedAt": "Ostatnio używano {{date}}",
-            "create": "Utwórz",
-            "profileCreatedSuccess": "Profil utworzony! Możesz teraz połączyć inne przeglądarki z tym profilem, a Twoje ustawienia będą między nimi synchronizowane.",
-            "confirm": "Potwierdź",
-            "rename": "Zmień nazwę",
-            "delete": "Usuń",
-            "deleteConfirmation": "Czy na pewno chcesz usunąć profil \"{{profileName}}\"? Tej operacji nie można cofnąć.",
-            "connectConfirmation": {
-                "message": "Połączenie z profilem \"{{profileName}}\" zastąpi Twoją bieżącą lokalną konfigurację tą zapisaną w profilu. Czy chcesz kontynuować?"
-            },
-            "settings": {
-                "title": "Ustawienia",
-                "shareOpenTabs": "Udostępniaj otwarte karty innym połączonym urządzeniom",
-                "shareOpenTabsHint": "Po włączeniu karty otwarte na tym komputerze są udostępniane innym urządzeniom zalogowanym na to konto Anori — dzięki czemu możesz je przeglądać i ponownie otwierać na dowolnym z nich."
-            },
-            "devices": {
-                "title": "Urządzenia",
-                "thisDevice": "To urządzenie",
-                "rename": "Zmień nazwę urządzenia",
-                "remove": "Usuń urządzenie",
-                "removeConfirmation": "Usunąć \"{{name}}\" z Twojego konta? Zostanie wylogowane i przestanie synchronizować dane.",
-                "namePlaceholder": "Nazwa urządzenia",
-                "lastActive": "aktywne {{date}}",
-                "empty": "Żadne urządzenie nie jest jeszcze zalogowane na to konto"
-            },
-            "error": {
-                "invalidCredentials": "Nieprawidłowy adres e-mail lub hasło",
-                "unknown": "Coś poszło nie tak. Spróbuj ponownie.",
-                "failedToLoadProfiles": "Nie udało się załadować profili",
-                "failedToLoadDevices": "Nie udało się załadować urządzeń",
-                "profileNameRequired": "Nazwa profilu jest wymagana",
-                "failedToCreateProfile": "Nie udało się utworzyć profilu"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Niestandardowe ikony to ikony, które przesyłasz do późniejszego użycia w Anori.",
             "customIconsAbsent": "Nie masz jeszcze żadnych niestandardowych ikon. Aby przesłać pierwszą niestandardową ikonę, przejdź do ustawień.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Schemat kolorów",
                 "previewColorScheme": "Schemat kolorów podglądu",
                 "hideDotPattern": "Ukryj wzór kropkowany",
-                "colorSchemeSystem": "Systemowy",
-                "colorSchemeLight": "Jasny",
-                "colorSchemeDark": "Ciemny",
-                "widgetBackgroundOpacity": "Krycie tła widżetu",
-                "widgetBackgroundOpacityHint": "Sprawia, że widżety są mniej lub bardziej przezroczyste. Zmienia to tylko powierzchnię widżetu; tekst i ikony pozostają nieprzezroczyste.",
                 "fit": "Dopasuj",
                 "fitCover": "Wypełnij ekran (przytnij)",
                 "fitContain": "Dopasuj do ekranu (cały obraz)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Prawo",
                 "anchorBottomLeft": "Dół lewy",
                 "anchorBottomCenter": "Dół",
-                "anchorBottomRight": "Dół prawy"
+                "anchorBottomRight": "Dół prawy",
+                "colorSchemeSystem": "Systemowy",
+                "colorSchemeLight": "Jasny",
+                "colorSchemeDark": "Ciemny",
+                "widgetBackgroundOpacity": "Krycie tła widżetu",
+                "widgetBackgroundOpacityHint": "Sprawia, że widżety są mniej lub bardziej przezroczyste. Zmienia to tylko powierzchnię widżetu; tekst i ikony pozostają nieprzezroczyste."
             },
             "importExport": {
                 "title": "Import i eksport",
                 "info": "Tutaj możesz wykonać kopię zapasową swoich ustawień lub przywrócić starszą kopię.",
                 "import": "Import",
                 "export": "Eksport",
-                "cloudWarning": "Masz włączoną synchronizację w chmurze. Importowanie kopii zapasowej rozłączy Cię z profilem synchronizacji. Po imporcie będziesz musiał ponownie się połączyć. Kontynuować?",
-                "cloudSyncHint": "Chcesz wykonać kopię zapasową konfiguracji w chmurze lub synchronizować ją między urządzeniami w czasie rzeczywistym? Wypróbuj <0>Anori Plus</0> — robi to bezproblemowo.",
                 "importError": "Nie udało się zaimportować kopii zapasowej: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Wypróbuj różne motywy w ustawieniach",
-                    "anoriPlus": "Sprawdź Anori Plus",
                     "widgets": "Odkryj dostępne widgety"
                 }
             }
@@ -377,16 +310,6 @@
                 "grantTabs": "Funkcja schowka kart wymaga dodatkowych uprawnień",
                 "recentlyStashed": "Ostatnio schowane",
                 "nothingStashed": "Nic jeszcze nie schowano"
-            },
-            "syncedTabs": {
-                "title": "Zsynchronizowane karty",
-                "loading": "Ładowanie kart...",
-                "unnamedGroup": "Grupa",
-                "notConnectedTitle": "Zobacz karty z innych urządzeń",
-                "notConnectedDescription": "Połącz Anori Plus, aby synchronizować otwarte karty między urządzeniami.",
-                "connect": "Połącz",
-                "emptyTitle": "Żadne inne urządzenie nie udostępnia jeszcze kart",
-                "emptyDescription": "Zaloguj się na konto Anori Plus na innym komputerze i włącz tam synchronizację kart."
             }
         },
         "tasks-plugin": {
@@ -502,11 +425,7 @@
                 "headline": "Teraz z rozszerzonym wtyczką Karty. Zachowaj linki, do których chcesz wrócić, i wznów pracę z kartami otwartymi na innym urządzeniu.",
                 "stashTitle": "Schowek kart",
                 "stashBody": "Użyj tego widżetu, aby przechowywać linki, do których chcesz wrócić później. Trzymaj je na nowej karcie, żebyś naprawdę o nich pamiętał. Kartę można dodać do schowka bezpośrednio z widżetu lub z nowego okna podręcznego Anori — wystarczy kliknąć ikonę Anori na pasku narzędzi rozszerzenia.",
-                "stashSync": "Dzięki Anori Plus Twój schowek jest współdzielony we wszystkich przeglądarkach, do których jesteś zalogowany, oraz we wszystkich profilach.",
-                "syncedTabsTitle": "Zsynchronizowane karty",
-                "syncedTabsBody": "Zobacz, co jest otwarte na Twoich innych urządzeniach, i bez wysiłku wróć do miejsca, w którym skończyłeś na poprzednim urządzeniu. Pamiętaj, że ta funkcja wymaga Anori Plus i wyraźnego włączenia jej w ustawieniach.",
                 "minorPopup": "Kliknięcie ikony Anori na pasku narzędzi otwiera teraz okno podręczne zamiast zwykłego otwierania nowej karty.",
-                "minorDevices": "W ustawieniach pojawiła się sekcja Urządzenia, w której możesz zobaczyć wszystko zalogowane na Twoje konto Anori Plus, a także zmieniać nazwy urządzeń lub je usuwać.",
                 "minorTabsPlugin": "Widżet Ostatnio zamknięte karty został włączony do nowej wtyczki Karty razem z dwoma powyższymi widżetami i można go teraz powiększyć bardziej niż wcześniej.",
                 "minorWidgetHeaders": "Zadania, Notatki, Kanał RSS, Prognoza pogody i Ostatnio zamknięte karty mają teraz wspólny układ nagłówka, dzięki czemu ich tytuły i przyciski są wyrównane obok siebie.",
                 "minorPlurals": "Przetłumaczone języki używają teraz poprawnych form liczby mnogiej, zamiast stosować angielską zasadę jeden-lub-wiele.",

@@ -55,70 +55,6 @@
             "title": "Ups",
             "description": "Widget gagal dirender, periksa konsol untuk detailnya."
         },
-        "cloud": {
-            "connect": "Hubungkan",
-            "connected": "Terhubung",
-            "disconnect": "Putuskan",
-            "cancel": "Batal",
-            "account": "Anori Plus",
-            "login": "Masuk",
-            "logout": "Keluar",
-            "email": "Email",
-            "password": "Kata sandi",
-            "connectedAs": "Terhubung sebagai",
-            "syncPausedBehind": "Salinan Anori ini lebih lama dari perangkat lain di profil ini, sehingga sinkronisasi dijeda hingga diperbarui. Perubahan yang Anda buat sebelum itu tidak akan disinkronkan ke perangkat lain, tetapi disimpan ke cadangan sebelum pembaruan, jika Anda membutuhkannya.",
-            "preUpdateBackup": "Cadangan sebelum pembaruan terakhir Anda ({{date}})",
-            "downloadBackup": "Unduh",
-            "noAccount": "Belum punya akun?",
-            "createAccount": "Buat di sini",
-            "userDataConflict": {
-                "description": "Browser ini memiliki data Anori Plus — misalnya Simpanan Tab Anda — yang telah disinkronkan ke akun berbeda dari akun yang Anda masuki. Apa yang harus dilakukan dengan data tersebut?",
-                "upload": "Tambahkan ke akun ini",
-                "uploadHint": "Menyimpan data ini dan menggabungkannya ke akun yang Anda masuki. Pilih ini jika data tersebut milik Anda — misalnya jika Anda beralih ke akun baru.",
-                "discard": "Buang data lokal",
-                "discardHint": "Menghapusnya dari browser ini dan menggunakan data yang sudah ada di akun ini. Pilih ini jika data tersebut milik akun lain atau Anda tidak membutuhkannya di sini."
-            },
-            "plusDescription": "Anori Plus adalah layanan tambahan untuk Anori yang memungkinkan Anda menyinkronkan konfigurasi antara beberapa browser dan perangkat secara real time.",
-            "learnMore": "Pelajari lebih lanjut",
-            "profiles": "Profil",
-            "noProfiles": "Tidak ada profil ditemukan. Buat profil pertama Anda untuk menyinkronkan pengaturan antar browser.",
-            "createProfile": "Buat profil",
-            "profileName": "Nama profil",
-            "createdAt": "Dibuat {{date}}",
-            "lastSyncedAt": "Terakhir digunakan {{date}}",
-            "create": "Buat",
-            "profileCreatedSuccess": "Profil dibuat! Anda sekarang dapat menghubungkan browser lain ke profil ini dan pengaturan Anda akan disinkronkan di antara mereka.",
-            "confirm": "Konfirmasi",
-            "rename": "Ganti nama",
-            "delete": "Hapus",
-            "deleteConfirmation": "Apakah Anda yakin ingin menghapus profil \"{{profileName}}\"? Tindakan ini tidak dapat dibatalkan.",
-            "connectConfirmation": {
-                "message": "Menghubungkan ke profil \"{{profileName}}\" akan menimpa konfigurasi lokal Anda saat ini dengan yang tersimpan di profil. Apakah Anda ingin melanjutkan?"
-            },
-            "settings": {
-                "title": "Pengaturan",
-                "shareOpenTabs": "Bagikan tab yang terbuka dengan perangkat lain yang terhubung",
-                "shareOpenTabsHint": "Jika diaktifkan, tab yang terbuka di komputer ini akan dibagikan ke perangkat lain yang masuk ke akun Anori ini — sehingga Anda dapat melihat dan membuka kembali tab dari perangkat mana pun."
-            },
-            "devices": {
-                "title": "Perangkat",
-                "thisDevice": "Perangkat ini",
-                "rename": "Ganti nama perangkat",
-                "remove": "Hapus perangkat",
-                "removeConfirmation": "Hapus \"{{name}}\" dari akun Anda? Perangkat akan keluar dan berhenti menyinkronkan.",
-                "namePlaceholder": "Nama perangkat",
-                "lastActive": "aktif {{date}}",
-                "empty": "Belum ada perangkat yang masuk ke akun ini"
-            },
-            "error": {
-                "invalidCredentials": "Email atau kata sandi tidak valid",
-                "unknown": "Terjadi kesalahan. Silakan coba lagi.",
-                "failedToLoadProfiles": "Gagal memuat profil",
-                "failedToLoadDevices": "Gagal memuat perangkat",
-                "profileNameRequired": "Nama profil wajib diisi",
-                "failedToCreateProfile": "Gagal membuat profil"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Ikon kustom adalah ikon yang Anda unggah untuk digunakan nanti di Anori.",
             "customIconsAbsent": "Saat ini Anda tidak memiliki ikon kustom. Untuk mengunggah ikon kustom pertama Anda, silakan buka pengaturan.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Skema warna",
                 "previewColorScheme": "Skema warna pratinjau",
                 "hideDotPattern": "Sembunyikan pola titik",
-                "colorSchemeSystem": "Sistem",
-                "colorSchemeLight": "Terang",
-                "colorSchemeDark": "Gelap",
-                "widgetBackgroundOpacity": "Opasitas latar widget",
-                "widgetBackgroundOpacityHint": "Buat widget lebih atau kurang tembus pandang. Ini hanya mengubah permukaan widget; teks dan ikon tetap buram.",
                 "fit": "Pas",
                 "fitCover": "Isi layar (potong)",
                 "fitContain": "Sesuaikan layar (gambar utuh)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Kanan",
                 "anchorBottomLeft": "Kiri bawah",
                 "anchorBottomCenter": "Bawah",
-                "anchorBottomRight": "Kanan bawah"
+                "anchorBottomRight": "Kanan bawah",
+                "colorSchemeSystem": "Sistem",
+                "colorSchemeLight": "Terang",
+                "colorSchemeDark": "Gelap",
+                "widgetBackgroundOpacity": "Opasitas latar widget",
+                "widgetBackgroundOpacityHint": "Buat widget lebih atau kurang tembus pandang. Ini hanya mengubah permukaan widget; teks dan ikon tetap buram."
             },
             "importExport": {
                 "title": "Impor & ekspor",
                 "info": "Di sini Anda dapat mencadangkan pengaturan atau memulihkan cadangan lama.",
                 "import": "Impor",
                 "export": "Ekspor",
-                "cloudWarning": "Anda telah mengaktifkan sinkronisasi cloud. Mengimpor cadangan akan memutuskan Anda dari profil sinkronisasi. Anda perlu menghubungkan kembali setelah impor. Lanjutkan?",
-                "cloudSyncHint": "Ingin mencadangkan konfigurasi ke cloud atau menyinkronkannya di berbagai perangkat secara real time? Coba <0>Anori Plus</0> — ini melakukannya dengan mulus.",
                 "importError": "Tidak dapat mengimpor cadangan: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Coba tema berbeda di pengaturan",
-                    "anoriPlus": "Lihat Anori Plus",
                     "widgets": "Jelajahi widget yang tersedia"
                 }
             }
@@ -374,16 +307,6 @@
                 "grantTabs": "Izin tambahan diperlukan untuk fitur simpanan Tab",
                 "recentlyStashed": "Baru saja disimpan",
                 "nothingStashed": "Belum ada yang disimpan"
-            },
-            "syncedTabs": {
-                "title": "Tab tersinkron",
-                "loading": "Memuat tab...",
-                "unnamedGroup": "Grup",
-                "notConnectedTitle": "Lihat tab dari perangkat lain Anda",
-                "notConnectedDescription": "Hubungkan Anori Plus untuk menyinkronkan tab yang terbuka di semua perangkat Anda.",
-                "connect": "Hubungkan",
-                "emptyTitle": "Belum ada perangkat lain yang berbagi tab",
-                "emptyDescription": "Masuk ke akun Anori Plus Anda di komputer lain dan aktifkan sinkronisasi tab di sana."
             }
         },
         "tasks-plugin": {
@@ -499,11 +422,7 @@
                 "headline": "Kini hadir dengan plugin Tab yang diperluas. Simpan tautan yang ingin Anda kunjungi kembali, dan lanjutkan tab yang Anda tinggalkan di perangkat lain.",
                 "stashTitle": "Simpanan tab",
                 "stashBody": "Gunakan widget ini untuk menyimpan tautan yang ingin Anda kunjungi kembali nanti. Simpan di tab baru Anda agar Anda benar-benar mengingatnya. Tab dapat disimpan dari widget itu sendiri atau dari jendela popup Anori yang baru, cukup klik ikon Anori di toolbar ekstensi.",
-                "stashSync": "Dengan Anori Plus, simpanan Anda dibagikan ke setiap browser yang Anda masuki, dan ke semua profil.",
-                "syncedTabsTitle": "Tab tersinkron",
-                "syncedTabsBody": "Lihat apa yang terbuka di perangkat lain Anda, dan lanjutkan dengan mudah dari tempat Anda berhenti di perangkat sebelumnya. Harap diperhatikan bahwa fitur ini memerlukan Anori Plus dan persetujuan eksplisit di pengaturan.",
                 "minorPopup": "Mengklik ikon Anori di toolbar kini membuka popup, bukan sekadar membuka tab baru.",
-                "minorDevices": "Pengaturan kini memiliki bagian Perangkat, di mana Anda dapat melihat semua yang masuk ke akun Anori Plus Anda, serta mengganti nama atau menghapusnya.",
                 "minorTabsPlugin": "Widget Tab yang baru saja ditutup digabungkan ke dalam plugin Tab baru bersama dua widget di atas, dan kini dapat diubah ukurannya menjadi lebih tinggi dari sebelumnya.",
                 "minorWidgetHeaders": "Tugas, Catatan, Umpan RSS, Prakiraan cuaca, dan Tab yang baru saja ditutup kini berbagi satu tata letak header, sehingga judul dan tombol mereka sejajar berdampingan.",
                 "minorPlurals": "Bahasa yang diterjemahkan kini menggunakan bentuk jamak yang benar, bukan meminjam aturan satu-atau-banyak dari bahasa Inggris.",

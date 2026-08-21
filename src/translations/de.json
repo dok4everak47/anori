@@ -55,70 +55,6 @@
             "title": "Hoppla",
             "description": "Widget konnte nicht gerendert werden, Details in der Konsole."
         },
-        "cloud": {
-            "connect": "Verbinden",
-            "connected": "Verbunden",
-            "disconnect": "Trennen",
-            "cancel": "Abbrechen",
-            "account": "Anori Plus",
-            "login": "Anmelden",
-            "logout": "Abmelden",
-            "email": "E-Mail",
-            "password": "Passwort",
-            "connectedAs": "Verbunden als",
-            "syncPausedBehind": "Diese Kopie von Anori ist älter als ein anderes Gerät in diesem Profil, daher ist die Synchronisierung pausiert, bis sie aktualisiert wird. Änderungen, die du bis dahin vornimmst, werden nicht mit deinen anderen Geräten synchronisiert, aber sie werden vor dem Update in einem Backup gespeichert, falls du sie jemals benötigst.",
-            "preUpdateBackup": "Backup von vor deinem letzten Update ({{date}})",
-            "downloadBackup": "Herunterladen",
-            "noAccount": "Kein Konto?",
-            "createAccount": "Hier erstellen",
-            "userDataConflict": {
-                "description": "Dieser Browser enthält Anori Plus-Daten — zum Beispiel deinen Tab-Speicher — die mit einem anderen Konto synchronisiert wurden als dem, bei dem du dich gerade anmeldest. Was soll damit geschehen?",
-                "upload": "Zu diesem Konto hinzufügen",
-                "uploadHint": "Behält diese Daten und fügt sie dem Konto hinzu, bei dem du dich anmeldest. Wähle dies, wenn sie dir gehören — zum Beispiel wenn du zu einem neuen Konto gewechselt bist.",
-                "discard": "Verwerfen",
-                "discardHint": "Entfernt sie aus diesem Browser und verwendet stattdessen die Daten des Kontos. Wähle dies, wenn sie zum anderen Konto gehören oder du sie hier nicht benötigst."
-            },
-            "plusDescription": "Anori Plus ist ein zusätzlicher Dienst für Anori, mit dem du deine Konfiguration in Echtzeit zwischen mehreren Browsern und Geräten synchronisieren kannst.",
-            "learnMore": "Mehr erfahren",
-            "profiles": "Profile",
-            "noProfiles": "Keine Profile gefunden. Erstelle dein erstes Profil, um Einstellungen zwischen Browsern zu synchronisieren.",
-            "createProfile": "Profil erstellen",
-            "profileName": "Profilname",
-            "createdAt": "Erstellt {{date}}",
-            "lastSyncedAt": "Zuletzt verwendet {{date}}",
-            "create": "Erstellen",
-            "profileCreatedSuccess": "Profil erstellt! Du kannst jetzt andere Browser mit diesem Profil verbinden und deine Einstellungen werden zwischen ihnen synchronisiert.",
-            "confirm": "Bestätigen",
-            "rename": "Umbenennen",
-            "delete": "Löschen",
-            "deleteConfirmation": "Möchtest du das Profil \"{{profileName}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-            "connectConfirmation": {
-                "message": "Das Verbinden mit dem Profil \"{{profileName}}\" überschreibt deine aktuelle lokale Konfiguration mit der im Profil gespeicherten. Möchtest du fortfahren?"
-            },
-            "settings": {
-                "title": "Einstellungen",
-                "shareOpenTabs": "Offene Tabs mit anderen verbundenen Geräten teilen",
-                "shareOpenTabsHint": "Wenn aktiviert, werden die auf diesem Computer geöffneten Tabs mit deinen anderen Geräten geteilt, die bei diesem Anori-Konto angemeldet sind — so kannst du Tabs von jedem Gerät aus sehen und wieder öffnen."
-            },
-            "devices": {
-                "title": "Geräte",
-                "thisDevice": "Dieses Gerät",
-                "rename": "Gerät umbenennen",
-                "remove": "Gerät entfernen",
-                "removeConfirmation": "\"{{name}}\" aus deinem Konto entfernen? Das Gerät wird abgemeldet und synchronisiert nicht mehr.",
-                "namePlaceholder": "Gerätename",
-                "lastActive": "aktiv {{date}}",
-                "empty": "Noch keine Geräte bei diesem Konto angemeldet"
-            },
-            "error": {
-                "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort",
-                "unknown": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-                "failedToLoadProfiles": "Profile konnten nicht geladen werden",
-                "failedToLoadDevices": "Geräte konnten nicht geladen werden",
-                "profileNameRequired": "Profilname ist erforderlich",
-                "failedToCreateProfile": "Profil konnte nicht erstellt werden"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Custom Icons sind Symbole die für die spätere Nutzung in Anori hochgeladen werden können.",
             "customIconsAbsent": "Aktuell hast du keine Custom Icons. Um dein erstes Icon hochzuladen, musst du in die Einstellungen gehen.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Farbschema",
                 "previewColorScheme": "Farbschema der Vorschau",
                 "hideDotPattern": "Punktmuster ausblenden",
-                "colorSchemeSystem": "System",
-                "colorSchemeLight": "Hell",
-                "colorSchemeDark": "Dunkel",
-                "widgetBackgroundOpacity": "Deckkraft des Widget-Hintergrunds",
-                "widgetBackgroundOpacityHint": "Widgets mehr oder weniger durchsichtig machen. Dies ändert nur die Widget-Oberfläche; Text und Symbole bleiben deckend.",
                 "fit": "Anpassen",
                 "fitCover": "Bildschirm ausfüllen (zuschneiden)",
                 "fitContain": "An Bildschirm anpassen (ganzes Bild)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Rechts",
                 "anchorBottomLeft": "Unten links",
                 "anchorBottomCenter": "Unten",
-                "anchorBottomRight": "Unten rechts"
+                "anchorBottomRight": "Unten rechts",
+                "colorSchemeSystem": "System",
+                "colorSchemeLight": "Hell",
+                "colorSchemeDark": "Dunkel",
+                "widgetBackgroundOpacity": "Deckkraft des Widget-Hintergrunds",
+                "widgetBackgroundOpacityHint": "Widgets mehr oder weniger durchsichtig machen. Dies ändert nur die Widget-Oberfläche; Text und Symbole bleiben deckend."
             },
             "importExport": {
                 "title": "Import & Export",
                 "info": "Hier können Sie Ihre Einstellungen sichern oder ältere Sicherungen wiederherstellen.",
                 "import": "Import",
                 "export": "Export",
-                "cloudWarning": "Du hast die Cloud-Synchronisierung aktiviert. Beim Importieren einer Sicherung wird die Verbindung zu deinem Synchronisierungsprofil getrennt. Nach dem Import musst du dich erneut verbinden. Fortfahren?",
-                "cloudSyncHint": "Möchtest du deine Konfiguration in der Cloud sichern oder in Echtzeit zwischen Geräten synchronisieren? Probiere <0>Anori Plus</0> — es erledigt das nahtlos.",
                 "importError": "Backup konnte nicht importiert werden: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Verschiedene Themes in den Einstellungen ausprobieren",
-                    "anoriPlus": "Anori Plus entdecken",
                     "widgets": "Verfügbare Widgets erkunden"
                 }
             }
@@ -375,16 +308,6 @@
                 "grantTabs": "Für die Tab-Ablage-Funktion sind zusätzliche Berechtigungen erforderlich",
                 "recentlyStashed": "Zuletzt gespeichert",
                 "nothingStashed": "Noch nichts gespeichert"
-            },
-            "syncedTabs": {
-                "title": "Synchronisierte Tabs",
-                "loading": "Tabs werden geladen...",
-                "unnamedGroup": "Gruppe",
-                "notConnectedTitle": "Tabs von deinen anderen Geräten anzeigen",
-                "notConnectedDescription": "Verbinde Anori Plus, um offene Tabs geräteübergreifend zu synchronisieren.",
-                "connect": "Verbinden",
-                "emptyTitle": "Noch kein anderes Gerät teilt Tabs",
-                "emptyDescription": "Melde dich auf einem anderen Computer bei deinem Anori Plus-Konto an und aktiviere dort die Tab-Synchronisierung."
             }
         },
         "tasks-plugin": {
@@ -500,11 +423,7 @@
                 "headline": "Jetzt mit erweitertem Tabs-Plugin. Behalte die Links, zu denen du zurückkehren möchtest, und mach dort weiter, wo du auf einem anderen Gerät aufgehört hast.",
                 "stashTitle": "Tab-Ablage",
                 "stashBody": "Verwende dieses Widget, um Links zu speichern, zu denen du später zurückkehren möchtest. Behalte sie auf deinem neuen Tab, damit du sie nicht vergisst. Ein Tab kann direkt im Widget oder über das neue Anori-Popup-Fenster abgelegt werden – klicke einfach auf das Anori-Symbol in der Symbolleiste der Erweiterung.",
-                "stashSync": "Mit Anori Plus wird deine Ablage über alle Browser, in denen du angemeldet bist, und über alle Profile hinweg synchronisiert.",
-                "syncedTabsTitle": "Synchronisierte Tabs",
-                "syncedTabsBody": "Sieh, was auf deinen anderen Geräten geöffnet ist, und mach mühelos dort weiter, wo du auf einem anderen Gerät aufgehört hast. Bitte beachte, dass diese Funktion Anori Plus und eine ausdrückliche Aktivierung in den Einstellungen erfordert.",
                 "minorPopup": "Ein Klick auf das Anori-Symbol in der Symbolleiste öffnet jetzt ein Popup statt nur einen neuen Tab.",
-                "minorDevices": "Die Einstellungen haben einen Bereich \"Geräte\" erhalten, in dem du alles sehen kannst, was mit deinem Anori Plus-Konto verbunden ist, und es umbenennen oder entfernen kannst.",
                 "minorTabsPlugin": "Das Widget \"Kürzlich geschlossene Tabs\" wurde zusammen mit den beiden obigen Widgets in ein neues Tabs-Plugin integriert und kann jetzt größer als zuvor skaliert werden.",
                 "minorWidgetHeaders": "Aufgaben, Notizen, RSS-Feed, Wettervorhersage und Kürzlich geschlossene Tabs teilen sich jetzt ein einheitliches Header-Layout, sodass ihre Titel und Schaltflächen nebeneinander ausgerichtet sind.",
                 "minorPlurals": "Übersetzte Sprachen verwenden jetzt korrekte Pluralformen, anstatt die englische Einzel-oder-Mehrfach-Regel zu übernehmen.",

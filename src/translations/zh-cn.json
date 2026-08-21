@@ -55,70 +55,6 @@
             "title": "哎呀",
             "description": "小组件渲染失败，请查看控制台以了解详情。"
         },
-        "cloud": {
-            "connect": "连接",
-            "connected": "已连接",
-            "disconnect": "断开连接",
-            "cancel": "取消",
-            "account": "Anori Plus",
-            "login": "登录",
-            "logout": "退出登录",
-            "email": "电子邮件",
-            "password": "密码",
-            "connectedAs": "已连接为",
-            "syncPausedBehind": "此 Anori 副本比该配置文件上的其他设备旧，因此同步已暂停，直到其更新。在此之前所做的更改不会同步到其他设备，但会在更新前保存到备份中，以备不时之需。",
-            "preUpdateBackup": "上次更新前的备份（{{date}}）",
-            "downloadBackup": "下载",
-            "noAccount": "没有账户？",
-            "createAccount": "在此创建",
-            "userDataConflict": {
-                "description": "此浏览器中存有 Anori Plus 数据（例如您的标签页收藏），该数据之前已同步至与您当前登录账户不同的账户。您希望如何处理这些数据？",
-                "upload": "添加到此账户",
-                "uploadHint": "保留此数据并将其合并到您正在登录的账户中。如果这是您的数据（例如您切换了新账户），请选择此项。",
-                "discard": "丢弃",
-                "discardHint": "从此浏览器中删除该数据，改用此账户已有的数据。如果该数据属于其他账户或您在此处不需要它，请选择此项。"
-            },
-            "plusDescription": "Anori Plus 是 Anori 的附加服务，可让您在多个浏览器和设备之间实时同步配置。",
-            "learnMore": "了解更多",
-            "profiles": "配置文件",
-            "noProfiles": "未找到配置文件。创建您的第一个配置文件以在浏览器之间同步设置。",
-            "createProfile": "创建配置文件",
-            "profileName": "配置文件名称",
-            "createdAt": "创建于 {{date}}",
-            "lastSyncedAt": "上次使用于 {{date}}",
-            "create": "创建",
-            "profileCreatedSuccess": "配置文件已创建！您现在可以将其他浏览器连接到此配置文件，您的设置将在它们之间同步。",
-            "confirm": "确认",
-            "rename": "重命名",
-            "delete": "删除",
-            "deleteConfirmation": "您确定要删除配置文件 \"{{profileName}}\" 吗？此操作无法撤销。",
-            "connectConfirmation": {
-                "message": "连接到配置文件 \"{{profileName}}\" 将用该配置文件中存储的配置覆盖您当前的本地配置。是否继续？"
-            },
-            "settings": {
-                "title": "设置",
-                "shareOpenTabs": "与其他已连接设备共享打开的标签页",
-                "shareOpenTabsHint": "启用后，此电脑上打开的标签页将与登录了同一 Anori 账户的其他设备共享，让您可以在任意设备上查看并重新打开这些标签页。"
-            },
-            "devices": {
-                "title": "设备",
-                "thisDevice": "此设备",
-                "rename": "重命名设备",
-                "remove": "移除设备",
-                "removeConfirmation": "从您的账户中移除\"{{name}}\"？该设备将被退出登录并停止同步。",
-                "namePlaceholder": "设备名称",
-                "lastActive": "活跃于 {{date}}",
-                "empty": "此账户尚无已登录的设备"
-            },
-            "error": {
-                "invalidCredentials": "电子邮件或密码无效",
-                "unknown": "出现错误，请重试。",
-                "failedToLoadProfiles": "加载配置文件失败",
-                "failedToLoadDevices": "加载设备失败",
-                "profileNameRequired": "配置文件名称为必填项",
-                "failedToCreateProfile": "创建配置文件失败"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "自定义图标是您上传以供以后在 Anori 中使用的图标。",
             "customIconsAbsent": "目前，您没有任何自定义图标。要上传您的第一个自定义图标，请前往设置。",
@@ -191,11 +127,6 @@
                 "colorScheme": "配色方案",
                 "previewColorScheme": "预览配色方案",
                 "hideDotPattern": "隐藏点状图案",
-                "colorSchemeSystem": "系统",
-                "colorSchemeLight": "浅色",
-                "colorSchemeDark": "深色",
-                "widgetBackgroundOpacity": "小组件背景透明度",
-                "widgetBackgroundOpacityHint": "调整小组件的通透程度。这只会改变小组件表面，文字和图标仍保持不透明。",
                 "fit": "适应",
                 "fitCover": "填充屏幕（裁剪）",
                 "fitContain": "适应屏幕（完整图片）",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "右",
                 "anchorBottomLeft": "左下",
                 "anchorBottomCenter": "底部",
-                "anchorBottomRight": "右下"
+                "anchorBottomRight": "右下",
+                "colorSchemeSystem": "系统",
+                "colorSchemeLight": "浅色",
+                "colorSchemeDark": "深色",
+                "widgetBackgroundOpacity": "小组件背景透明度",
+                "widgetBackgroundOpacityHint": "调整小组件的通透程度。这只会改变小组件表面，文字和图标仍保持不透明。"
             },
             "importExport": {
                 "title": "导入 & 导出",
                 "info": "你可以在这里备份或恢复你的设置。",
                 "import": "导入",
                 "export": "导出",
-                "cloudWarning": "您已启用云同步。导入备份将断开您与同步配置文件的连接。导入后需要重新连接。是否继续？",
-                "cloudSyncHint": "想将配置备份到云端或在设备间实时同步？试试 <0>Anori Plus</0>——它可以无缝实现这一切。",
                 "importError": "无法导入备份：{{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "在设置中尝试不同的主题",
-                    "anoriPlus": "了解 Anori Plus",
                     "widgets": "探索可用的小部件"
                 }
             }
@@ -374,16 +307,6 @@
                 "grantTabs": "标签页暂存功能需要额外权限",
                 "recentlyStashed": "最近暂存",
                 "nothingStashed": "暂无暂存内容"
-            },
-            "syncedTabs": {
-                "title": "已同步的标签页",
-                "loading": "正在加载标签页...",
-                "unnamedGroup": "分组",
-                "notConnectedTitle": "查看其他设备上的标签页",
-                "notConnectedDescription": "连接 Anori Plus 以在您的设备间同步打开的标签页。",
-                "connect": "连接",
-                "emptyTitle": "暂无其他设备正在共享标签页",
-                "emptyDescription": "在另一台电脑上登录您的 Anori Plus 账户，并在那里开启标签页同步。"
             }
         },
         "tasks-plugin": {
@@ -499,11 +422,7 @@
                 "headline": "全新扩展的标签页插件。保存您想稍后回顾的链接，并接续您在其他设备上未关闭的标签页。",
                 "stashTitle": "标签页暂存",
                 "stashBody": "使用此小组件保存您想稍后回顾的链接。将它们保留在新标签页上，这样您就不会忘记。您可以直接在小组件中暂存标签页，也可以通过新的 Anori 弹出窗口来操作，只需点击扩展工具栏中的 Anori 图标即可。",
-                "stashSync": "使用 Anori Plus，您的暂存内容将在所有已登录的浏览器及所有配置文件之间同步共享。",
-                "syncedTabsTitle": "已同步标签页",
-                "syncedTabsBody": "查看您其他设备上正在打开的内容，轻松接续在其他设备上未完成的工作。请注意，此功能需要 Anori Plus，并需在设置中明确开启。",
                 "minorPopup": "点击工具栏中的 Anori 图标现在会打开一个弹出窗口，而不仅仅是打开一个新标签页。",
-                "minorDevices": "设置中新增了\"设备\"部分，您可以在此查看所有已登录 Anori Plus 账户的设备，并对其进行重命名或移除。",
                 "minorTabsPlugin": "\"最近关闭的标签页\"小组件已与上述两个小组件合并到新的标签页插件中，且现在可以调整为比以前更高的尺寸。",
                 "minorWidgetHeaders": "任务、笔记、RSS 订阅、天气预报和最近关闭的标签页现在共用同一种标题栏布局，其标题和按钮并排对齐显示。",
                 "minorPlurals": "已翻译的语言现在使用正确的复数形式，而不再沿用英语的单复数规则。",

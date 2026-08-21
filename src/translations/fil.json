@@ -55,70 +55,6 @@
             "title": "Oops",
             "description": "Nabigo ang widget na mag-render, tingnan ang console para sa mga detalye."
         },
-        "cloud": {
-            "connect": "Ikonekta",
-            "connected": "Nakakonekta",
-            "disconnect": "Idiskonekta",
-            "cancel": "Kanselahin",
-            "account": "Anori Plus",
-            "login": "Mag-log in",
-            "logout": "Mag-log out",
-            "email": "Email",
-            "password": "Password",
-            "connectedAs": "Nakakonekta bilang",
-            "syncPausedBehind": "Ang kopyang ito ng Anori ay mas luma kaysa sa ibang device sa profile na ito, kaya ang pag-sync ay naka-pause hanggang ma-update ito. Ang mga pagbabagong gagawin mo hanggang noon ay hindi ma-sync sa iyong ibang mga device, ngunit nai-save ang mga ito sa isang backup bago ang update, sakaling kailanganin mo ang mga ito.",
-            "preUpdateBackup": "Backup mula bago ang iyong huling update ({{date}})",
-            "downloadBackup": "I-download",
-            "noAccount": "Wala kang account?",
-            "createAccount": "Gumawa ng isa dito",
-            "userDataConflict": {
-                "description": "Ang browser na ito ay may data ng Anori Plus — halimbawa ang iyong Tab stash — na na-sync sa ibang account kaysa sa iyong pinipirmahan. Ano ang dapat mangyari dito?",
-                "upload": "Idagdag ito sa account na ito",
-                "uploadHint": "Pinapanatili ang data na ito at ini-merge ito sa account na iyong pinipirmahan. Piliin ito kung sa iyo ito — halimbawa kung lumipat ka sa bagong account.",
-                "discard": "Itapon ito",
-                "discardHint": "Inaalis ito mula sa browser na ito at ginagamit ang anumang mayroon na ang account na ito. Piliin ito kung sa ibang account ito o hindi mo na kailangan dito."
-            },
-            "plusDescription": "Ang Anori Plus ay isang karagdagang serbisyo para sa Anori na nagbibigay-daan sa iyo na i-sync ang iyong configuration sa pagitan ng maraming browser at device nang real time.",
-            "learnMore": "Matuto pa",
-            "profiles": "Mga Profile",
-            "noProfiles": "Walang nahanap na profile. Gumawa ng iyong unang profile upang i-sync ang mga setting sa pagitan ng mga browser.",
-            "createProfile": "Gumawa ng profile",
-            "profileName": "Pangalan ng profile",
-            "createdAt": "Ginawa {{date}}",
-            "lastSyncedAt": "Huling ginamit {{date}}",
-            "create": "Gumawa",
-            "profileCreatedSuccess": "Nagawa na ang profile! Maaari ka na ngayong ikonekta ang ibang mga browser sa profile na ito at ang iyong mga setting ay isi-sync sa pagitan nila.",
-            "confirm": "Kumpirmahin",
-            "rename": "Palitan ng pangalan",
-            "delete": "Tanggalin",
-            "deleteConfirmation": "Sigurado ka bang gusto mong tanggalin ang profile na \"{{profileName}}\"? Hindi na maaaring bawiin ang aksyong ito.",
-            "connectConfirmation": {
-                "message": "Ang pagkonekta sa profile na \"{{profileName}}\" ay papalitan ang iyong kasalukuyang lokal na configuration ng nakaimbak sa profile. Gusto mo bang magpatuloy?"
-            },
-            "settings": {
-                "title": "Mga Setting",
-                "shareOpenTabs": "Ibahagi ang mga bukas na tab sa iba pang mga konektadong device",
-                "shareOpenTabsHint": "Kapag pinagana, ang mga tab na bukas sa computer na ito ay ibinabahagi sa iyong iba pang mga device na naka-sign in sa Anori account na ito — para makita at muling mabuksan ang mga tab mula sa alinman sa mga ito."
-            },
-            "devices": {
-                "title": "Mga Device",
-                "thisDevice": "Ang device na ito",
-                "rename": "Palitan ang pangalan ng device",
-                "remove": "Alisin ang device",
-                "removeConfirmation": "Alisin ang \"{{name}}\" mula sa iyong account? Ito ay mag-sign out at titigil sa pag-sync.",
-                "namePlaceholder": "Pangalan ng device",
-                "lastActive": "aktibo {{date}}",
-                "empty": "Walang mga device na naka-sign in sa account na ito"
-            },
-            "error": {
-                "invalidCredentials": "Mali ang email o password",
-                "unknown": "May nangyaring mali. Pakisubukan muli.",
-                "failedToLoadProfiles": "Nabigong i-load ang mga profile",
-                "failedToLoadDevices": "Nabigo ang pag-load ng mga device",
-                "profileNameRequired": "Kailangan ang pangalan ng profile",
-                "failedToCreateProfile": "Nabigong gumawa ng profile"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Ang mga custom na icon ay mga icon na ini-upload mo para magamit sa Anori.",
             "customIconsAbsent": "Sa kasalukuyan, wala kang mga custom na icon. Upang mag-upload ng iyong unang custom na icon, pumunta sa mga setting.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Kulay ng scheme",
                 "previewColorScheme": "Color scheme ng preview",
                 "hideDotPattern": "Itago ang dot pattern",
-                "colorSchemeSystem": "System",
-                "colorSchemeLight": "Maliwanag",
-                "colorSchemeDark": "Madilim",
-                "widgetBackgroundOpacity": "Opacity ng background ng widget",
-                "widgetBackgroundOpacityHint": "Gawing mas transparent o hindi ang mga widget. Binabago lamang nito ang ibabaw ng widget; nananatiling opaque ang teksto at mga icon.",
                 "fit": "Iangkop",
                 "fitCover": "Punuin ang screen (i-crop)",
                 "fitContain": "Kasya sa screen (buong larawan)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Kanan",
                 "anchorBottomLeft": "Kaliwang ibaba",
                 "anchorBottomCenter": "Ibaba",
-                "anchorBottomRight": "Kanang ibaba"
+                "anchorBottomRight": "Kanang ibaba",
+                "colorSchemeSystem": "System",
+                "colorSchemeLight": "Maliwanag",
+                "colorSchemeDark": "Madilim",
+                "widgetBackgroundOpacity": "Opacity ng background ng widget",
+                "widgetBackgroundOpacityHint": "Gawing mas transparent o hindi ang mga widget. Binabago lamang nito ang ibabaw ng widget; nananatiling opaque ang teksto at mga icon."
             },
             "importExport": {
                 "title": "Import at export",
                 "info": "Dito maaari mong i-backup ang iyong mga setting o ibalik ang mas lumang backup.",
                 "import": "Import",
                 "export": "Export",
-                "cloudWarning": "Naka-enable ang cloud sync mo. Ang pag-import ng backup ay magdidiskonekta sa iyo mula sa iyong sync profile. Kakailanganin mong muling kumonekta pagkatapos ng import. Ituloy?",
-                "cloudSyncHint": "Gusto mo bang i-backup ang iyong configuration sa cloud o i-sync ito sa iba't ibang device nang real time? Subukan ang <0>Anori Plus</0> — ginagawa nito ito nang walang kahirap-hirap.",
                 "importError": "Hindi ma-import ang backup: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Subukan ang iba't ibang tema sa mga setting",
-                    "anoriPlus": "Tingnan ang Anori Plus",
                     "widgets": "Tuklasin ang mga available na widget"
                 }
             }
@@ -375,16 +308,6 @@
                 "grantTabs": "Kailangan ng karagdagang mga pahintulot para sa tampok na Tab stash",
                 "recentlyStashed": "Kamakailan lang na na-stash",
                 "nothingStashed": "Wala pang naka-stash"
-            },
-            "syncedTabs": {
-                "title": "Mga naka-sync na tab",
-                "loading": "Nino-load ang mga tab...",
-                "unnamedGroup": "Grupo",
-                "notConnectedTitle": "Tingnan ang mga tab mula sa iyong iba pang mga device",
-                "notConnectedDescription": "I-connect ang Anori Plus para i-sync ang mga bukas na tab sa iyong mga device.",
-                "connect": "I-connect",
-                "emptyTitle": "Walang ibang device na nagbabahagi ng mga tab",
-                "emptyDescription": "Mag-log in sa iyong Anori Plus account sa ibang computer at i-on ang tab sync doon."
             }
         },
         "tasks-plugin": {
@@ -500,11 +423,7 @@
                 "headline": "Ngayon may extended Tabs plugin na. Itago ang mga link na balak mong balikan, at kunin ang mga tab na naiwan mo sa ibang device.",
                 "stashTitle": "Tab stash",
                 "stashBody": "Gamitin ang widget na ito para itago ang mga link na balak mong balikan mamaya. Panatilihin ang mga ito sa iyong bagong tab para hindi mo malimutan. Maaaring i-stash ang isang tab mula sa widget mismo o mula sa bagong Anori popup window — i-click lang ang Anori icon sa toolbar ng extension.",
-                "stashSync": "Sa Anori Plus, ang iyong stash ay ibinabahagi sa bawat browser na naka-sign in ka, at sa lahat ng profile.",
-                "syncedTabsTitle": "Mga naka-sync na tab",
-                "syncedTabsBody": "Tingnan kung ano ang bukas sa iyong ibang mga device, at madaling ituloy kung saan ka natigil sa nakaraang device. Pakitandaan na ang feature na ito ay nangangailangan ng Anori Plus at ng malinaw na pag-opt-in sa mga setting.",
                 "minorPopup": "Ang pag-click sa Anori icon sa toolbar ay nagbubukas na ngayon ng popup sa halip na basta magbukas ng bagong tab.",
-                "minorDevices": "Nagkaroon ng seksyong Mga Device ang Settings, kung saan makikita mo ang lahat ng naka-sign in sa iyong Anori Plus account, at maaari mo itong palitan ng pangalan o alisin.",
                 "minorTabsPlugin": "Ang widget na Mga kamakailang saradong tab ay isinama sa bagong Tabs plugin kasama ang dalawang widget sa itaas, at maaari na itong palakihin nang mas mataas kaysa dati.",
                 "minorWidgetHeaders": "Ang Mga Gawain, Mga Tala, RSS feed, Pagtataya ng panahon, at Mga kamakailang saradong tab ay gumagamit na ngayon ng iisang layout ng header, kaya nakahanay ang kanilang mga pamagat at button nang magkatabi.",
                 "minorPlurals": "Ang mga isinalin na wika ay gumagamit na ngayon ng tamang plural forms, sa halip na gamitin ang panuntunan ng Ingles na isa o marami.",

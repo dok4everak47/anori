@@ -151,10 +151,12 @@ const IconsGrid = ({
 }) => {
   const { t } = useTranslation();
 
-  const { icons: iconsList } = useIconsSuspense({
+  const { icons: iconsList, isLoading } = useIconsSuspense({
     set: selectedFamily === ALL_SETS ? undefined : selectedFamily,
     searchQuery,
   });
+
+  if (isLoading) return null;
 
   const ROWS = Math.ceil(iconsList.length / COLUMNS);
 

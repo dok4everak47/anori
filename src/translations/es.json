@@ -55,70 +55,6 @@
             "title": "Vaya",
             "description": "El widget no se pudo renderizar, consulta la consola para más detalles."
         },
-        "cloud": {
-            "connect": "Conectar",
-            "connected": "Conectado",
-            "disconnect": "Desconectar",
-            "cancel": "Cancelar",
-            "account": "Anori Plus",
-            "login": "Iniciar sesión",
-            "logout": "Cerrar sesión",
-            "email": "Correo electrónico",
-            "password": "Contraseña",
-            "connectedAs": "Conectado como",
-            "syncPausedBehind": "Esta copia de Anori es más antigua que otro dispositivo en este perfil, por lo que la sincronización está pausada hasta que se actualice. Los cambios que realices hasta entonces no se sincronizarán con tus otros dispositivos, pero se guardan en una copia de seguridad antes de la actualización, por si alguna vez los necesitas.",
-            "preUpdateBackup": "Copia de seguridad anterior a tu última actualización ({{date}})",
-            "downloadBackup": "Descargar",
-            "noAccount": "¿No tienes una cuenta?",
-            "createAccount": "Crear una aquí",
-            "userDataConflict": {
-                "description": "Este navegador tiene datos de Anori Plus — por ejemplo tu Guardado de pestañas — que fueron sincronizados con una cuenta diferente a la que estás iniciando sesión. ¿Qué debería ocurrir con ellos?",
-                "upload": "Añadirlos a esta cuenta",
-                "uploadHint": "Conserva estos datos y los fusiona con la cuenta en la que estás iniciando sesión. Elige esto si son tuyos — por ejemplo, si cambiaste a una cuenta nueva.",
-                "discard": "Descartarlos",
-                "discardHint": "Los elimina de este navegador y usa lo que ya tiene esta cuenta. Elige esto si pertenecen a la otra cuenta o no los necesitas aquí."
-            },
-            "plusDescription": "Anori Plus es un servicio adicional para Anori que te permite sincronizar tu configuración entre varios navegadores y dispositivos en tiempo real.",
-            "learnMore": "Más información",
-            "profiles": "Perfiles",
-            "noProfiles": "No se encontraron perfiles. Crea tu primer perfil para sincronizar la configuración entre navegadores.",
-            "createProfile": "Crear perfil",
-            "profileName": "Nombre del perfil",
-            "createdAt": "Creado {{date}}",
-            "lastSyncedAt": "Último uso {{date}}",
-            "create": "Crear",
-            "profileCreatedSuccess": "¡Perfil creado! Ahora puedes conectar otros navegadores a este perfil y tu configuración se sincronizará entre ellos.",
-            "confirm": "Confirmar",
-            "rename": "Renombrar",
-            "delete": "Eliminar",
-            "deleteConfirmation": "¿Estás seguro de que quieres eliminar el perfil \"{{profileName}}\"? Esta acción no se puede deshacer.",
-            "connectConfirmation": {
-                "message": "Conectarse al perfil \"{{profileName}}\" sobrescribirá tu configuración local actual con la almacenada en el perfil. ¿Deseas continuar?"
-            },
-            "settings": {
-                "title": "Configuración",
-                "shareOpenTabs": "Compartir pestañas abiertas con otros dispositivos conectados",
-                "shareOpenTabsHint": "Cuando está activado, las pestañas abiertas en este equipo se comparten con tus otros dispositivos que hayan iniciado sesión en esta cuenta de Anori, para que puedas verlas y reabrirlas desde cualquiera de ellos."
-            },
-            "devices": {
-                "title": "Dispositivos",
-                "thisDevice": "Este dispositivo",
-                "rename": "Renombrar dispositivo",
-                "remove": "Eliminar dispositivo",
-                "removeConfirmation": "¿Eliminar \"{{name}}\" de tu cuenta? Se cerrará sesión y dejará de sincronizarse.",
-                "namePlaceholder": "Nombre del dispositivo",
-                "lastActive": "activo {{date}}",
-                "empty": "Aún no hay dispositivos con sesión iniciada en esta cuenta"
-            },
-            "error": {
-                "invalidCredentials": "Correo electrónico o contraseña incorrectos",
-                "unknown": "Algo salió mal. Por favor, inténtalo de nuevo.",
-                "failedToLoadProfiles": "No se pudieron cargar los perfiles",
-                "failedToLoadDevices": "No se pudieron cargar los dispositivos",
-                "profileNameRequired": "El nombre del perfil es obligatorio",
-                "failedToCreateProfile": "No se pudo crear el perfil"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Los iconos personalizados son iconos que puede subir para usarlos después en Anori.",
             "customIconsAbsent": "Actualmente, usted no cuenta con iconos personalizados. Para subir su primer icono personalizado por favor vaya a configuración.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Esquema de color",
                 "previewColorScheme": "Esquema de color de la vista previa",
                 "hideDotPattern": "Ocultar patrón de puntos",
-                "colorSchemeSystem": "Sistema",
-                "colorSchemeLight": "Claro",
-                "colorSchemeDark": "Oscuro",
-                "widgetBackgroundOpacity": "Opacidad del fondo del widget",
-                "widgetBackgroundOpacityHint": "Hace que los widgets sean más o menos transparentes. Esto solo cambia la superficie del widget; el texto y los iconos se mantienen opacos.",
                 "fit": "Ajustar",
                 "fitCover": "Rellenar pantalla (recortar)",
                 "fitContain": "Ajustar a pantalla (imagen completa)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Derecha",
                 "anchorBottomLeft": "Abajo a la izquierda",
                 "anchorBottomCenter": "Abajo",
-                "anchorBottomRight": "Abajo a la derecha"
+                "anchorBottomRight": "Abajo a la derecha",
+                "colorSchemeSystem": "Sistema",
+                "colorSchemeLight": "Claro",
+                "colorSchemeDark": "Oscuro",
+                "widgetBackgroundOpacity": "Opacidad del fondo del widget",
+                "widgetBackgroundOpacityHint": "Hace que los widgets sean más o menos transparentes. Esto solo cambia la superficie del widget; el texto y los iconos se mantienen opacos."
             },
             "importExport": {
                 "title": "Importar & exportar",
                 "info": "Aquí puedes hacer una copia de seguridad de tu configuración o restaurar una copia de seguridad anterior.",
                 "import": "Importar",
                 "export": "Exportar",
-                "cloudWarning": "Tienes la sincronización en la nube activada. Importar una copia de seguridad te desconectará de tu perfil de sincronización. Deberás volver a conectarte después de la importación. ¿Continuar?",
-                "cloudSyncHint": "¿Quieres hacer una copia de seguridad de tu configuración en la nube o sincronizarla entre dispositivos en tiempo real? Prueba <0>Anori Plus</0> — lo hace sin complicaciones.",
                 "importError": "No se pudo importar la copia de seguridad: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Prueba diferentes temas en la configuración",
-                    "anoriPlus": "Descubre Anori Plus",
                     "widgets": "Explora los widgets disponibles"
                 }
             }
@@ -376,16 +309,6 @@
                 "grantTabs": "Se requieren permisos adicionales para la función de pestañas guardadas",
                 "recentlyStashed": "Guardado recientemente",
                 "nothingStashed": "Nada guardado aún"
-            },
-            "syncedTabs": {
-                "title": "Pestañas sincronizadas",
-                "loading": "Cargando pestañas...",
-                "unnamedGroup": "Grupo",
-                "notConnectedTitle": "Ver pestañas de tus otros dispositivos",
-                "notConnectedDescription": "Conecta Anori Plus para sincronizar las pestañas abiertas entre tus dispositivos.",
-                "connect": "Conectar",
-                "emptyTitle": "Ningún otro dispositivo está compartiendo pestañas todavía",
-                "emptyDescription": "Inicia sesión en tu cuenta de Anori Plus en otro equipo y activa la sincronización de pestañas allí."
             }
         },
         "tasks-plugin": {
@@ -501,11 +424,7 @@
                 "headline": "Ahora con el plugin de Pestañas ampliado. Guarda los enlaces a los que quieres volver y retoma las pestañas que dejaste abiertas en otro dispositivo.",
                 "stashTitle": "Almacén de pestañas",
                 "stashBody": "Usa este widget para guardar los enlaces a los que quieres volver más tarde. Mantenlos en tu nueva pestaña para que no se te olviden. Puedes almacenar una pestaña desde el propio widget o desde la nueva ventana emergente de Anori; simplemente haz clic en el icono de Anori en la barra de herramientas de la extensión.",
-                "stashSync": "Con Anori Plus, tu almacén se comparte en todos los navegadores en los que hayas iniciado sesión y en todos los perfiles.",
-                "syncedTabsTitle": "Pestañas sincronizadas",
-                "syncedTabsBody": "Consulta qué tienes abierto en tus otros dispositivos y retoma fácilmente donde lo dejaste. Ten en cuenta que esta función requiere Anori Plus y activarla explícitamente en los ajustes.",
                 "minorPopup": "Al hacer clic en el icono de Anori en la barra de herramientas ahora se abre una ventana emergente en lugar de simplemente abrir una nueva pestaña.",
-                "minorDevices": "Los ajustes incorporan una sección Dispositivos, donde puedes ver todo lo que ha iniciado sesión en tu cuenta de Anori Plus, y renombrarlo o eliminarlo.",
                 "minorTabsPlugin": "El widget Pestañas cerradas recientemente se integró en el nuevo plugin de Pestañas junto con los dos widgets anteriores, y ahora puede redimensionarse para ser más alto que antes.",
                 "minorWidgetHeaders": "Tareas, Notas, Feed RSS, Previsión meteorológica y Pestañas cerradas recientemente ahora comparten un mismo diseño de encabezado, por lo que sus títulos y botones se alinean uno al lado del otro.",
                 "minorPlurals": "Los idiomas traducidos ahora usan las formas plurales correctas, en lugar de tomar prestada la regla de singular o plural del inglés.",

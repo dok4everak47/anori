@@ -55,70 +55,6 @@
             "title": "Hata",
             "description": "Widget oluşturulamadı, ayrıntılar için konsolu kontrol edin."
         },
-        "cloud": {
-            "connect": "Bağlan",
-            "connected": "Bağlandı",
-            "disconnect": "Bağlantıyı kes",
-            "cancel": "İptal",
-            "account": "Anori Plus",
-            "login": "Giriş yap",
-            "logout": "Çıkış yap",
-            "email": "E-posta",
-            "password": "Şifre",
-            "connectedAs": "Bağlı kullanıcı",
-            "syncPausedBehind": "Bu Anori kopyası, bu profildeki başka bir cihazdan daha eski olduğundan, güncellenene kadar senkronizasyon duraklatıldı. O zamana kadar yaptığınız değişiklikler diğer cihazlarınıza senkronize edilmeyecek, ancak ihtiyaç duymanız ihtimaline karşı güncelleme öncesinde bir yedeğe kaydedilecek.",
-            "preUpdateBackup": "Son güncellemeden önceki yedek ({{date}})",
-            "downloadBackup": "İndir",
-            "noAccount": "Hesabınız yok mu?",
-            "createAccount": "Buradan oluşturun",
-            "userDataConflict": {
-                "description": "Bu tarayıcıda Anori Plus verileri var — örneğin Sekme arşiviniz — ve bu veriler oturum açtığınız hesaptan farklı bir hesaba senkronize edilmiş. Bu verilerle ne yapılsın?",
-                "upload": "Bu hesaba ekle",
-                "uploadHint": "Bu verileri korur ve oturum açtığınız hesaba ekler. Veriler size aitse bunu seçin — örneğin yeni bir hesaba geçtiyseniz.",
-                "discard": "Yerel verileri sil",
-                "discardHint": "Bu tarayıcıdan kaldırır ve bunun yerine hesabın mevcut verilerini kullanır. Veriler diğer hesaba aitse veya burada ihtiyacınız yoksa bunu seçin."
-            },
-            "plusDescription": "Anori Plus, yapılandırmanızı birden fazla tarayıcı ve cihaz arasında gerçek zamanlı olarak senkronize etmenizi sağlayan Anori için ek bir hizmettir.",
-            "learnMore": "Daha fazla bilgi",
-            "profiles": "Profiller",
-            "noProfiles": "Profil bulunamadı. Tarayıcılar arasında ayarları senkronize etmek için ilk profilinizi oluşturun.",
-            "createProfile": "Profil oluştur",
-            "profileName": "Profil adı",
-            "createdAt": "{{date}} tarihinde oluşturuldu",
-            "lastSyncedAt": "Son kullanım {{date}}",
-            "create": "Oluştur",
-            "profileCreatedSuccess": "Profil oluşturuldu! Artık diğer tarayıcıları bu profile bağlayabilirsiniz; ayarlarınız aralarında senkronize edilecektir.",
-            "confirm": "Onayla",
-            "rename": "Yeniden adlandır",
-            "delete": "Sil",
-            "deleteConfirmation": "\"{{profileName}}\" profilini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-            "connectConfirmation": {
-                "message": "\"{{profileName}}\" profiline bağlanmak, mevcut yerel yapılandırmanızın üzerine profilde saklanan yapılandırmayı yazacaktır. Devam etmek istiyor musunuz?"
-            },
-            "settings": {
-                "title": "Ayarlar",
-                "shareOpenTabs": "Açık sekmeleri bağlı diğer cihazlarla paylaş",
-                "shareOpenTabsHint": "Etkinleştirildiğinde, bu bilgisayarda açık olan sekmeler aynı Anori hesabına giriş yapmış diğer cihazlarınızla paylaşılır — böylece herhangi bir cihazdan sekmeleri görebilir ve yeniden açabilirsiniz."
-            },
-            "devices": {
-                "title": "Cihazlar",
-                "thisDevice": "Bu cihaz",
-                "rename": "Cihazı yeniden adlandır",
-                "remove": "Cihazı kaldır",
-                "removeConfirmation": "\"{{name}}\" hesabınızdan kaldırılsın mı? Oturumu kapatılacak ve senkronizasyon duracak.",
-                "namePlaceholder": "Cihaz adı",
-                "lastActive": "{{date}} etkin",
-                "empty": "Bu hesaba henüz giriş yapmış cihaz yok"
-            },
-            "error": {
-                "invalidCredentials": "Geçersiz e-posta veya şifre",
-                "unknown": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
-                "failedToLoadProfiles": "Profiller yüklenemedi",
-                "failedToLoadDevices": "Cihazlar yüklenemedi",
-                "profileNameRequired": "Profil adı zorunludur",
-                "failedToCreateProfile": "Profil oluşturulamadı"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Özel ikonlar, Anori'de daha sonra kullanmak üzere yüklediğiniz ikonlardır.",
             "customIconsAbsent": "Şu anda özel ikonlarınız yok. İlk özel ikonunuzu yüklemek için ayarlara gidin.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Renk şeması",
                 "previewColorScheme": "Önizleme renk şeması",
                 "hideDotPattern": "Nokta desenini gizle",
-                "colorSchemeSystem": "Sistem",
-                "colorSchemeLight": "Açık",
-                "colorSchemeDark": "Koyu",
-                "widgetBackgroundOpacity": "Widget arka plan opaklığı",
-                "widgetBackgroundOpacityHint": "Widget'ları daha az veya daha fazla şeffaf yapar. Yalnızca widget yüzeyini değiştirir; metin ve simgeler opak kalır.",
                 "fit": "Sığdır",
                 "fitCover": "Ekranı doldur (kırp)",
                 "fitContain": "Ekrana sığdır (tüm görsel)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Sağ",
                 "anchorBottomLeft": "Sol alt",
                 "anchorBottomCenter": "Alt",
-                "anchorBottomRight": "Sağ alt"
+                "anchorBottomRight": "Sağ alt",
+                "colorSchemeSystem": "Sistem",
+                "colorSchemeLight": "Açık",
+                "colorSchemeDark": "Koyu",
+                "widgetBackgroundOpacity": "Widget arka plan opaklığı",
+                "widgetBackgroundOpacityHint": "Widget'ları daha az veya daha fazla şeffaf yapar. Yalnızca widget yüzeyini değiştirir; metin ve simgeler opak kalır."
             },
             "importExport": {
                 "title": "İçe aktar & dışa aktar",
                 "info": "Burada ayarlarınızı yedekleyebilir veya eski bir yedeği geri yükleyebilirsiniz.",
                 "import": "İçe aktar",
                 "export": "Dışa aktar",
-                "cloudWarning": "Bulut senkronizasyonu etkin. Yedek içe aktarıldığında senkronizasyon profilinizden bağlantınız kesilecektir. İçe aktarma işleminden sonra yeniden bağlanmanız gerekecektir. Devam edilsin mi?",
-                "cloudSyncHint": "Yapılandırmanızı buluta yedeklemek veya cihazlar arasında gerçek zamanlı senkronize etmek ister misiniz? Bunu sorunsuzca yapan <0>Anori Plus</0>'ı deneyin.",
                 "importError": "Yedek içe aktarılamadı: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Ayarlarda farklı temaları deneyin",
-                    "anoriPlus": "Anori Plus'a göz atın",
                     "widgets": "Mevcut widget'ları keşfedin"
                 }
             }
@@ -375,16 +308,6 @@
                 "grantTabs": "Sekmeler saklama özelliği için ek izinler gerekiyor",
                 "recentlyStashed": "Son saklananlar",
                 "nothingStashed": "Henüz hiçbir şey saklanmadı"
-            },
-            "syncedTabs": {
-                "title": "Senkronize sekmeler",
-                "loading": "Sekmeler yükleniyor...",
-                "unnamedGroup": "Grup",
-                "notConnectedTitle": "Diğer cihazlarınızdaki sekmeleri görün",
-                "notConnectedDescription": "Cihazlarınız arasında açık sekmeleri senkronize etmek için Anori Plus'ı bağlayın.",
-                "connect": "Bağlan",
-                "emptyTitle": "Henüz sekme paylaşan başka cihaz yok",
-                "emptyDescription": "Başka bir bilgisayarda Anori Plus hesabınıza giriş yapın ve orada sekme senkronizasyonunu açın."
             }
         },
         "tasks-plugin": {
@@ -500,11 +423,7 @@
                 "headline": "Artık genişletilmiş Sekmeler eklentisiyle. Geri dönmek istediğiniz bağlantıları saklayın ve başka bir cihazda açık bıraktığınız sekmeleri kaldığınız yerden devam edin.",
                 "stashTitle": "Sekme deposu",
                 "stashBody": "Daha sonra geri dönmek istediğiniz bağlantıları saklamak için bu widget'ı kullanın. Yeni sekme sayfanızda tutun ki gerçekten hatırlayasınız. Bir sekme, widget'ın kendisinden veya yeni Anori açılır penceresinden depolanabilir; bunun için uzantı araç çubuğundaki Anori simgesine tıklamanız yeterli.",
-                "stashSync": "Anori Plus ile deponuz, oturum açtığınız her tarayıcıda ve tüm profillerde paylaşılır.",
-                "syncedTabsTitle": "Senkronize sekmeler",
-                "syncedTabsBody": "Diğer cihazlarınızda nelerin açık olduğunu görün ve önceki bir cihazda kaldığınız yerden zahmetsizce devam edin. Bu özelliğin Anori Plus gerektirdiğini ve ayarlardan açıkça etkinleştirilmesi gerektiğini lütfen unutmayın.",
                 "minorPopup": "Araç çubuğundaki Anori simgesine tıklamak artık yeni bir sekme açmak yerine bir açılır pencere açıyor.",
-                "minorDevices": "Ayarlara bir Cihazlar bölümü eklendi; burada Anori Plus hesabınıza bağlı tüm cihazları görebilir, yeniden adlandırabilir veya kaldırabilirsiniz.",
                 "minorTabsPlugin": "Son kapatılan sekmeler widget'ı, yukarıdaki iki widget'la birlikte yeni bir Sekmeler eklentisi altında toplandı ve artık eskisinden daha uzun boyutlandırılabiliyor.",
                 "minorWidgetHeaders": "Görevler, Notlar, RSS akışı, Hava durumu tahmini ve Son kapatılan sekmeler artık ortak bir başlık düzeni kullanıyor; böylece başlıkları ve düğmeleri yan yana hizalanıyor.",
                 "minorPlurals": "Çevrilen diller artık İngilizce'nin tek-ya-çok kuralını ödünç almak yerine kendi doğru çoğul biçimlerini kullanıyor.",

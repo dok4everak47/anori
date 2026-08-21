@@ -54,9 +54,6 @@ type LegacyStorageContent = {
   dailyUsageMetrics?: Record<string, number>;
   performanceAvgLcp?: { avg: number; n: number };
   performanceRawInp?: number[];
-
-  // Cloud
-  cloudAccount?: { sessionToken: string; email: string; userId: string } | null;
 };
 
 /**
@@ -138,11 +135,6 @@ export async function migrateFromLegacy(): Promise<void> {
   newData.dailyUsageMetrics = wrapValue(allData.dailyUsageMetrics ?? {}, hlc.tick());
   newData.performanceAvgLcp = wrapValue(allData.performanceAvgLcp ?? { avg: 0, n: 0 }, hlc.tick());
   newData.performanceRawInp = wrapValue(allData.performanceRawInp ?? [], hlc.tick());
-
-  // Cloud
-  if (allData.cloudAccount !== undefined) {
-    newData.cloudAccount = wrapValue(allData.cloudAccount, hlc.tick());
-  }
 
   const keysToDelete = new Set<string>();
   keysToDelete.add(LEGACY_STORAGE_VERSION_KEY);

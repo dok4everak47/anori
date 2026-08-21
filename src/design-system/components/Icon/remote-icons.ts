@@ -28,13 +28,54 @@ const fetchRemoteIconSets = async (): Promise<IconSetInfo[]> => {
     }));
 };
 
-const useRemoteState = <T>(queryFn: () => Promise<T>): RemoteState<T> => {
-  const [state, setState] = useState<RemoteState<T>>({ data: undefined, isLoading: true, isError: false });
+const remoteDataCache = new Map<string, unknown>();
+const remotePromises = new Map<string, Promise<unknown>>();
+
+const getCachedRemoteData = <T>(key: string, fetcher: () => Promise<T>): Promise<T> => {
+  const existing = remotePromises.get(key);
+  if (existing) return existing as Promise<T>;
+
+  const promise = fetcher()
+    .then((data) => {
+      remoteDataCache.set(key, data);
+      return data;
+    })
+    .catch((error) => {
+      remotePromises.delete(key);
+      throw error;
+    });
+  remotePromises.set(key, promise);
+  return promise;
+};
+
+const useRemoteState = <T>(queryKey: unknown, queryFn: () => Promise<T>, enabled = true): RemoteState<T> => {
+  const key = useMemo(() => JSON.stringify(queryKey), [queryKey]);
+  const [state, setState] = useState<RemoteState<T>>(() => {
+    const cachedData = remoteDataCache.get(key) as T | undefined;
+    return { data: cachedData, isLoading: enabled && cachedData === undefined, isError: false };
+  });
+  const [currentKey, setCurrentKey] = useState(key);
+
+  if (currentKey !== key) {
+    setCurrentKey(key);
+    const cachedData = remoteDataCache.get(key) as T | undefined;
+    setState({ data: cachedData, isLoading: enabled && cachedData === undefined, isError: false });
+  }
 
   useEffect(() => {
+    const cachedData = remoteDataCache.get(key) as T | undefined;
+    if (!enabled) {
+      setState({ data: undefined, isLoading: false, isError: false });
+      return;
+    }
+    if (cachedData !== undefined) {
+      setState({ data: cachedData, isLoading: false, isError: false });
+      return;
+    }
+
     let cancelled = false;
     setState({ data: undefined, isLoading: true, isError: false });
-    queryFn()
+    getCachedRemoteData(key, queryFn)
       .then((data) => {
         if (!cancelled) setState({ data, isLoading: false, isError: false });
       })
@@ -44,7 +85,7 @@ const useRemoteState = <T>(queryFn: () => Promise<T>): RemoteState<T> => {
     return () => {
       cancelled = true;
     };
-  }, [queryFn]);
+  }, [enabled, key, queryFn]);
 
   return state;
 };
@@ -52,7 +93,7 @@ const useRemoteState = <T>(queryFn: () => Promise<T>): RemoteState<T> => {
 export const useIconSets = () => {
   const { t } = useTranslation();
   const queryFn = useMemo(() => fetchRemoteIconSets, []);
-  const { data, isLoading, isError } = useRemoteState(queryFn);
+  const { data, isLoading, isError } = useRemoteState("icon-sets", queryFn);
   const iconSetIds = useMemo(() => [CUSTOM_ICONS_SET_NAME, ...(data ?? []).map((s) => s.id)], [data]);
   const prettyNames = useMemo(
     () => Object.fromEntries([[CUSTOM_ICONS_SET_NAME, t("customIcons")], ...(data ?? []).map((s) => [s.id, s.name])]),
@@ -108,12 +149,14 @@ const getRemoteIcons = async ({ set, searchQuery }: GetRemoteIconsOptions): Prom
 
 export const useIconsSuspense = ({ set, searchQuery }: GetRemoteIconsOptions) => {
   const { customIcons } = useCustomIcons();
-  const enabled = Boolean(set || searchQuery);
+  const isCustomSet = set === CUSTOM_ICONS_SET_NAME;
+  const enabled = Boolean(set || searchQuery) && !isCustomSet;
+  const queryKey = useMemo(() => ({ scope: "remote-icons", set, searchQuery }), [searchQuery, set]);
   const queryFn = useMemo(
-    () => () => (enabled ? getRemoteIcons({ set, searchQuery }) : Promise.resolve([])),
-    [enabled, searchQuery, set],
+    () => () => getCachedRemoteData(JSON.stringify({ set, searchQuery }), () => getRemoteIcons({ set, searchQuery })),
+    [searchQuery, set],
   );
-  const { data, isLoading, isError } = useRemoteState(queryFn);
+  const { data, isLoading, isError } = useRemoteState(queryKey, queryFn, enabled);
   const allIcons = useMemo(() => {
     const matchingCustomIcons =
       set && set !== CUSTOM_ICONS_SET_NAME
@@ -122,5 +165,5 @@ export const useIconsSuspense = ({ set, searchQuery }: GetRemoteIconsOptions) =>
     return [...matchingCustomIcons.map((i) => `${CUSTOM_ICONS_SET_NAME}:${i.name}`), ...(data ?? [])];
   }, [customIcons, data, set, searchQuery]);
 
-  return { icons: allIcons, isLoading, isError };
+  return { icons: allIcons, isLoading: isLoading || (enabled && data === undefined), isError };
 };

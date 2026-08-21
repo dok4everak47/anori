@@ -55,70 +55,6 @@
             "title": "Ops",
             "description": "O widget falhou ao renderizar, verifique o console para mais detalhes."
         },
-        "cloud": {
-            "connect": "Conectar",
-            "connected": "Conectado",
-            "disconnect": "Desconectar",
-            "cancel": "Cancelar",
-            "account": "Anori Plus",
-            "login": "Entrar",
-            "logout": "Sair",
-            "email": "E-mail",
-            "password": "Senha",
-            "connectedAs": "Conectado como",
-            "syncPausedBehind": "Esta cópia do Anori é mais antiga do que outro dispositivo neste perfil, portanto a sincronização está pausada até que seja atualizada. As alterações feitas até lá não serão sincronizadas com seus outros dispositivos, mas serão salvas em um backup antes da atualização, caso você precise delas.",
-            "preUpdateBackup": "Backup de antes da sua última atualização ({{date}})",
-            "downloadBackup": "Baixar",
-            "noAccount": "Não tem uma conta?",
-            "createAccount": "Crie uma aqui",
-            "userDataConflict": {
-                "description": "Este navegador tem dados do Anori Plus — por exemplo, seu Arquivo de abas — que foram sincronizados com uma conta diferente da que você está entrando. O que deve acontecer com eles?",
-                "upload": "Adicionar a esta conta",
-                "uploadHint": "Mantém esses dados e os mescla na conta em que você está entrando. Escolha esta opção se forem seus — por exemplo, se você mudou para uma nova conta.",
-                "discard": "Descartar dados locais",
-                "discardHint": "Remove-os deste navegador e usa o que esta conta já tem. Escolha esta opção se os dados pertencem à outra conta ou você não precisa deles aqui."
-            },
-            "plusDescription": "O Anori Plus é um serviço adicional para o Anori que permite sincronizar sua configuração entre vários navegadores e dispositivos em tempo real.",
-            "learnMore": "Saiba mais",
-            "profiles": "Perfis",
-            "noProfiles": "Nenhum perfil encontrado. Crie seu primeiro perfil para sincronizar as configurações entre navegadores.",
-            "createProfile": "Criar perfil",
-            "profileName": "Nome do perfil",
-            "createdAt": "Criado em {{date}}",
-            "lastSyncedAt": "Último uso {{date}}",
-            "create": "Criar",
-            "profileCreatedSuccess": "Perfil criado! Agora você pode conectar outros navegadores a este perfil e suas configurações serão sincronizadas entre eles.",
-            "confirm": "Confirmar",
-            "rename": "Renomear",
-            "delete": "Excluir",
-            "deleteConfirmation": "Tem certeza de que deseja excluir o perfil \"{{profileName}}\"? Esta ação não pode ser desfeita.",
-            "connectConfirmation": {
-                "message": "Conectar ao perfil \"{{profileName}}\" substituirá sua configuração local atual pela armazenada no perfil. Deseja continuar?"
-            },
-            "settings": {
-                "title": "Configurações",
-                "shareOpenTabs": "Compartilhar abas abertas com outros dispositivos conectados",
-                "shareOpenTabsHint": "Quando ativado, as abas abertas neste computador são compartilhadas com seus outros dispositivos conectados a esta conta Anori — para que você possa ver e reabrir abas em qualquer um deles."
-            },
-            "devices": {
-                "title": "Dispositivos",
-                "thisDevice": "Este dispositivo",
-                "rename": "Renomear dispositivo",
-                "remove": "Remover dispositivo",
-                "removeConfirmation": "Remover \"{{name}}\" da sua conta? Ele será desconectado e deixará de sincronizar.",
-                "namePlaceholder": "Nome do dispositivo",
-                "lastActive": "ativo {{date}}",
-                "empty": "Nenhum dispositivo conectado a esta conta ainda"
-            },
-            "error": {
-                "invalidCredentials": "E-mail ou senha inválidos",
-                "unknown": "Algo deu errado. Por favor, tente novamente.",
-                "failedToLoadProfiles": "Falha ao carregar perfis",
-                "failedToLoadDevices": "Falha ao carregar dispositivos",
-                "profileNameRequired": "O nome do perfil é obrigatório",
-                "failedToCreateProfile": "Falha ao criar perfil"
-            }
-        },
         "iconsPicker": {
             "customIconsInfo": "Ícones customiozados são ícones que você sobe para depois usar no Anori.",
             "customIconsAbsent": "Atualmente, você não tem nenhum ícone customizado. Para subir seu primeiro ícone customizado por favor vá para as configurações.",
@@ -191,11 +127,6 @@
                 "colorScheme": "Esquema de cores",
                 "previewColorScheme": "Esquema de cores da pré-visualização",
                 "hideDotPattern": "Ocultar padrão de pontos",
-                "colorSchemeSystem": "Sistema",
-                "colorSchemeLight": "Claro",
-                "colorSchemeDark": "Escuro",
-                "widgetBackgroundOpacity": "Opacidade do fundo do widget",
-                "widgetBackgroundOpacityHint": "Deixa os widgets mais ou menos transparentes. Isso altera apenas a superfície do widget; texto e ícones permanecem opacos.",
                 "fit": "Ajustar",
                 "fitCover": "Preencher tela (cortar)",
                 "fitContain": "Ajustar à tela (imagem inteira)",
@@ -209,15 +140,18 @@
                 "anchorCenterRight": "Direita",
                 "anchorBottomLeft": "Inferior esquerdo",
                 "anchorBottomCenter": "Inferior",
-                "anchorBottomRight": "Inferior direito"
+                "anchorBottomRight": "Inferior direito",
+                "colorSchemeSystem": "Sistema",
+                "colorSchemeLight": "Claro",
+                "colorSchemeDark": "Escuro",
+                "widgetBackgroundOpacity": "Opacidade do fundo do widget",
+                "widgetBackgroundOpacityHint": "Deixa os widgets mais ou menos transparentes. Isso altera apenas a superfície do widget; texto e ícones permanecem opacos."
             },
             "importExport": {
                 "title": "Importar & exportar",
                 "info": "Aqui você pode fazer backup de suas configurações ou restaurar backups mais antigos.",
                 "import": "Importar",
                 "export": "Exportar",
-                "cloudWarning": "Você tem a sincronização na nuvem ativada. Importar um backup irá desconectá-lo do seu perfil de sincronização. Você precisará reconectar após a importação. Continuar?",
-                "cloudSyncHint": "Quer fazer backup da sua configuração na nuvem ou sincronizá-la entre dispositivos em tempo real? Experimente o <0>Anori Plus</0> — ele faz isso de forma transparente.",
                 "importError": "Não foi possível importar o backup: {{error}}"
             },
             "aboutHelp": {
@@ -276,7 +210,6 @@
             "preset": {
                 "task": {
                     "themes": "Experimente diferentes temas nas configurações",
-                    "anoriPlus": "Conheça o Anori Plus",
                     "widgets": "Explore os widgets disponíveis"
                 }
             }
@@ -376,16 +309,6 @@
                 "grantTabs": "Permissões adicionais são necessárias para o recurso de abas guardadas",
                 "recentlyStashed": "Guardados recentemente",
                 "nothingStashed": "Nada guardado ainda"
-            },
-            "syncedTabs": {
-                "title": "Abas sincronizadas",
-                "loading": "Carregando abas...",
-                "unnamedGroup": "Grupo",
-                "notConnectedTitle": "Veja as abas dos seus outros dispositivos",
-                "notConnectedDescription": "Conecte o Anori Plus para sincronizar abas abertas entre seus dispositivos.",
-                "connect": "Conectar",
-                "emptyTitle": "Nenhum outro dispositivo está compartilhando abas ainda",
-                "emptyDescription": "Entre na sua conta Anori Plus em outro computador e ative a sincronização de abas lá."
             }
         },
         "tasks-plugin": {
@@ -501,11 +424,7 @@
                 "headline": "Agora com o plugin de Abas expandido. Guarde os links aos quais você quer voltar e retome as abas que deixou abertas em outro dispositivo.",
                 "stashTitle": "Stash de abas",
                 "stashBody": "Use este widget para guardar os links aos quais você quer voltar mais tarde. Mantenha-os na sua nova aba para não esquecê-los. Uma aba pode ser guardada no stash pelo próprio widget ou pela nova janela popup do Anori — basta clicar no ícone do Anori na barra de ferramentas da extensão.",
-                "stashSync": "Com o Anori Plus, seu stash é compartilhado em todos os navegadores nos quais você está conectado e em todos os perfis.",
-                "syncedTabsTitle": "Abas sincronizadas",
-                "syncedTabsBody": "Veja o que está aberto nos seus outros dispositivos e retome de onde parou com facilidade. Observe que este recurso requer o Anori Plus e uma ativação explícita nas configurações.",
                 "minorPopup": "Clicar no ícone do Anori na barra de ferramentas agora abre um popup em vez de apenas abrir uma nova aba.",
-                "minorDevices": "As configurações ganharam uma seção Dispositivos, onde você pode ver tudo que está conectado à sua conta do Anori Plus, além de renomear ou remover dispositivos.",
                 "minorTabsPlugin": "O widget Abas fechadas recentemente foi incorporado a um novo plugin de Abas junto com os dois widgets acima, e agora pode ser redimensionado para uma altura maior do que antes.",
                 "minorWidgetHeaders": "Tarefas, Notas, Feed RSS, Previsão do tempo e Abas fechadas recentemente agora compartilham um layout de cabeçalho único, de modo que seus títulos e botões ficam alinhados lado a lado.",
                 "minorPlurals": "Os idiomas traduzidos agora usam as formas plurais corretas, em vez de seguir a regra de singular ou plural do inglês.",
