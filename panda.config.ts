@@ -72,6 +72,21 @@ export default defineConfig({
           tooltip: { value: 4000 },
           "app-cover": { value: 9000 },
         },
+        letterSpacings: {
+          tight: { value: "0.02em" },
+          normal: { value: "0.075rem" },
+          wide: { value: "0.1em" },
+        },
+        durations: {
+          fast: { value: "100ms" },
+          normal: { value: "200ms" },
+          slow: { value: "300ms" },
+        },
+        easings: {
+          standard: { value: "ease-in-out" },
+          emphasized: { value: "cubic-bezier(0.2, 0, 0, 1)" },
+          spring: { value: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
+        },
         shadows: {
           raised: { value: "rgba(0, 0, 0, 0.25) 0px 4px 6px 4px" },
           overlay: { value: "0px 4px 4px 3px rgba(0, 0, 0, 0.4)" },
@@ -174,6 +189,26 @@ export default defineConfig({
             placeholder: { value: "var(--ds-text-placeholder)" },
             disabled: { value: "var(--ds-text-disabled)" },
           },
+
+          // Glass depth hierarchy (progressive translucency)
+          glass: {
+            base: { value: "var(--ds-glass-base)" },
+            elevated: { value: "var(--ds-glass-elevated)" },
+            floating: { value: "var(--ds-glass-floating)" },
+            overlay: { value: "var(--ds-glass-overlay)" },
+          },
+          "glass-border": {
+            DEFAULT: { value: "var(--ds-glass-border)" },
+            strong: { value: "var(--ds-glass-border-strong)" },
+          },
+
+          // Surface interaction states
+          "surface-hover": { value: "var(--ds-surface-hover)" },
+          "surface-active": { value: "var(--ds-surface-active)" },
+
+          // Focus and interaction
+          "focus-ring": { value: "var(--ds-focus-ring)" },
+          selected: { value: "var(--ds-selected)" },
         },
       },
     },

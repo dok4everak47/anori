@@ -39,8 +39,10 @@ const backdrop = css({
 
 const wrapper = css({
   borderRadius: "xl",
-  bg: "surface",
-  boxShadow: "surface.edge",
+  bg: "glass.floating",
+  backdropFilter: "blur(24px) saturate(180%)",
+  border: "1px solid var(--ds-glass-border)",
+  boxShadow: "0 16px 48px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15)",
   overflow: "hidden",
 });
 

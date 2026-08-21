@@ -36,12 +36,12 @@ export const useDragSnapPosition = (
   useDragDropMonitor({
     onDragStart(event) {
       const { source } = event.operation;
-      if (!source || source.type !== "widget") return;
+      if (source?.type !== "widget") return;
       dragStartRect.current = gridRef.current?.getBoundingClientRect() ?? null;
     },
     onDragMove(event) {
       const { source, target } = event.operation;
-      if (!source || source.type !== "widget") return;
+      if (source?.type !== "widget") return;
       const item = layout.find((w) => w.instanceId === source.id);
       if (!item || !gridRef.current) return;
 
@@ -96,7 +96,7 @@ export const useDragSnapPosition = (
       dragStartRect.current = null;
       if (event.canceled) return;
       const { source, target } = event.operation;
-      if (!source || source.type !== "widget" || target?.type === "folder") return;
+      if (source?.type !== "widget" || target?.type === "folder") return;
       if (lastSnap && lastSnap.instanceId === source.id) {
         onDrop([{ instanceId: lastSnap.instanceId, position: lastSnap.position }, ...lastSnap.displaced]);
       }

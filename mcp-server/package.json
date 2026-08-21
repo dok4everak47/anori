@@ -1,0 +1,13 @@
+{
+    "name": "anori-mcp-server",
+    "version": "2.3.0",
+    "private": true,
+    "type": "module",
+    "bin": {
+        "anori-mcp": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "start": "node --experimental-strip-types src/index.ts"
+    }
+}

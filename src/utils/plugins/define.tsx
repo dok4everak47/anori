@@ -174,6 +174,7 @@ export const definePlugin = <
       decodeConfig: decodePluginConfig,
       encodeConfig: encodePluginConfig,
       configurationScreen: pluginConfigSpec ? pluginConfigSpec.configurationScreen : null,
+      registerCommands: undefined as SomePlugin["registerCommands"],
       get onMessage() {
         return behaviors.onMessage;
       },

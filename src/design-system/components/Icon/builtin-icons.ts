@@ -32,6 +32,7 @@ import IonCodeSlashSharp from "~icons/ion/code-slash-sharp?raw";
 import IonColorPalette from "~icons/ion/color-palette?raw";
 import IonCompass from "~icons/ion/compass?raw";
 import IonDice from "~icons/ion/dice?raw";
+import IonEllipsisHorizontal from "~icons/ion/ellipsis-horizontal?raw";
 import IonExpand from "~icons/ion/expand?raw";
 import IonFileTrayFull from "~icons/ion/file-tray-full?raw";
 import IonFolderOpenSharp from "~icons/ion/folder-open-sharp?raw";
@@ -82,6 +83,7 @@ const builtinIconSvgsBySourceId = {
   "ion:close": IonClose,
   "ion:code-slash-sharp": IonCodeSlashSharp,
   "ion:color-palette": IonColorPalette,
+  "ion:ellipsis-horizontal": IonEllipsisHorizontal,
   "ion:file-tray-full": IonFileTrayFull,
   "ion:folder-open-sharp": IonFolderOpenSharp,
   "ion:help-buoy-sharp": IonHelpBuoySharp,
@@ -172,6 +174,7 @@ export const builtinIcons = {
   cloud: "ion:cloud",
   compass: "ion:compass",
   dice: "ion:dice",
+  ellipsis: "ion:ellipsis-horizontal",
   helpBuoy: "ion:help-buoy-sharp",
   settings: "ion:settings-sharp",
   chevronBack: "ion:chevron-back",

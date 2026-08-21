@@ -19,7 +19,8 @@ export const Favicon = ({ useFaviconApiIfPossible, ref, ...props }: FaviconProps
 
   const iconUrl = useMemo(() => {
     const size = props.width || props.height || 64;
-    const sizeInt = (typeof size === "number" ? size : parseInt(size), 10) * 2;
+    const parsedSize = typeof size === "number" ? size : parseInt(size, 10);
+    const sizeInt = (Number.isFinite(parsedSize) ? parsedSize : 10) * 2;
     if (hasPermission && useFaviconApiIfPossible) {
       const resUrl = new URL(browser.runtime.getURL("/_favicon/"));
       resUrl.searchParams.set("pageUrl", props.url);

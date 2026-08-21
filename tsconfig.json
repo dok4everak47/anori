@@ -12,6 +12,8 @@
             "@anori/translations/*": ["./src/translations/*"],
             "@anori/cloud-integration/*": ["./src/cloud-integration/*"],
             "@anori/design-system/*": ["./src/design-system/*"],
+            "@anori/sdk": ["./src/sdk/index.ts"],
+            "@anori/sdk/*": ["./src/sdk/*"],
             "styled-system/*": ["./styled-system/*"]
         },
         "outDir": "dist",

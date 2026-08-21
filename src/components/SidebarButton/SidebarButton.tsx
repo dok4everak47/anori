@@ -27,8 +27,9 @@ const button = css({
   borderColor: "transparent",
   cursor: "pointer",
   userSelect: "none",
-  transition: "all 0.1s ease-in-out",
-  _hover: { transform: "scale(1.15)", color: "accent" },
+  transition: "color 0.1s ease-in-out, background 0.1s ease-in-out, transform 0.1s ease-in-out",
+  _hover: { transform: "scale(1.08)", color: "accent", background: "surface-hover" },
+  _active: { transform: "scale(0.96)" },
 });
 
 const activeRing = css({

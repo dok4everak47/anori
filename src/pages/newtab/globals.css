@@ -3,6 +3,45 @@
    component classes — and they're page-specific, so they live here rather than in panda's app-wide
    globalCss. Colours reference the design-system runtime vars (--ds-*). */
 
+/* Glass blur tokens — static values (not theme-dependent) used by backdrop-filter. */
+:root {
+  --ds-blur-sm: 4px;
+  --ds-blur-md: 12px;
+  --ds-blur-lg: 24px;
+  --ds-blur-xl: 48px;
+}
+
+/* Focus ring — keyboard-only focus indicator for the Liquid Glass design system.
+   Components with custom focus styles override this via :focus-visible. */
+:focus-visible {
+  outline: 2px solid var(--ds-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Reduced motion — respect user accessibility preferences.
+   Only the most essential opacity transitions persist; scale, slide, and blur animations are disabled. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+
+  :root {
+    --ds-blur-sm: 0px;
+    --ds-blur-md: 0px;
+    --ds-blur-lg: 0px;
+    --ds-blur-xl: 0px;
+  }
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 html {
   height: 100dvh;
   background: #121615;
@@ -80,5 +119,14 @@ html.theme-hide-dot-pattern #root::before {
   }
   to {
     transform: translateX(100%);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

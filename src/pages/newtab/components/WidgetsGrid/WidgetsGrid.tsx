@@ -3,11 +3,13 @@ import { WidgetCard } from "@anori/components/WidgetCard/WidgetCard";
 import { MotionScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
 import type { GridDimensions, GridItemSize, GridPosition } from "@anori/utils/grid/types";
 import { canPlaceItemInGrid, GRID_DRAG_EXTEND_SLOTS, positionToPixelPosition } from "@anori/utils/grid/utils";
+import { useWidgetSelection } from "@anori/utils/selection";
 import type { Mapping } from "@anori/utils/types";
 import type { WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { AnimatePresence, m } from "motion/react";
-import { memo, type Ref, useState } from "react";
+import { type KeyboardEventHandler, memo, type Ref, useCallback, useEffect, useRef, useState } from "react";
 import { css, cva } from "styled-system/css";
+import { ContextMenu, type ContextMenuAction } from "../ContextMenu/ContextMenu";
 import { computeDisplacedMoves, resizePushDirection } from "./displacement";
 import { useDragSnapPosition } from "./use-drag-snap-position";
 
@@ -95,6 +97,72 @@ export const WidgetsGrid = memo(function WidgetsGrid({
   scrollAreaRef,
   isEditing,
 }: WidgetsGridProps) {
+  const { focusIndex, setFocusIndex, select, clear } = useWidgetSelection();
+  const gridContainerRef = useRef<HTMLDivElement>(null);
+
+  const [contextMenu, setContextMenu] = useState<{
+    widget: WidgetInFolderWithMeta;
+    position: { x: number; y: number };
+  } | null>(null);
+
+  const _handleContextMenu = useCallback((w: WidgetInFolderWithMeta) => {
+    return (e: { x: number; y: number }) => {
+      setContextMenu({ widget: w, position: e });
+    };
+  }, []);
+
+  const getContextMenuActions = useCallback(
+    (w: WidgetInFolderWithMeta): ContextMenuAction[] => {
+      const actions: ContextMenuAction[] = [];
+      actions.push({
+        id: "open",
+        label: "Open",
+        action: () => {
+          const link = w.configuration?.url ?? w.configuration?.link;
+          if (typeof link === "string") {
+            window.open(link, "_self");
+          }
+        },
+      });
+      actions.push({
+        id: "open-new-tab",
+        label: "Open in New Tab",
+        action: () => {
+          const link = w.configuration?.url ?? w.configuration?.link;
+          if (typeof link === "string") {
+            window.open(link, "_blank");
+          }
+        },
+      });
+      actions.push({ id: "divider-1", label: "", divider: true, action: () => {} });
+      actions.push({
+        id: "copy-url",
+        label: "Copy URL",
+        action: () => {
+          const link = w.configuration?.url ?? w.configuration?.link;
+          if (typeof link === "string") {
+            navigator.clipboard.writeText(link);
+          }
+        },
+      });
+      if (w.widget.configurationScreen) {
+        actions.push({
+          id: "edit",
+          label: "Edit",
+          action: () => onEditWidget(w),
+        });
+      }
+      actions.push({ id: "divider-2", label: "", divider: true, action: () => {} });
+      actions.push({
+        id: "remove",
+        label: "Delete",
+        action: () => onLayoutUpdate([{ type: "remove", instanceId: w.instanceId }]),
+      });
+      return actions;
+    },
+    [onEditWidget, onLayoutUpdate],
+  );
+
   const tryRepositionWidget = (widget: WidgetInFolderWithMeta, position: GridPosition) => {
     const canPlaceThere = canPlaceItemInGrid({
       grid: gridDimensions,
@@ -192,6 +260,50 @@ export const WidgetsGrid = memo(function WidgetsGrid({
         ? { position: { x: resizeItem.x, y: resizeItem.y }, width: resizePreview.width, height: resizePreview.height }
         : null;
 
+  const handleKeyDown: KeyboardEventHandler = useCallback(
+    (e) => {
+      if (contextMenu) return;
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setFocusIndex(Math.min(focusIndex + 1, layout.length - 1));
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setFocusIndex(Math.max(focusIndex - 1, 0));
+          break;
+        case "Enter": {
+          e.preventDefault();
+          const w = layout[focusIndex];
+          if (w) {
+            const link = w.configuration?.url ?? w.configuration?.link;
+            if (typeof link === "string") {
+              window.open(link, "_self");
+            }
+          }
+          break;
+        }
+        case "Escape":
+          if (focusIndex >= 0) {
+            e.preventDefault();
+            setFocusIndex(-1);
+            clear();
+          }
+          break;
+      }
+    },
+    [contextMenu, focusIndex, layout, setFocusIndex, clear],
+  );
+
+  useEffect(() => {
+    if (focusIndex >= 0 && focusIndex < layout.length) {
+      const el = gridContainerRef.current?.querySelector(`[data-focus-index="${focusIndex}"]`);
+      if (el instanceof HTMLElement) {
+        el.focus();
+      }
+    }
+  }, [focusIndex, layout.length]);
+
   const maxWidthPx =
     convertUnitsToPixels(
       Math.max(0, ...layout.map((w) => Math.max(w.x + w.width, effectivePosition(w).x + effectiveSize(w).width))),
@@ -215,7 +327,13 @@ export const WidgetsGrid = memo(function WidgetsGrid({
       color="translucent"
       ref={scrollAreaRef}
     >
-      <div className={relativeWrapper({ onboarding: showOnboarding })} ref={gridRef}>
+      <div
+        role="grid"
+        className={relativeWrapper({ onboarding: showOnboarding })}
+        ref={gridRef}
+        onKeyDown={handleKeyDown}
+        tabIndex={-1}
+      >
         <AnimatePresence initial={false}>
           <div
             style={{
@@ -228,7 +346,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
           />
           {gridDimensions.isMeasured &&
             !deferWidgets &&
-            layout.map((w) => {
+            layout.map((w, idx) => {
               const entranceDelay = animateEntrance ? Math.min((w.x + w.y) * 0.06, 0.6) : undefined;
               return (
                 <WidgetCard
@@ -241,6 +359,16 @@ export const WidgetsGrid = memo(function WidgetsGrid({
                   size={w}
                   position={w}
                   entranceDelay={entranceDelay}
+                  tabIndex={0}
+                  data-focus-index={idx}
+                  onFocus={() => {
+                    setFocusIndex(idx);
+                    select({
+                      instanceId: w.instanceId,
+                      widgetId: w.widget.id,
+                      pluginId: w.plugin.id,
+                    });
+                  }}
                   onUpdateConfig={onUpdateWidgetConfig}
                   onRemove={() => onLayoutUpdate([{ type: "remove", instanceId: w.instanceId }])}
                   onEdit={w.widget.configurationScreen ? () => onEditWidget(w) : undefined}
@@ -291,6 +419,14 @@ export const WidgetsGrid = memo(function WidgetsGrid({
         )}
 
         {showOnboarding && <Onboarding gridDimensions={gridDimensions} />}
+
+        {contextMenu && (
+          <ContextMenu
+            actions={getContextMenuActions(contextMenu.widget)}
+            position={contextMenu.position}
+            onClose={() => setContextMenu(null)}
+          />
+        )}
       </div>
     </MotionScrollArea>
   );

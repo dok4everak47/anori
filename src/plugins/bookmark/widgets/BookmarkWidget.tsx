@@ -135,18 +135,9 @@ export const BookmarkWidget = memo(function BookmarkWidget({
             <div className={bookmarkHost}>{host}</div>
           </div>
           {isNavigating && !config.openInNewTab ? (
-            <Icon
-              className={loadingIcon}
-              icon={builtinIcons.spinner}
-              width={size === "m" ? rem(5.75) : rem(2.25)}
-              height={size === "m" ? rem(5.75) : rem(2.25)}
-            />
+            <Icon className={loadingIcon} icon={builtinIcons.spinner} width={rem(1.25)} height={rem(1.25)} />
           ) : (
-            <Icon
-              icon={config.icon}
-              width={size === "m" ? rem(5.75) : rem(2.25)}
-              height={size === "m" ? rem(5.75) : rem(2.25)}
-            />
+            <Icon icon={config.icon} width={rem(1.25)} height={rem(1.25)} />
           )}
         </div>
         <div className={cornerControls}>

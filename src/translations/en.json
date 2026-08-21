@@ -172,6 +172,8 @@
             "switchToFolderAbove": "Switch to folder above",
             "switchToFolderBelow": "Switch to folder below",
             "switchToNFolder": "Switch to 1st folder (works with other numbers too!)",
+            "commandPalette": "Open command palette",
+            "moreActions": "More actions",
             "editCurrentFolder": "Edit current folder",
             "addNewWidget": "Add new widget to current folder"
         },
@@ -406,6 +408,35 @@
             "errorTitle": "AnkiConnect can't be reached",
             "error": "Make sure Anki is running and the AnkiConnect add-on is installed.",
             "widgetName": "Anki"
+        },
+        "commandPalette": {
+            "title": "Commands",
+            "placeholder": "Search commands…",
+            "noResults": "No results found",
+            "navigate": "Navigate",
+            "open": "Open",
+            "close": "Close",
+            "goToHome": "Go to your workspace",
+            "switchFolder": "Switch to this folder",
+            "openSettings": "Open settings",
+            "toggleTheme": "Toggle theme",
+            "toggleThemeDesc": "Switch between light, dark, and system",
+            "showShortcuts": "Show keyboard shortcuts",
+            "askAi": "Ask Anori AI"
+        },
+        "ai": {
+            "title": "Ask Anori",
+            "commandTitle": "Ask Anori AI",
+            "commandDescription": "Organize and manage bookmarks with natural language",
+            "placeholder": "Ask Anori to organize, find, or edit bookmarks…",
+            "send": "Send",
+            "apply": "Apply",
+            "cancel": "Cancel",
+            "close": "Close",
+            "confirmHint": "Review the changes before applying.",
+            "closeHint": "Press Esc to close.",
+            "destructiveWarning": "{{count}} destructive action(s) included. This cannot be undone.",
+            "notConfigured": "AI is not configured. Add an API key in settings."
         }
     }
 }

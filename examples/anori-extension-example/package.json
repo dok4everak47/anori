@@ -1,0 +1,14 @@
+{
+    "name": "anori-extension-example",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "A minimal Anori extension demonstrating commands, tools, and events.",
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "zod": "^3.0.0"
+    }
+}

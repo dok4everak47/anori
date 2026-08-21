@@ -238,6 +238,24 @@ export function buildPalette(accentColor: OklchInput, mode: Mode, gamut: Gamut):
     divider: withAlpha(neutral[byMode(mode, 13, 1)], 0.15),
     "ghost-hover": withAlpha(neutral[byMode(mode, 13, 0)], byMode(mode, 0.07, 0.05)),
     "scrollbar-thumb": withAlpha(neutral[byMode(mode, 13, 1)], 0.1),
+
+    // Surface interaction states
+    "surface-hover": shade(sampleSurface, surfaceL, HOVER_DELTA * deltaBoost),
+    "surface-active": shade(sampleSurface, surfaceL, HOVER_DELTA * 2 * deltaBoost),
+
+    // Glass depth hierarchy (progressive translucency for Liquid Glass surfaces)
+    "glass-base": withAlpha(neutral[byMode(mode, 13, 11)], byMode(mode, 0.05, 0.12)),
+    "glass-elevated": withAlpha(neutral[byMode(mode, 13, 11)], byMode(mode, 0.1, 0.22)),
+    "glass-floating": withAlpha(neutral[byMode(mode, 13, 10)], byMode(mode, 0.18, 0.35)),
+    "glass-overlay": withAlpha(neutral[byMode(mode, 0, 13)], byMode(mode, 0.35, 0.12)),
+
+    // Glass edges (subtle borders for glass surfaces)
+    "glass-border": withAlpha(neutral[byMode(mode, 13, 0)], byMode(mode, 0.08, 0.06)),
+    "glass-border-strong": withAlpha(neutral[byMode(mode, 13, 0)], byMode(mode, 0.12, 0.1)),
+
+    // Focus and interaction tokens
+    "focus-ring": withAlpha(accent[byMode(mode, 7, 7)], byMode(mode, 0.5, 0.45)),
+    "selected": withAlpha(accent[byMode(mode, 7, 7)], byMode(mode, 0.15, 0.1)),
   };
 
   return { mode, scales, tokens };

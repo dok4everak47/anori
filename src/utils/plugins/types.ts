@@ -77,6 +77,18 @@ export type AnoriPlugin<
     intervalInMinutes: number;
     callback: () => void;
   };
+  registerCommands?: (registry: {
+    register: (command: {
+      id: string;
+      title: string;
+      description?: string;
+      icon?: string;
+      keywords?: string[];
+      execute: (context: {
+        selection?: { type: string; instanceId?: string; pluginId?: string; widgetId?: string } | null;
+      }) => { success: boolean; error?: string } | Promise<{ success: boolean; error?: string }>;
+    }) => () => void;
+  }) => void;
 };
 
 // A plugin/widget with its config type erased — the form the registry holds and the render pipeline

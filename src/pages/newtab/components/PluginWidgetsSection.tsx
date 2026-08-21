@@ -25,7 +25,22 @@ const mocks = css({
   padding: "3",
   borderRadius: "lg",
 });
-const widgetButton = css({ textAlign: "start", cursor: "pointer" });
+const widgetButton = css({
+  textAlign: "start",
+  cursor: "pointer",
+  borderRadius: "lg",
+  transition: "background 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+  _hover: {
+    background: "surface-hover",
+  },
+  _focusVisible: {
+    outline: "2px solid var(--ds-focus-ring)",
+    outlineOffset: "2px",
+  },
+  _active: {
+    background: "surface-active",
+  },
+});
 const widgetName = css({ marginTop: "1-5", marginLeft: "2", wordWrap: "normal" });
 
 export const PluginWidgetsSection = memo(function PluginWidgetsSection({

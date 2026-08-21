@@ -5,6 +5,7 @@ import type { Folder, WidgetInFolderWithMeta } from "@anori/utils/user-data/type
 import { m } from "motion/react";
 import { type CSSProperties, type Ref, useEffect, useState } from "react";
 import { css, cx } from "styled-system/css";
+import { DashboardHeader } from "./DashboardHeader/DashboardHeader";
 import { type LayoutChange, WidgetsGrid } from "./WidgetsGrid/WidgetsGrid";
 
 type FolderContentProps = {
@@ -67,12 +68,24 @@ const folderChangeTransition = { type: "spring", duration: 0.4, bounce: 0.17 } a
 const rootClass = css({
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  gap: "3",
+  justifyContent: "flex-start",
+  alignItems: "stretch",
+  gap: "1",
   flexGrow: 1,
   alignSelf: "stretch",
   maxHeight: "100%",
+  paddingInline: "4",
+  backgroundImage:
+    "radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in srgb, var(--ds-accent) 3%, transparent) 0%, transparent 60%)",
+});
+
+const gridWrapper = css({
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  minHeight: 0,
 });
 
 export const FolderContent = ({
@@ -124,20 +137,23 @@ export const FolderContent = ({
         } as CSSProperties
       }
     >
-      <WidgetsGrid
-        gridRef={gridRef}
-        scrollAreaRef={scrollAreaRef}
-        isEditing={isEditing}
-        gapSize={gapSize}
-        layout={widgets}
-        gridDimensions={gridDimensions}
-        onEditWidget={onEditWidget}
-        onUpdateWidgetConfig={onUpdateWidgetConfig}
-        onLayoutUpdate={onLayoutUpdate}
-        animateEntrance={animateEntrance}
-        deferWidgets={deferWidgets}
-        showOnboarding={showOnboarding}
-      />
+      {!isEditing && !showOnboarding && <DashboardHeader folderName={folder.name} isHome={folder.id === "home"} />}
+      <div className={gridWrapper}>
+        <WidgetsGrid
+          gridRef={gridRef}
+          scrollAreaRef={scrollAreaRef}
+          isEditing={isEditing}
+          gapSize={gapSize}
+          layout={widgets}
+          gridDimensions={gridDimensions}
+          onEditWidget={onEditWidget}
+          onUpdateWidgetConfig={onUpdateWidgetConfig}
+          onLayoutUpdate={onLayoutUpdate}
+          animateEntrance={animateEntrance}
+          deferWidgets={deferWidgets}
+          showOnboarding={showOnboarding}
+        />
+      </div>
     </m.div>
   );
 };

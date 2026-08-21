@@ -33,6 +33,10 @@ const cardCss = css({
   zIndex: "base",
   boxShadow: "surface.edge",
   backfaceVisibility: "hidden",
+  transition: "box-shadow 0.15s ease-in-out",
+  "&:not([data-busy]):hover": {
+    boxShadow: "{shadows.surface.edge}, 0 2px 8px rgba(0,0,0,0.12)",
+  },
   "&[data-busy]": {
     zIndex: "docked",
     boxShadow: "{shadows.surface.edge}, {shadows.overlay}",
@@ -46,15 +50,10 @@ const cardCss = css({
     opacity: 1,
     pointerEvents: "auto",
   },
-  // While dragging or resizing, the only control still mounted is the active one — keep it visible
-  // regardless of hover (the pointer may leave the card as it moves). Stay pointer-transparent so a
-  // drop target beneath the dragged card (e.g. a sidebar folder) still receives the pointer;
   "&[data-busy] .widget-control": {
     opacity: 1,
     pointerEvents: "none",
   },
-  // Resize is a native-pointer gesture on the handle itself (with pointer capture), so it must stay
-  // interactive throughout. (No drop-through is needed during a resize.)
   "&[data-resizing] .widget-control": {
     pointerEvents: "auto",
   },
@@ -65,10 +64,6 @@ const cardBackgroundCss = css({
     "color-mix(in srgb, var(--ds-surface) calc(18% + var(--anori-widget-opacity, 1) * 30%), transparent)!",
   backgroundImage:
     "linear-gradient(180deg, color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent) 0%, transparent 35%), linear-gradient(180deg, color-mix(in srgb, var(--ds-glass-highlight) calc((1 - var(--anori-widget-opacity, 1)) * 100%), transparent) 0%, transparent 10%)",
-  backdropFilter: "blur(calc(8px + var(--anori-widget-opacity, 1) * 26px)) saturate(190%)",
-  "&[data-busy]": {
-    backdropFilter: "none",
-  },
 });
 const cardPaddedCss = css({ padding: "4" });
 const cardFlushCss = css({ padding: 0 });
@@ -103,6 +98,10 @@ const control = cva({
         _nestedSvgIcon: { transform: "rotate(90deg)" },
         _compact: { bottom: "-8px", right: "-4px" },
       },
+      more: {
+        top: "1",
+        right: "1",
+      },
     },
   },
 });
@@ -136,6 +135,7 @@ type WidgetCardProps = {
       onUpdateConfig: (instanceId: string, config: Partial<Mapping>) => void;
       onRemove?: () => void;
       onEdit?: () => void;
+      onContextMenu?: (e: { x: number; y: number }) => void;
       onResize?: (newWidth: number, newHeight: number) => boolean | undefined;
       onResizePreview?: (size: GridItemSize | null) => void;
       onPositionChange?: (newPosition: GridPosition) => void;
@@ -158,6 +158,7 @@ export const WidgetCard = ({
   onUpdateConfig,
   onRemove,
   onEdit,
+  onContextMenu,
   onResize,
   onResizePreview,
   onPositionChange,
@@ -266,17 +267,11 @@ export const WidgetCard = ({
       whileHover={
         widget.appearance.withHoverAnimation
           ? {
-              scale: isEditing ? undefined : 1.05,
+              scale: isEditing ? undefined : 1.02,
             }
           : undefined
       }
-      whileTap={
-        widget.appearance.withHoverAnimation
-          ? {
-              scale: isEditing ? undefined : 0.95,
-            }
-          : undefined
-      }
+      whileTap={widget.appearance.withHoverAnimation && !isEditing && !isDragging ? { scale: 0.98 } : undefined}
       style={{
         boxShadow: glassHighlightBoxShadow,
         width: resize.width,
@@ -288,6 +283,23 @@ export const WidgetCard = ({
       }}
       {...props}
     >
+      {!isEditing &&
+        !otherWidgetDragging &&
+        type === "widget" &&
+        !isDragging &&
+        !resize.isResizing &&
+        onContextMenu && (
+          <IconButton
+            className={cx("widget-control", control({ position: "more" }))}
+            icon={builtinIcons.ellipsis}
+            label={t("moreActions")}
+            onClick={(e) => {
+              e.stopPropagation();
+              const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+              onContextMenu({ x: rect.right, y: rect.bottom });
+            }}
+          />
+        )}
       {isEditing && !otherWidgetDragging && type === "widget" && !resize.isResizing && !!onPositionChange && (
         <IconButton
           ref={handleRef}

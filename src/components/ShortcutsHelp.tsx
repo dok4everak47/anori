@@ -61,6 +61,12 @@ export const ShortcutsHelp = () => {
 
       <div className={shortcutRow}>
         <div className={hintWrapper}>
+          <ShortcutHint shortcut="meta+k" />
+        </div>
+        <div>{t("shortcuts.commandPalette")}</div>
+      </div>
+      <div className={shortcutRow}>
+        <div className={hintWrapper}>
           <ShortcutHint shortcut="alt+e" />
         </div>
         <div>{t("shortcuts.editCurrentFolder")}</div>

@@ -1,11 +1,9 @@
-import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Icon } from "@anori/design-system/components/Icon/Icon";
 import { useSizeSettings } from "@anori/utils/compact";
 import { useLinkNavigationState } from "@anori/utils/hooks";
 import { normalizeUrl } from "@anori/utils/misc";
 import type { WidgetRenderProps } from "@anori/utils/plugins/define";
-import { useWidgetMetadata } from "@anori/utils/plugins/widget";
 import { isMacLike } from "@anori/utils/shortcuts";
 import type { MouseEventHandler } from "react";
 import { memo } from "react";
@@ -17,9 +15,12 @@ import { bookmarkContent, bookmarkH2, bookmarkHost, bookmarkText, loadingIcon, w
 export const BookmarkGroupWidget = memo(function BookmarkGroupWidget({
   config,
 }: WidgetRenderProps<BookmarkGroupWidgetConfig> & { isMock?: boolean }) {
+  const { rem } = useSizeSettings();
+  const { onLinkClick, isNavigating } = useLinkNavigationState();
+  const { t } = useTranslation();
+
   const openGroup: MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault();
-    // aux click but with another button, like rmb
     if (e.type === "auxclick" && e.button !== 1) {
       return;
     }
@@ -32,36 +33,18 @@ export const BookmarkGroupWidget = memo(function BookmarkGroupWidget({
       title: config.title,
     });
   };
-  const { rem } = useSizeSettings();
-  const { onLinkClick, isNavigating } = useLinkNavigationState();
-  const { t } = useTranslation();
-  const {
-    size: { width },
-  } = useWidgetMetadata();
-  const size = width === 1 ? "s" : "m";
 
   return (
     <button type="button" className={widget} onClick={openGroup} onAuxClick={openGroup}>
-      <div className={bookmarkContent({ size })}>
+      <div className={bookmarkContent({ size: "s" })}>
         <div className={bookmarkText}>
-          <Heading singleLine={false} className={bookmarkH2({ size })}>
-            {config.title}
-          </Heading>
+          <span className={bookmarkH2({ size: "s" })}>{config.title}</span>
           <div className={bookmarkHost}>{t("bookmark-plugin.group")}</div>
         </div>
         {isNavigating ? (
-          <Icon
-            className={loadingIcon}
-            icon={builtinIcons.spinner}
-            width={size === "m" ? rem(5.75) : rem(2.25)}
-            height={size === "m" ? rem(5.75) : rem(2.25)}
-          />
+          <Icon className={loadingIcon} icon={builtinIcons.spinner} width={rem(1.25)} height={rem(1.25)} />
         ) : (
-          <Icon
-            icon={config.icon}
-            width={size === "m" ? rem(5.75) : rem(2.25)}
-            height={size === "m" ? rem(5.75) : rem(2.25)}
-          />
+          <Icon icon={config.icon} width={rem(1.25)} height={rem(1.25)} />
         )}
       </div>
     </button>

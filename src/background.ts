@@ -1,11 +1,37 @@
 import { availablePlugins } from "@anori/plugins/all";
+import { createExtensionFolderStore } from "@anori/utils/bookmark-service/extension-store";
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import { runOrphanGc } from "@anori/utils/storage/orphan-gc";
 import browser, { type Runtime } from "webextension-polyfill";
 
 type BackgroundMessage =
   | { type: "plugin-command"; pluginId: string; command: string; args: unknown }
-  | { type: "open-url"; url: string; inNewTab?: boolean; active?: boolean };
+  | { type: "open-url"; url: string; inNewTab?: boolean; active?: boolean }
+  | { type: "mcp-store"; method: string; params?: Record<string, unknown> };
+
+let mcpStorePromise: ReturnType<typeof createExtensionFolderStore> | null = null;
+async function getMcpStore() {
+  if (!mcpStorePromise) mcpStorePromise = createExtensionFolderStore();
+  return mcpStorePromise;
+}
+
+async function handleMcpStoreMessage(message: Extract<BackgroundMessage, { type: "mcp-store" }>) {
+  const store = await getMcpStore();
+  switch (message.method) {
+    case "store.getFolders":
+      return store.getFolders();
+    case "store.getWidgets": {
+      const { folderId } = (message.params ?? {}) as { folderId: string };
+      return store.getWidgets(folderId);
+    }
+    case "store.setWidgets": {
+      const { folderId, widgets } = (message.params ?? {}) as { folderId: string; widgets?: unknown };
+      return store.setWidgets(folderId, (widgets ?? []) as Awaited<ReturnType<typeof store.getWidgets>>);
+    }
+    default:
+      throw new Error(`Unknown MCP store method: ${message.method}`);
+  }
+}
 
 console.log("Background init");
 
@@ -177,6 +203,13 @@ browser.runtime.onMessage.addListener(async (rawMessage: unknown, sender: Runtim
     return browser.tabs.update(sender.tab.id, {
       url: message.url,
     });
+  } else if (message.type === "mcp-store") {
+    try {
+      return await handleMcpStoreMessage(message);
+    } catch (err) {
+      console.error("MCP store bridge error:", err);
+      throw err;
+    }
   }
 
   return true;
