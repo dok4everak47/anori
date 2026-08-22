@@ -25,8 +25,8 @@ body {
   /* The user's wallpaper, set at runtime; --background-color fills the letterbox areas a contained image leaves uncovered. */
   background-color: var(--background-color, transparent);
   background-image: var(--background-image);
-  background-size: var(--background-size, cover);
-  background-position: var(--background-position, center);
+  background-size: var(--background-size-override, var(--background-size, cover));
+  background-position: var(--background-position-override, var(--background-position, center));
   background-repeat: var(--background-repeat, no-repeat);
   overflow: hidden;
 }

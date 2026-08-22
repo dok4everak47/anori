@@ -3,8 +3,6 @@ import { SidebarButton } from "@anori/components/SidebarButton/SidebarButton";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
 import { TooltipProvider } from "@anori/design-system/components/Tooltip/Tooltip";
-import { anoriSchema } from "@anori/utils/storage";
-import { useStorageValue } from "@anori/utils/storage-lib";
 import type { Folder } from "@anori/utils/user-data/types";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,27 +21,39 @@ export type SidebarProps = {
 };
 
 const sidebarWrapper = cva({
-  base: { overflow: "hidden" },
+  base: {
+    position: "relative",
+    alignSelf: "stretch",
+    zIndex: "base",
+    "--sidebar-display": "none",
+    "&:hover": { zIndex: "dropdown", "--sidebar-display": "flex" },
+  },
   variants: {
     orientation: {
-      vertical: { paddingBlock: "7", paddingInline: "2" },
+      vertical: { paddingBlock: "7", paddingInline: "4" },
       horizontal: { paddingBlock: "4", paddingInline: "6" },
     },
-    autohide: { true: { "--sidebar-display": "none", "&:hover": { "--sidebar-display": "flex" } } },
     bookmarksBar: { true: {} },
   },
-  compoundVariants: [
-    { orientation: "vertical", autohide: true, css: { paddingInline: "4!", "&:hover": { paddingInline: "2!" } } },
-    { orientation: "vertical", bookmarksBar: true, css: { paddingTop: "2!" } },
-  ],
+  compoundVariants: [{ orientation: "vertical", bookmarksBar: true, css: { paddingTop: "2!" } }],
 });
 
-const sidebar = css({
-  flexGrow: 0,
-  flexShrink: 0,
-  maxHeight: "100%",
-  minHeight: "100%",
-  display: "var(--sidebar-display, flex) !important",
+const sidebar = cva({
+  base: {
+    position: "absolute!",
+    display: "var(--sidebar-display, none) !important",
+    background: "white",
+    borderRadius: "xl",
+    boxShadow: "popover",
+  },
+  variants: {
+    orientation: {
+      vertical: { insetBlock: "7", insetInlineStart: "4" },
+      horizontal: { insetBlockEnd: "4", insetInline: "6" },
+    },
+    bookmarksBar: { true: {} },
+  },
+  compoundVariants: [{ orientation: "vertical", bookmarksBar: true, css: { insetBlockStart: "2!" } }],
 });
 
 const sidebarViewport = css({ flexGrow: 1, display: "flex", flexDirection: "column" });
@@ -61,7 +71,7 @@ const sidebarContent = cva({
   base: { display: "flex !important", gap: "8" },
   variants: {
     orientation: {
-      vertical: { flexDirection: "column", paddingBlock: "3", paddingInline: "6" },
+      vertical: { flexDirection: "column", paddingBlock: "3", paddingInline: "3" },
       horizontal: { flexDirection: "row", padding: "3" },
     },
   },
@@ -81,18 +91,11 @@ export const Sidebar = memo(function Sidebar({
   onOpenSettings,
 }: SidebarProps) {
   const { t } = useTranslation();
-  const [autoHideSidebar] = useStorageValue(anoriSchema.autoHideSidebar);
 
   return (
-    <div
-      className={sidebarWrapper({
-        orientation,
-        autohide: autoHideSidebar ?? false,
-        bookmarksBar: bookmarksBarVisible ?? false,
-      })}
-    >
+    <div className={sidebarWrapper({ orientation, bookmarksBar: bookmarksBarVisible ?? false })}>
       <ScrollArea
-        className={sidebar}
+        className={sidebar({ orientation, bookmarksBar: bookmarksBarVisible ?? false })}
         viewportClassName={sidebarViewport}
         contentClassName={sidebarContentSlot({ orientation })}
         type="hover"

@@ -33,16 +33,67 @@ export const useGridDimensions = (
       const rows = Math.max(minRows, maxRowOccupied);
 
       let restrictedBand: GridRestrictedBand | undefined;
+      const root = document.documentElement;
+      const bgFit = (getComputedStyle(root).getPropertyValue("--background-size") || "cover").trim();
+      const isContain = bgFit === "contain";
+      const clearBgOverride = () => {
+        root.style.removeProperty("--background-size-override");
+        root.style.removeProperty("--background-position-override");
+      };
       if (backgroundInfo) {
         const { width: imgW, height: imgH } = backgroundInfo;
         const aspectRatio = imgW / imgH;
-        const bandWidth = Math.floor(box.height * aspectRatio);
-        const colStart = Math.floor((box.width - bandWidth) / 2 / boxSize);
-        const colEnd = Math.ceil((box.width + bandWidth) / 2 / boxSize);
-        const bandCols = colEnd - colStart;
-        if (bandCols >= 1 && minColumns - bandCols >= 2) {
-          restrictedBand = { colStart, colEnd };
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const bandWidth = viewportHeight * aspectRatio;
+        const [hAnchor = "center"] = (
+          getComputedStyle(root).getPropertyValue("--background-position") || "center center"
+        )
+          .trim()
+          .split(/\s+/);
+        if (isContain) {
+          const snappedCols = Math.max(1, Math.round(bandWidth / boxSize));
+          if (minColumns - snappedCols >= 2) {
+            const snappedWidth = snappedCols * boxSize;
+            const rawLeft =
+              hAnchor === "left"
+                ? 0
+                : hAnchor === "right"
+                  ? viewportWidth - snappedWidth
+                  : (viewportWidth - snappedWidth) / 2;
+            const colStart = Math.max(
+              0,
+              Math.min(Math.round((rawLeft - box.left) / boxSize), minColumns - snappedCols),
+            );
+            const snappedLeft = box.left + colStart * boxSize;
+            restrictedBand = {
+              colStart,
+              colEnd: colStart + snappedCols,
+              visualRect: { left: snappedLeft, top: 0, width: snappedWidth, height: viewportHeight },
+            };
+            root.style.setProperty("--background-size-override", `${snappedWidth}px ${viewportHeight}px`);
+            root.style.setProperty("--background-position-override", `${snappedLeft}px 0px`);
+          } else {
+            clearBgOverride();
+          }
+        } else {
+          const bandLeftViewport =
+            hAnchor === "left" ? 0 : hAnchor === "right" ? viewportWidth - bandWidth : (viewportWidth - bandWidth) / 2;
+          const bandRightViewport = bandLeftViewport + bandWidth;
+          const colStart = Math.floor((bandLeftViewport - box.left) / boxSize);
+          const colEnd = Math.ceil((bandRightViewport - box.left) / boxSize);
+          const bandCols = colEnd - colStart;
+          if (bandCols >= 1 && minColumns - bandCols >= 2) {
+            restrictedBand = {
+              colStart,
+              colEnd,
+              visualRect: { left: bandLeftViewport, top: 0, width: bandWidth, height: viewportHeight },
+            };
+          }
+          clearBgOverride();
         }
+      } else {
+        clearBgOverride();
       }
 
       return {
@@ -105,7 +156,11 @@ export const useGridDimensions = (
       });
 
       resizeObserver.observe(ref.current);
-      return () => resizeObserver.disconnect();
+      return () => {
+        resizeObserver.disconnect();
+        document.documentElement.style.removeProperty("--background-size-override");
+        document.documentElement.style.removeProperty("--background-position-override");
+      };
     }
   }, [ref.current, calculateDimensions, setDimensions]);
 

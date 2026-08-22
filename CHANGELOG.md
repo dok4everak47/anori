@@ -4,6 +4,9 @@
 
 - **New.** Custom theme backgrounds now have a fill color option. When a portrait photo is set to "Fit screen (whole image)", the letterbox areas on the sides are no longer stuck with the page background — pick a preset or any custom color, or restore the default.
 - **Fixed.** Entering the theme editor or changing the background image no longer makes the page flash — the new backdrop is preloaded before it replaces the current one, so the swap is seamless.
+- **Fixed.** Hovering the auto-hide sidebar no longer shifts widget positions. The expanded bar now overlays the page as a white rounded panel instead of resizing the grid, in both vertical and horizontal orientations.
+- **Changed.** The sidebar now auto-hides by default, revealing itself on hover; the "Auto-hide sidebar" toggle was removed from settings.
+- **Fixed.** Opening the browser's side panel no longer shifts widgets or the wallpaper. The new tab page keeps its width at the widest size seen and only the right edge is covered by the panel, so widgets and the background stay exactly where they are with the panel closed.
 
 ## 2.3.0
 

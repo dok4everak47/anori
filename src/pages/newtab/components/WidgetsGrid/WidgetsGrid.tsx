@@ -7,6 +7,7 @@ import type { Mapping } from "@anori/utils/types";
 import type { WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { AnimatePresence, m } from "motion/react";
 import { memo, type Ref, useState } from "react";
+import { createPortal } from "react-dom";
 import { css, cva } from "styled-system/css";
 import { computeDisplacedMoves, resizePushDirection } from "./displacement";
 import { useDragSnapPosition } from "./use-drag-snap-position";
@@ -33,8 +34,10 @@ const ghostRect = css({
 });
 
 const restrictedBandVisual = css({
-  position: "absolute",
+  position: "fixed",
   top: 0,
+  height: "100dvh",
+  zIndex: "docked",
   pointerEvents: "none",
   background: "frosted",
   borderInline: "1px dashed",
@@ -203,6 +206,8 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     ) +
     gapSize * 2;
 
+  const bandVisualRect = gridDimensions.restrictedBand?.visualRect;
+
   return (
     <MotionScrollArea
       className={grid}
@@ -262,18 +267,15 @@ export const WidgetsGrid = memo(function WidgetsGrid({
             })}
         </AnimatePresence>
 
-        {gridDimensions.isMeasured && gridDimensions.restrictedBand && isEditing && (
-          <div
-            className={restrictedBandVisual}
-            style={{
-              left: gridDimensions.restrictedBand.colStart * gridDimensions.boxSize,
-              width:
-                (gridDimensions.restrictedBand.colEnd - gridDimensions.restrictedBand.colStart) *
-                gridDimensions.boxSize,
-              height: gridDimensions.rows * gridDimensions.boxSize,
-            }}
-          />
-        )}
+        {gridDimensions.isMeasured && bandVisualRect && isEditing
+          ? createPortal(
+              <div
+                className={restrictedBandVisual}
+                style={{ left: bandVisualRect.left, width: bandVisualRect.width }}
+              />,
+              document.body,
+            )
+          : null}
 
         {ghost && (
           <m.div

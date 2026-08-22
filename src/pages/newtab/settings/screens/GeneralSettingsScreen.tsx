@@ -34,7 +34,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
   const [showBookmarksBar, setShowBookmarksBar] = useStorageValue(anoriSchema.showBookmarksBar);
   const [newTabTitle, setNewTabTitle] = useStorageValue(anoriSchema.newTabTitle);
   const [sidebarOrientation, setSidebarOrientation] = useStorageValue(anoriSchema.sidebarOrientation);
-  const [autoHideSidebar, setAutoHideSidebar] = useStorageValue(anoriSchema.autoHideSidebar);
   const [, setLastFolder] = useStorageValue(anoriSchema.lastFolder);
   const screenWidth = useScreenWidth();
   const { t } = useTranslation();
@@ -77,10 +76,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
         }}
       >
         {t("settings.general.rememberLastFolder")}
-      </Checkbox>
-
-      <Checkbox checked={autoHideSidebar} onChange={setAutoHideSidebar}>
-        {t("settings.general.autoHideSidebar")}
       </Checkbox>
 
       {/* In Firefox, we can't get favicon https://bugzilla.mozilla.org/show_bug.cgi?id=1315616 */}
