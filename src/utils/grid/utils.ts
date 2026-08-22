@@ -136,6 +136,21 @@ export const findPositionForItemInGrid = ({
   return false;
 };
 
+export const findFallbackPosition = ({
+  grid,
+  layout,
+}: {
+  grid: Pick<GridDimensions, "restrictedBand">;
+  layout: GridContent;
+}): GridPosition => {
+  const numberOfColumns = Math.max(...layout.map((w) => w.x + w.width), 0);
+  const bandEnd = grid.restrictedBand?.colEnd ?? 0;
+  return {
+    x: Math.max(numberOfColumns, bandEnd),
+    y: 0,
+  };
+};
+
 const distanceBetweenPoints = (p1: GridPixelPosition, p2: GridPixelPosition) => {
   return Math.hypot(p2.x - p1.x, p2.y - p1.y);
 };

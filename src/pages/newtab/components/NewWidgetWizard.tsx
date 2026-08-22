@@ -8,7 +8,7 @@ import { Modal } from "@anori/design-system/components/Modal/Modal";
 import { MotionScrollArea, ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
 import { availablePluginsWithWidgets } from "@anori/plugins/all";
 import type { GridContent, GridDimensions } from "@anori/utils/grid/types";
-import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
+import { findFallbackPosition, findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import type { SomePlugin, SomeWidget } from "@anori/utils/plugins/types";
 import { isWidgetNonConfigurable } from "@anori/utils/plugins/widget";
 import type { Mapping } from "@anori/utils/types";
@@ -69,11 +69,7 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
     async (plugin: SomePlugin, widget: SomeWidget, config: Mapping) => {
       let position = findPositionForItemInGrid({ grid: gridDimensions, layout, item: widget.appearance.size });
       if (!position) {
-        const numberOfColumns = Math.max(...layout.map((w) => w.x + w.width), 0);
-        position = {
-          x: numberOfColumns,
-          y: 0,
-        };
+        position = findFallbackPosition({ grid: gridDimensions, layout });
       }
       try {
         const { instanceId } = await addWidget({ plugin, widget, config, position });

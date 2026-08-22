@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { GridDimensions } from "./types";
-import { canPlaceItemInGrid, findPositionForItemInGrid, overlapsRestrictedBand } from "./utils";
+import { canPlaceItemInGrid, findFallbackPosition, findPositionForItemInGrid, overlapsRestrictedBand } from "./utils";
 
 const gridWithBand = (columns: number, band: { colStart: number; colEnd: number }): GridDimensions => ({
   boxSize: 100,
@@ -98,5 +98,37 @@ describe("findPositionForItemInGrid with restricted band", () => {
       x: 0,
       y: 0,
     });
+  });
+});
+
+describe("findFallbackPosition", () => {
+  it("appends past the rightmost widget without a band", () => {
+    const grid = gridWithBand(12, { colStart: 3, colEnd: 9 });
+    delete grid.restrictedBand;
+    const layout = [{ x: 0, y: 0, width: 2, height: 1 }];
+    expect(findFallbackPosition({ grid, layout })).toEqual({ x: 2, y: 0 });
+  });
+
+  it("starts at column 0 for an empty grid without a band", () => {
+    const grid = gridWithBand(12, { colStart: 3, colEnd: 9 });
+    delete grid.restrictedBand;
+    expect(findFallbackPosition({ grid, layout: [] })).toEqual({ x: 0, y: 0 });
+  });
+
+  it("jumps past the band when widgets only sit left of it", () => {
+    const grid = gridWithBand(12, { colStart: 3, colEnd: 9 });
+    const layout = [{ x: 0, y: 0, width: 3, height: 10 }];
+    expect(findFallbackPosition({ grid, layout })).toEqual({ x: 9, y: 0 });
+  });
+
+  it("stays past the rightmost widget when it already clears the band", () => {
+    const grid = gridWithBand(12, { colStart: 3, colEnd: 9 });
+    const layout = [{ x: 9, y: 0, width: 3, height: 10 }];
+    expect(findFallbackPosition({ grid, layout })).toEqual({ x: 12, y: 0 });
+  });
+
+  it("lands past the band on an empty grid", () => {
+    const grid = gridWithBand(12, { colStart: 3, colEnd: 9 });
+    expect(findFallbackPosition({ grid, layout: [] })).toEqual({ x: 9, y: 0 });
   });
 });
