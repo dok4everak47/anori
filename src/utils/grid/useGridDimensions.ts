@@ -34,8 +34,6 @@ export const useGridDimensions = (
 
       let restrictedBand: GridRestrictedBand | undefined;
       const root = document.documentElement;
-      const bgFit = (getComputedStyle(root).getPropertyValue("--background-size") || "cover").trim();
-      const isContain = bgFit === "contain";
       const clearBgOverride = () => {
         root.style.removeProperty("--background-size-override");
         root.style.removeProperty("--background-position-override");
@@ -51,47 +49,20 @@ export const useGridDimensions = (
         )
           .trim()
           .split(/\s+/);
-        if (isContain) {
-          const snappedCols = Math.max(1, Math.round(bandWidth / boxSize));
-          if (minColumns - snappedCols >= 2) {
-            const snappedWidth = snappedCols * boxSize;
-            const rawLeft =
-              hAnchor === "left"
-                ? 0
-                : hAnchor === "right"
-                  ? viewportWidth - snappedWidth
-                  : (viewportWidth - snappedWidth) / 2;
-            const colStart = Math.max(
-              0,
-              Math.min(Math.round((rawLeft - box.left) / boxSize), minColumns - snappedCols),
-            );
-            const snappedLeft = box.left + colStart * boxSize;
-            restrictedBand = {
-              colStart,
-              colEnd: colStart + snappedCols,
-              visualRect: { left: snappedLeft, top: 0, width: snappedWidth, height: viewportHeight },
-            };
-            root.style.setProperty("--background-size-override", `${snappedWidth}px ${viewportHeight}px`);
-            root.style.setProperty("--background-position-override", `${snappedLeft}px 0px`);
-          } else {
-            clearBgOverride();
-          }
-        } else {
-          const bandLeftViewport =
-            hAnchor === "left" ? 0 : hAnchor === "right" ? viewportWidth - bandWidth : (viewportWidth - bandWidth) / 2;
-          const bandRightViewport = bandLeftViewport + bandWidth;
-          const colStart = Math.floor((bandLeftViewport - box.left) / boxSize);
-          const colEnd = Math.ceil((bandRightViewport - box.left) / boxSize);
-          const bandCols = colEnd - colStart;
-          if (bandCols >= 1 && minColumns - bandCols >= 2) {
-            restrictedBand = {
-              colStart,
-              colEnd,
-              visualRect: { left: bandLeftViewport, top: 0, width: bandWidth, height: viewportHeight },
-            };
-          }
-          clearBgOverride();
+        const bandLeftViewport =
+          hAnchor === "left" ? 0 : hAnchor === "right" ? viewportWidth - bandWidth : (viewportWidth - bandWidth) / 2;
+        const bandRightViewport = bandLeftViewport + bandWidth;
+        const colStart = Math.floor((bandLeftViewport - box.left) / boxSize);
+        const colEnd = Math.ceil((bandRightViewport - box.left) / boxSize);
+        const bandCols = colEnd - colStart;
+        if (bandCols >= 1 && minColumns - bandCols >= 2) {
+          restrictedBand = {
+            colStart,
+            colEnd,
+            visualRect: { left: bandLeftViewport, top: 0, width: bandWidth, height: viewportHeight },
+          };
         }
+        clearBgOverride();
       } else {
         clearBgOverride();
       }

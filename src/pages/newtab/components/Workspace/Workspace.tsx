@@ -19,10 +19,10 @@ import { css, cva } from "styled-system/css";
 import browser from "webextension-polyfill";
 import { NewWidgetWizard, SettingsModal } from "../../lazy-components";
 import type { SettingScreen } from "../../settings/Settings";
+import { Dock } from "../Dock/Dock";
 import { EditModeToolbar } from "../EditModeToolbar/EditModeToolbar";
 import { EditWidgetModal } from "../EditWidgetModal";
 import { FolderContent } from "../FolderContent";
-import { Sidebar } from "../Sidebar";
 import type { LayoutChange } from "../WidgetsGrid/WidgetsGrid";
 
 const CHANGELOG_URL = "https://github.com/dok4everak47/anori/blob/master/CHANGELOG.md";
@@ -30,16 +30,12 @@ const CHANGELOG_URL = "https://github.com/dok4everak47/anori/blob/master/CHANGEL
 type WorkspaceProps = {
   folders: Folder[];
   activeFolder: Folder;
-  orientation: "vertical" | "horizontal";
   bookmarksBarVisible?: boolean;
-  animationDirection: "up" | "down" | "left" | "right" | null;
+  animationDirection: "left" | "right" | null;
   onFolderClick: (folder: Folder) => void;
 };
 
-const startPageContent = cva({
-  base: { display: "flex", flex: 1, overflow: "hidden" },
-  variants: { orientation: { vertical: {}, horizontal: { flexDirection: "column-reverse" } } },
-});
+const startPageContent = css({ display: "flex", flex: 1, overflow: "hidden" });
 
 const widgetsArea = cva({
   base: {
@@ -50,14 +46,12 @@ const widgetsArea = cva({
     display: "flex",
     flexDirection: "column",
     minWidth: 0,
+    marginBlockStart: "8",
+    marginBlockEnd: "8",
+    marginInline: "8",
   },
   variants: {
-    orientation: {
-      vertical: { marginBlock: "8", marginInlineStart: 0, marginInlineEnd: "8" },
-      horizontal: { marginTop: "8", marginInline: "8", marginBottom: 0 },
-    },
-    // The bookmarks bar takes the top, so tighten the widgets-area top margin. `!` to win over orientation.
-    bookmarksBar: { true: { marginTop: "1!" } },
+    bookmarksBar: { true: { marginBlockStart: "1!" } },
   },
 });
 
@@ -74,7 +68,6 @@ const editingScrim = css({
 export const Workspace = ({
   folders,
   activeFolder,
-  orientation,
   bookmarksBarVisible,
   animationDirection,
   onFolderClick,
@@ -203,22 +196,10 @@ export const Workspace = ({
         )}
       </AnimatePresence>
 
-      <div className={startPageContent({ orientation })}>
-        <Sidebar
-          folders={folders}
-          activeFolder={activeFolder}
-          orientation={orientation}
-          bookmarksBarVisible={bookmarksBarVisible}
-          hasUnreadReleaseNotes={hasUnreadReleaseNotes ?? false}
-          onFolderClick={onFolderClick}
-          onToggleEditMode={handleToggleEditMode}
-          onOpenWhatsNew={handleOpenWhatsNew}
-          onOpenSettings={handleOpenSettings}
-        />
-
+      <div className={startPageContent}>
         <div
           ref={panelRef}
-          className={widgetsArea({ orientation, bookmarksBar: bookmarksBarVisible })}
+          className={widgetsArea({ bookmarksBar: bookmarksBarVisible })}
           style={
             {
               "--anori-widget-opacity": (widgetBackgroundOpacity ?? 100) / 100,
@@ -242,6 +223,15 @@ export const Workspace = ({
             />
           </FolderContentContext.Provider>
           <EditModeToolbar visible={isEditing} onAddWidget={handleAddWidget} onDone={handleDoneEditing} />
+          <Dock
+            folders={folders}
+            activeFolder={activeFolder}
+            hasUnreadReleaseNotes={hasUnreadReleaseNotes ?? false}
+            onFolderClick={onFolderClick}
+            onToggleEditMode={handleToggleEditMode}
+            onOpenWhatsNew={handleOpenWhatsNew}
+            onOpenSettings={handleOpenSettings}
+          />
         </div>
       </div>
 

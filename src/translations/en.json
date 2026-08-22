@@ -68,11 +68,6 @@
                 "title": "General",
                 "language": "Language",
                 "translationInfo": "Translations into languages other than English or Ukrainian can be made by machine. We rely on community to review those. If you spot any mistake or untranslated string, help us fix it! <0>Here</0> is instruction how you can participate.",
-                "sidebarOrientation": "Sidebar orientation",
-                "sidebarOrientationOption-auto": "Based on window orientation",
-                "sidebarOrientationOption-vertical": "Always vertical",
-                "sidebarOrientationOption-horizontal": "Always horizontal",
-                "autoHideSidebar": "Automatically hide sidebar",
                 "newTabTitle": "New tab title",
                 "showBookmarksBar": "Show bookmarks bar",
                 "automaticCompact": "Automatically switch to compact mode based on screen size",
@@ -180,7 +175,7 @@
                 "title": "Welcome to Anori!",
                 "p1": "Glad to see you! Let's take a quick tour.",
                 "p2": "You're on your way to setup your ideal new tab. Anori start page consists of different widgets, like notes, bookmarks, todo lists, etc. You choose what to add and how to organize them.",
-                "p3": "You can add your first widget by clicking on the pencil ('$t(editFolder)') in the sidebar. This will switch the page into editing mode. Here you can add new widgets and reposition or remove existing ones.",
+                "p3": "You can add your first widget by clicking on the pencil ('$t(editFolder)') in the dock at the bottom left. This will switch the page into editing mode. Here you can add new widgets and reposition or remove existing ones.",
                 "p4": "To add a new widget, click on the '$t(addWidget)' button, or click on '$t(done)' to exit editing mode. Once you add your first widget, this onboarding will disappear. You can add a widget right now and explore the extension on your own, or, if you'd like to know a bit more about the features Anori has to offer, click '$t(next)'."
             },
             "folders": {

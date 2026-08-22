@@ -10,7 +10,7 @@ import { languageDirections } from "@anori/translations/metadata";
 import { initTranslation } from "@anori/translations/utils";
 import { CompactModeProvider } from "@anori/utils/compact";
 import { IS_ANDROID, IS_TOUCH_DEVICE } from "@anori/utils/device";
-import { useHotkeys, useMirrorStateToRef, usePrevious } from "@anori/utils/hooks";
+import { useHotkeys, usePrevious } from "@anori/utils/hooks";
 import { OverlayLayersProvider } from "@anori/utils/overlay-layers";
 import { watchForPermissionChanges } from "@anori/utils/permissions";
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
@@ -20,39 +20,12 @@ import { watchForThemeUpdates } from "@anori/utils/user-data/theme";
 import type { Folder } from "@anori/utils/user-data/types";
 import { DirectionProvider } from "@radix-ui/react-direction";
 import { AnimatePresence, domMax, LazyMotion, MotionConfig, m } from "motion/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { css } from "styled-system/css";
 import { Workspace } from "./components/Workspace/Workspace";
 import { scheduleLazyComponentsPreload } from "./lazy-components";
 
 const startPage = css({ height: "100dvh", width: "100vw", display: "flex", flexDirection: "column" });
-
-const useSidebarOrientation = () => {
-  const [sidebarOrientation] = useStorageValue(anoriSchema.sidebarOrientation);
-  const [winOrientation, setWinOrientation] = useState<"landscape" | "portrait">(() =>
-    window.innerWidth >= window.innerHeight ? "landscape" : "portrait",
-  );
-  const winOrientationRef = useMirrorStateToRef(winOrientation);
-  const computedSidebarOrientation =
-    sidebarOrientation === "auto" ? (winOrientation === "landscape" ? "vertical" : "horizontal") : sidebarOrientation;
-
-  useEffect(() => {
-    if (sidebarOrientation === "auto") {
-      const handler = () => {
-        const newOrientation = window.innerWidth >= window.innerHeight ? "landscape" : "portrait";
-        if (newOrientation !== winOrientationRef.current) {
-          setWinOrientation(newOrientation);
-        }
-      };
-
-      window.addEventListener("resize", handler);
-      handler();
-      return () => window.removeEventListener("resize", handler);
-    }
-  }, [sidebarOrientation]);
-
-  return computedSidebarOrientation;
-};
 
 const Start = () => {
   const switchToFolderByIndex = (ind: number) => {
@@ -68,7 +41,6 @@ const Start = () => {
     setActiveFolder(folders[activeFolderIndex === folders.length - 1 ? 0 : activeFolderIndex + 1]);
   };
 
-  const sidebarOrientation = useSidebarOrientation();
   const [rememberLastFolder] = useStorageValue(anoriSchema.rememberLastFolder);
   const [lastFolder, setLastFolder] = useStorageValue(anoriSchema.lastFolder);
   const [language] = useStorageValue(anoriSchema.language);
@@ -90,12 +62,8 @@ const Start = () => {
     previousActiveFolderIndex === undefined || previousActiveFolderIndex === activeFolderIndex
       ? null
       : activeFolderIndex > previousActiveFolderIndex
-        ? sidebarOrientation === "vertical"
-          ? "down"
-          : "right"
-        : sidebarOrientation === "vertical"
-          ? "up"
-          : "left";
+        ? "right"
+        : "left";
 
   const [showBookmarksBar] = useStorageValue(anoriSchema.showBookmarksBar);
 
@@ -125,7 +93,6 @@ const Start = () => {
                 <Workspace
                   folders={folders}
                   activeFolder={activeFolder}
-                  orientation={sidebarOrientation}
                   bookmarksBarVisible={showBookmarksBar}
                   animationDirection={animationDirection}
                   onFolderClick={onFolderClick}

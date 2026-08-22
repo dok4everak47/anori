@@ -33,7 +33,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
   const [rememberLastFolder, setRememberLastFolder] = useStorageValue(anoriSchema.rememberLastFolder);
   const [showBookmarksBar, setShowBookmarksBar] = useStorageValue(anoriSchema.showBookmarksBar);
   const [newTabTitle, setNewTabTitle] = useStorageValue(anoriSchema.newTabTitle);
-  const [sidebarOrientation, setSidebarOrientation] = useStorageValue(anoriSchema.sidebarOrientation);
   const [, setLastFolder] = useStorageValue(anoriSchema.lastFolder);
   const screenWidth = useScreenWidth();
   const { t } = useTranslation();
@@ -55,15 +54,6 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
       <Heading level={2} size={1}>
         {t("settings.general.title")}
       </Heading>
-      <Field label={`${t("settings.general.sidebarOrientation")}:`}>
-        <Select<"auto" | "vertical" | "horizontal">
-          value={sidebarOrientation}
-          onChange={setSidebarOrientation}
-          options={["auto", "vertical", "horizontal"]}
-          getOptionKey={(o) => o}
-          getOptionLabel={(o) => t(`settings.general.sidebarOrientationOption-${o}`)}
-        />
-      </Field>
       <Field label={`${t("settings.general.newTabTitle")}:`}>
         <Input value={newTabTitle} onValueChange={setNewTabTitle} />
       </Field>
