@@ -473,9 +473,26 @@ const migrateV3ToV4 = createMigration(schemaV3, schemaV4, async (ctx) => {
   ctx.to.set(ctx.to.schema.customThemes, oldThemes);
 });
 
+export const schemaV5 = defineSchemaVersion(5, {
+  ...schemaV4.definition,
+  crtEffect: cell({
+    key: "crtEffect",
+    schema: z.boolean(),
+    defaultValue: false,
+    sync: "profile",
+    includedInBackup: true,
+  }),
+});
+
+export type AnoriSchemaV5 = typeof schemaV5.definition;
+
+const migrateV4ToV5 = createMigration(schemaV4, schemaV5, async (ctx) => {
+  ctx.to.set(ctx.to.schema.crtEffect, false);
+});
+
 export const anoriVersionedSchema = defineVersionedSchema({
-  versions: [schemaV1, schemaV2, schemaV3, schemaV4],
-  migrations: [migrateV1ToV2, migrateV2ToV3, migrateV3ToV4],
+  versions: [schemaV1, schemaV2, schemaV3, schemaV4, schemaV5],
+  migrations: [migrateV1ToV2, migrateV2ToV3, migrateV3ToV4, migrateV4ToV5],
 });
 
 export const anoriSchema = anoriVersionedSchema.latestSchema.definition;

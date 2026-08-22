@@ -76,6 +76,8 @@
                 "useCompact": "Always use compact mode",
                 "showAnimationOnOpen": "Show animation on open",
                 "showAnimationOnOpenHint": "If enabled, the extension will show a quick-loading animation which will hide the initial flicker of loading data and provide a better look.",
+                "crtEffect": "CRT monitor effect",
+                "crtEffectHint": "Adds scanlines, vignette, and a subtle flicker for a retro cathode-ray-tube look.",
                 "rememberLastFolder": "Remember last open folder"
             },
             "customIcons": {

@@ -30,6 +30,7 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
   );
   const [manualCompactMode, setManualCompactMode] = useStorageValue(anoriSchema.compactMode);
   const [showLoadAnimation, setShowLoadAnimation] = useStorageValue(anoriSchema.showLoadAnimation);
+  const [crtEffect, setCrtEffect] = useStorageValue(anoriSchema.crtEffect);
   const [rememberLastFolder, setRememberLastFolder] = useStorageValue(anoriSchema.rememberLastFolder);
   const [showBookmarksBar, setShowBookmarksBar] = useStorageValue(anoriSchema.showBookmarksBar);
   const [newTabTitle, setNewTabTitle] = useStorageValue(anoriSchema.newTabTitle);
@@ -104,6 +105,10 @@ export const GeneralSettingsScreen = (props: ComponentProps<typeof m.div>) => {
       <Checkbox checked={showLoadAnimation} onChange={setShowLoadAnimation}>
         {t("settings.general.showAnimationOnOpen")}
         <Hint content={t("settings.general.showAnimationOnOpenHint")} />
+      </Checkbox>
+      <Checkbox checked={crtEffect} onChange={setCrtEffect}>
+        {t("settings.general.crtEffect")}
+        <Hint content={t("settings.general.crtEffectHint")} />
       </Checkbox>
     </m.div>
   );

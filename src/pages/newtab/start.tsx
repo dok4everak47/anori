@@ -20,7 +20,7 @@ import { watchForThemeUpdates } from "@anori/utils/user-data/theme";
 import type { Folder } from "@anori/utils/user-data/types";
 import { DirectionProvider } from "@radix-ui/react-direction";
 import { AnimatePresence, domMax, LazyMotion, MotionConfig, m } from "motion/react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { css } from "styled-system/css";
 import { Workspace } from "./components/Workspace/Workspace";
 import { scheduleLazyComponentsPreload } from "./lazy-components";
@@ -81,6 +81,11 @@ const Start = () => {
   useHotkeys("alt+7", () => switchToFolderByIndex(6));
   useHotkeys("alt+8", () => switchToFolderByIndex(7));
   useHotkeys("alt+9", () => switchToFolderByIndex(8));
+
+  const [crtEffect] = useStorageValue(anoriSchema.crtEffect);
+  useEffect(() => {
+    document.documentElement.classList.toggle("crt-effect", crtEffect);
+  }, [crtEffect]);
 
   return (
     <DirectionProvider dir={dir}>
@@ -157,6 +162,8 @@ getAnoriStorage().then(async (storage) => {
   storage.files.get(anoriSchema.customIcons.all()); // This preloads custom icon blobs into cache
 
   const showLoadAnimation = storage.get(anoriSchema.showLoadAnimation);
+  const crtEffect = storage.get(anoriSchema.crtEffect);
+  document.documentElement.classList.toggle("crt-effect", crtEffect);
   const div = document.querySelector(".loading-cover");
 
   watchForThemeUpdates(storage);
