@@ -10,7 +10,6 @@ import { type LayoutChange, WidgetsGrid } from "./WidgetsGrid/WidgetsGrid";
 type FolderContentProps = {
   folder: Folder;
   animationDirection: "up" | "down" | "left" | "right" | null;
-  isEditing: boolean;
   widgets: WidgetInFolderWithMeta[];
   gridDimensions: GridDimensions & {
     position: GridPixelPosition;
@@ -78,7 +77,6 @@ const rootClass = css({
 export const FolderContent = ({
   folder,
   animationDirection,
-  isEditing,
   widgets,
   gridDimensions,
   gridRef,
@@ -127,7 +125,6 @@ export const FolderContent = ({
       <WidgetsGrid
         gridRef={gridRef}
         scrollAreaRef={scrollAreaRef}
-        isEditing={isEditing}
         gapSize={gapSize}
         layout={widgets}
         gridDimensions={gridDimensions}

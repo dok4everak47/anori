@@ -297,7 +297,7 @@ export const tryMoveWidgetToFolder = async (
   const toFolderLayout = toFolderDetails.widgets;
   let newPosition = findPositionForItemInGrid({ grid: currentGrid, layout: toFolderLayout, item: widgetInfo });
   if (!newPosition) {
-    newPosition = findFallbackPosition({ grid: currentGrid, layout: toFolderLayout });
+    newPosition = findFallbackPosition({ layout: toFolderLayout });
   }
 
   const updatedFromDetails = {

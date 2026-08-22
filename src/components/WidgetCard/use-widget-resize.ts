@@ -100,14 +100,8 @@ export const useWidgetResize = ({
     if (!resizeActive.current || !resizable) return;
     const minWidth = resizable === true ? 1 : (resizable.min?.width ?? 1);
     const minHeight = resizable === true ? 1 : (resizable.min?.height ?? 1);
-    const maxWidth = Math.min(
-      resizable === true ? 999 : (resizable.max?.width ?? 999),
-      position ? grid.columns + GRID_DRAG_EXTEND_SLOTS - position.x : 999,
-    );
-    const maxHeight = Math.min(
-      resizable === true ? 999 : (resizable.max?.height ?? 999),
-      position ? grid.rows + GRID_DRAG_EXTEND_SLOTS - position.y : 999,
-    );
+    const maxWidth = position ? grid.columns + GRID_DRAG_EXTEND_SLOTS - position.x : 999;
+    const maxHeight = position ? grid.rows + GRID_DRAG_EXTEND_SLOTS - position.y : 999;
     const scrollDriftX = (resizeScrollContainer.current?.scrollLeft ?? 0) - resizeScrollStart.current.left;
     const scrollDriftY = (resizeScrollContainer.current?.scrollTop ?? 0) - resizeScrollStart.current.top;
     const offsetX = resizePointer.current.x - resizeStart.current.x + scrollDriftX;

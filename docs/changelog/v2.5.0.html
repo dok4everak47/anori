@@ -10,8 +10,8 @@
 <meta charset="UTF-8">
 <title>Anori · v2.5.0 更新日志</title>
 <meta name="author" content="Anori">
-<meta name="description" content="Anori v2.5.0：以常驻左下角的浮动 Dock 取代悬停侧边栏，竖屏壁纸不再被压扁，widget 落点不再越墙。">
-<meta name="keywords" content="Anori, 更新日志, 浮动 Dock, 侧边栏, 竖屏壁纸, widget">
+<meta name="description" content="Anori v2.5.0：以常驻左下角的浮动 Dock 取代悬停侧边栏，所有 widget 支持更自由的网格拉伸。">
+<meta name="keywords" content="Anori, 更新日志, 浮动 Dock, 侧边栏, widget, 拉伸">
 <meta name="generator" content="Kami">
 <style>
   /* Regular weight */
@@ -34,7 +34,7 @@
 
   @page {
     size: A4;
-    margin: 20mm 22mm 22mm 22mm;
+    margin: 34mm 24mm 36mm 24mm;
     background: #f5f4ed;
   }
 
@@ -61,14 +61,14 @@
   html, body { background: var(--parchment); }
 
   @media screen {
-    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm; }
+    body { max-width: 210mm; margin: 0 auto; padding: 34mm 24mm 36mm 24mm; }
   }
 
   body {
     color: var(--near-black);
     font-family: var(--serif);
-    font-size: 10.5pt;
-    line-height: 1.55;
+    font-size: 12pt;
+    line-height: 1.8;
     letter-spacing: 0.3pt;
     widows: 3;
     orphans: 3;
@@ -79,8 +79,8 @@
 
   /* ========== HEADER (left-aligned editorial, matches one-pager) ========== */
   .header {
-    margin-bottom: 20pt;
-    padding-bottom: 13pt;
+    margin-bottom: 28pt;
+    padding-bottom: 18pt;
     border-bottom: 0.5pt solid var(--border);
     display: flex;
     align-items: flex-end;
@@ -109,7 +109,7 @@
   }
   h1 {
     font-family: var(--serif);
-    font-size: 26pt;
+    font-size: 30pt;
     font-weight: 500;
     color: var(--near-black);
     line-height: 1.15;
@@ -131,10 +131,10 @@
   /* ========== SECTION HEAD - brand left bar ========== */
   h2 {
     font-family: var(--serif);
-    font-size: 14pt;
+    font-size: 16pt;
     font-weight: 500;
     color: var(--near-black);
-    margin: 20pt 0 10pt 0;
+    margin: 26pt 0 12pt 0;
     border-left: 2.5pt solid var(--brand);
     border-radius: 1.5pt;
     padding-left: 9pt;
@@ -148,9 +148,9 @@
   /* ========== CHANGE LIST - numbered, brand markers, bold lead-in ========== */
   ol.changes { margin: 0; padding-left: 18pt; }
   ol.changes li {
-    margin-bottom: 7pt;
+    margin-bottom: 10pt;
     padding-left: 3pt;
-    line-height: 1.55;
+    line-height: 1.7;
     break-inside: avoid;
   }
   ol.changes li:last-child { margin-bottom: 0; }
@@ -213,7 +213,7 @@
   <div class="title-block">
     <div class="eyebrow">更新日志</div>
     <h1>Anori v2.5.0</h1>
-    <div class="subtitle">悬停侧边栏换成常驻左下角的浮动 Dock，竖屏壁纸不再被压扁</div>
+    <div class="subtitle">悬停侧边栏换成常驻左下角的浮动 Dock，所有 widget 都能更自由地拉大</div>
   </div>
   <div class="meta">2026-08-22</div>
 </div>
@@ -227,13 +227,15 @@
 <h2>新功能</h2>
 <ol class="changes">
   <li><strong>浮动 Dock</strong>：以 macOS 风格的浮动 Dock 栏取代原先需悬停才出现的侧边栏，常驻左下角，文件夹切换与「更新 / 编辑 / 设置」入口一触即达，无需再悬停等待展开。</li>
+  <li><strong>Widget 自由拉伸</strong>：编辑模式下所有 widget 都可拖动右下角调整尺寸，按网格吸附到合适行列，并自动推开会重叠的 widget。</li>
 </ol>
 
 <h2>修复</h2>
 <ol class="changes">
   <li><strong>竖屏壁纸压扁</strong>：竖屏照片在「适合屏幕」下不再因布局变化被横向拉伸，背景始终按真实比例居中。</li>
-  <li><strong>widget 落点越墙</strong>：添加或移动 widget 找不到空位时，兜底位置不再落入壁纸墙壁区域，widget 不再半在墙内半在墙外被错误接受。</li>
 </ol>
+
+<p>这次调整保持原有网格布局：小尺寸 widget 仍可整齐摆放，需要更多内容时再拖到更大的行列范围，编辑完成后退出编辑模式即可恢复清爽界面。</p>
 
 <!-- FOOTER -->
 <div class="changelog-footer">

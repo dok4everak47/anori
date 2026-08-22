@@ -69,7 +69,7 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
     async (plugin: SomePlugin, widget: SomeWidget, config: Mapping) => {
       let position = findPositionForItemInGrid({ grid: gridDimensions, layout, item: widget.appearance.size });
       if (!position) {
-        position = findFallbackPosition({ grid: gridDimensions, layout });
+        position = findFallbackPosition({ layout });
       }
       try {
         const { instanceId } = await addWidget({ plugin, widget, config, position });

@@ -5,7 +5,6 @@ import type {
   GridItemSize,
   GridPixelPosition,
   GridPosition,
-  GridRestrictedBand,
 } from "@anori/utils/grid/types";
 import type { Mapping } from "@anori/utils/types";
 
@@ -75,15 +74,6 @@ export const willItemOverlay = ({ arr, item }: { arr: Grid2DArray; item: GridIte
   return false;
 };
 
-export const overlapsRestrictedBand = (
-  band: GridRestrictedBand | undefined,
-  position: GridPosition,
-  size: GridItemSize,
-): boolean => {
-  if (!band) return false;
-  return position.x < band.colEnd && position.x + size.width > band.colStart;
-};
-
 export const canPlaceItemInGrid = ({
   grid,
   layout,
@@ -97,8 +87,6 @@ export const canPlaceItemInGrid = ({
   position: GridPosition;
   allowOutOfBounds?: boolean;
 }): boolean => {
-  if (overlapsRestrictedBand(grid.restrictedBand, position, item)) return false;
-
   const outOfBounds = position.x + item.width > grid.columns || position.y + item.height > grid.rows;
   if (outOfBounds && !allowOutOfBounds) return false;
 
@@ -113,7 +101,7 @@ export const findPositionForItemInGrid = ({
   layout,
   item,
 }: {
-  grid: Pick<GridDimensions, "columns" | "rows" | "restrictedBand">;
+  grid: Pick<GridDimensions, "columns" | "rows">;
   layout: GridContent;
   item: GridItemSize;
 }): false | GridPosition => {
@@ -124,7 +112,6 @@ export const findPositionForItemInGrid = ({
     for (let j = 0; j < row.length; j++) {
       const cell = row[j];
       if (cell) continue;
-      if (overlapsRestrictedBand(grid.restrictedBand, { x: j, y: i }, item)) continue;
       const overlay = willItemOverlay({ arr, item: { ...item, x: j, y: i } });
       const overflow = j + item.width > grid.columns || i + item.height > grid.rows;
       if (overlay || overflow) continue;
@@ -136,17 +123,10 @@ export const findPositionForItemInGrid = ({
   return false;
 };
 
-export const findFallbackPosition = ({
-  grid,
-  layout,
-}: {
-  grid: Pick<GridDimensions, "restrictedBand">;
-  layout: GridContent;
-}): GridPosition => {
+export const findFallbackPosition = ({ layout }: { layout: GridContent }): GridPosition => {
   const numberOfColumns = Math.max(...layout.map((w) => w.x + w.width), 0);
-  const bandEnd = grid.restrictedBand?.colEnd ?? 0;
   return {
-    x: Math.max(numberOfColumns, bandEnd),
+    x: numberOfColumns,
     y: 0,
   };
 };

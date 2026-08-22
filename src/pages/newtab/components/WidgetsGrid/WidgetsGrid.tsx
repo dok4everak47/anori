@@ -7,7 +7,6 @@ import type { Mapping } from "@anori/utils/types";
 import type { WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { AnimatePresence, m } from "motion/react";
 import { memo, type Ref, useState } from "react";
-import { createPortal } from "react-dom";
 import { css, cva } from "styled-system/css";
 import { computeDisplacedMoves, resizePushDirection } from "./displacement";
 import { useDragSnapPosition } from "./use-drag-snap-position";
@@ -31,18 +30,6 @@ const ghostRect = css({
   borderRadius: "lg",
   userSelect: "none",
   pointerEvents: "none",
-});
-
-const restrictedBandVisual = css({
-  position: "fixed",
-  top: 0,
-  height: "100dvh",
-  zIndex: "docked",
-  pointerEvents: "none",
-  background: "frosted",
-  borderInline: "1px dashed",
-  borderColor: "accent",
-  opacity: 0.7,
 });
 
 const ghostSpring = { type: "spring", duration: 0.25, bounce: 0.1 } as const;
@@ -70,7 +57,6 @@ export type LayoutChange =
     };
 
 export type WidgetsGridProps = {
-  isEditing: boolean;
   gridDimensions: GridDimensions & { isMeasured: boolean };
   gapSize: number;
   layout: WidgetInFolderWithMeta[];
@@ -96,7 +82,6 @@ export const WidgetsGrid = memo(function WidgetsGrid({
   onLayoutUpdate = () => {},
   gridRef,
   scrollAreaRef,
-  isEditing,
 }: WidgetsGridProps) {
   const tryRepositionWidget = (widget: WidgetInFolderWithMeta, position: GridPosition) => {
     const canPlaceThere = canPlaceItemInGrid({
@@ -111,14 +96,10 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     }
   };
 
-  const clampSizeToExtendedGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => {
-    const band = gridDimensions.restrictedBand;
-    const maxWidth = Math.min(size.width, gridDimensions.columns + GRID_DRAG_EXTEND_SLOTS - widget.x);
-    return {
-      width: band && widget.x < band.colStart ? Math.min(maxWidth, band.colStart - widget.x) : maxWidth,
-      height: Math.min(size.height, gridDimensions.rows + GRID_DRAG_EXTEND_SLOTS - widget.y),
-    };
-  };
+  const clampSizeToExtendedGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => ({
+    width: Math.min(size.width, gridDimensions.columns + GRID_DRAG_EXTEND_SLOTS - widget.x),
+    height: Math.min(size.height, gridDimensions.rows + GRID_DRAG_EXTEND_SLOTS - widget.y),
+  });
 
   const tryResizeWidget = (widget: WidgetInFolderWithMeta, widthInBoxes: number, heightInBoxes: number) => {
     ({ width: widthInBoxes, height: heightInBoxes } = clampSizeToExtendedGrid(widget, {
@@ -206,8 +187,6 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     ) +
     gapSize * 2;
 
-  const bandVisualRect = gridDimensions.restrictedBand?.visualRect;
-
   return (
     <MotionScrollArea
       className={grid}
@@ -266,16 +245,6 @@ export const WidgetsGrid = memo(function WidgetsGrid({
               );
             })}
         </AnimatePresence>
-
-        {gridDimensions.isMeasured && bandVisualRect && isEditing
-          ? createPortal(
-              <div
-                className={restrictedBandVisual}
-                style={{ left: bandVisualRect.left, width: bandVisualRect.width }}
-              />,
-              document.body,
-            )
-          : null}
 
         {ghost && (
           <m.div

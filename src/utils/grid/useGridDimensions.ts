@@ -1,12 +1,5 @@
-import type {
-  GridContent,
-  GridDimensions,
-  GridItemSize,
-  GridPixelPosition,
-  GridRestrictedBand,
-} from "@anori/utils/grid/types";
+import type { GridContent, GridDimensions, GridItemSize, GridPixelPosition } from "@anori/utils/grid/types";
 import { calculateColumnWidth } from "@anori/utils/grid/utils";
-import type { BackgroundInfo } from "@anori/utils/page";
 import isEqual from "lodash/isEqual";
 import { type RefObject, useCallback, useLayoutEffect, useState } from "react";
 
@@ -15,7 +8,6 @@ export const useGridDimensions = (
   desiredSize: number,
   minSize: number,
   layout: GridContent,
-  backgroundInfo: BackgroundInfo | null,
 ) => {
   const calculateDimensions = useCallback(
     (el: HTMLElement) => {
@@ -32,48 +24,12 @@ export const useGridDimensions = (
       const columns = Math.max(minColumns, maxColOccupied);
       const rows = Math.max(minRows, maxRowOccupied);
 
-      let restrictedBand: GridRestrictedBand | undefined;
-      const root = document.documentElement;
-      const clearBgOverride = () => {
-        root.style.removeProperty("--background-size-override");
-        root.style.removeProperty("--background-position-override");
-      };
-      if (backgroundInfo) {
-        const { width: imgW, height: imgH } = backgroundInfo;
-        const aspectRatio = imgW / imgH;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const bandWidth = viewportHeight * aspectRatio;
-        const [hAnchor = "center"] = (
-          getComputedStyle(root).getPropertyValue("--background-position") || "center center"
-        )
-          .trim()
-          .split(/\s+/);
-        const bandLeftViewport =
-          hAnchor === "left" ? 0 : hAnchor === "right" ? viewportWidth - bandWidth : (viewportWidth - bandWidth) / 2;
-        const bandRightViewport = bandLeftViewport + bandWidth;
-        const colStart = Math.floor((bandLeftViewport - box.left) / boxSize);
-        const colEnd = Math.ceil((bandRightViewport - box.left) / boxSize);
-        const bandCols = colEnd - colStart;
-        if (bandCols >= 1 && minColumns - bandCols >= 2) {
-          restrictedBand = {
-            colStart,
-            colEnd,
-            visualRect: { left: bandLeftViewport, top: 0, width: bandWidth, height: viewportHeight },
-          };
-        }
-        clearBgOverride();
-      } else {
-        clearBgOverride();
-      }
-
       return {
         boxSize,
         columns,
         rows,
         minColumns,
         minRows,
-        restrictedBand,
         position: {
           x: box.left,
           y: box.top,
@@ -84,7 +40,7 @@ export const useGridDimensions = (
         },
       };
     },
-    [desiredSize, minSize, layout, backgroundInfo],
+    [desiredSize, minSize, layout],
   );
 
   const [dimensions, _setDimensions] = useState<
@@ -129,8 +85,6 @@ export const useGridDimensions = (
       resizeObserver.observe(ref.current);
       return () => {
         resizeObserver.disconnect();
-        document.documentElement.style.removeProperty("--background-size-override");
-        document.documentElement.style.removeProperty("--background-position-override");
       };
     }
   }, [ref.current, calculateDimensions, setDimensions]);

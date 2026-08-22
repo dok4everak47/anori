@@ -173,9 +173,11 @@ export const WidgetCard = ({
 
   const sizeToUse = size ? size : widget.appearance.size;
   const withPadding = !widget.appearance.withoutPadding;
+  const resizeConstraints =
+    widget.appearance.resizable && typeof widget.appearance.resizable === "object" ? widget.appearance.resizable : {};
 
   const resize = useWidgetResize({
-    resizable: widget.appearance.resizable,
+    resizable: resizeConstraints,
     size: sizeToUse,
     position,
     cardRef: ref,
@@ -313,7 +315,7 @@ export const WidgetCard = ({
           onClick={onEdit}
         />
       )}
-      {isEditing && !otherWidgetDragging && type === "widget" && !isDragging && !!widget.appearance.resizable && (
+      {isEditing && !otherWidgetDragging && type === "widget" && !isDragging && (
         <IconButton
           className={cx("widget-control", control({ position: "resize" }))}
           icon={builtinIcons.resize}
