@@ -1,3 +1,4 @@
+import "@anori/utils/zod-jitless";
 import { installExtensionReloadWatcher } from "@anori/utils/handle-extension-reload";
 import { setPageTitle } from "@anori/utils/page";
 import { mountPage } from "@anori/utils/react";

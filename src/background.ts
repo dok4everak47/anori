@@ -1,3 +1,4 @@
+import "@anori/utils/zod-jitless";
 import { availablePlugins } from "@anori/plugins/all";
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import { runOrphanGc } from "@anori/utils/storage/orphan-gc";

@@ -1,3 +1,4 @@
+import "@anori/utils/zod-jitless";
 import "../../panda.css";
 import "./globals.css";
 import { TooltipProvider } from "@anori/design-system/components/Tooltip/Tooltip";
