@@ -31,6 +31,7 @@
         "configureWidget": "Configure widget",
         "addWidget": "Add widget",
         "addWidgetConfigInvalid": "Couldn't add the widget: its configuration is invalid. Check the console for details.",
+        "addWidgetNoSpace": "Not enough space on the current grid.",
         "saveWidgetConfigInvalid": "Couldn't save: the widget configuration is invalid. Check the console for details.",
         "edit": "Edit",
         "editFolder": "Edit folder",

@@ -227,16 +227,16 @@
 <h2>新功能</h2>
 <ol class="changes">
   <li><strong>浮动 Dock</strong>：以 macOS 风格的浮动 Dock 栏取代原先需悬停才出现的侧边栏，常驻左下角，文件夹切换与「更新 / 编辑 / 设置」入口一触即达，无需再悬停等待展开。</li>
-  <li><strong>Widget 自由拉伸</strong>：编辑模式下所有 widget 都可拖动右下角调整尺寸，按网格吸附到合适行列，并自动推开会重叠的 widget。</li>
+  <li><strong>Widget 自由拉伸</strong>：编辑模式下所有 widget 都可拖动右下角调整尺寸，按网格吸附到合适行列，限制在当前可见网格内，并自动推开会重叠的 widget。</li>
 </ol>
 
 <h2>修复</h2>
 <ol class="changes">
-  <li><strong>右侧贴边</strong>：编辑或拉大 widget 时，网格现在按实际可见区域计算列数，最右侧 widget 可以贴近边缘而不是被滚动条挤出屏幕。</li>
+  <li><strong>右侧贴边</strong>：编辑或拉大 widget 时，网格现在按实际可见区域计算列数，最右侧 widget 可以贴近可见边缘而不会撑出额外滚动区域。</li>
   <li><strong>竖屏壁纸压扁</strong>：竖屏照片在「适合屏幕」下不再因布局变化被横向拉伸，背景始终按真实比例居中。</li>
 </ol>
 
-<p>这次调整保持原有网格布局：小尺寸 widget 仍可整齐摆放，需要更多内容时再拖到更大的行列范围，编辑完成后退出编辑模式即可恢复清爽界面。</p>
+<p>这次调整保持固定的新标签页布局：所有新增、拖动和拉伸都被限制在当前可见网格内，小尺寸 widget 仍可整齐摆放，编辑完成后退出编辑模式即可恢复清爽界面。</p>
 
 <!-- FOOTER -->
 <div class="changelog-footer">

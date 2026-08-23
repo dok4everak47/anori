@@ -18,8 +18,8 @@ export class OverlapError extends Error {
 }
 
 export const calculateColumnWidth = (containerWidth: number, desiredSize: number, minBoxSize: number) => {
-  const columns = Math.round(containerWidth / desiredSize);
-  const colWidth = Math.min(Math.max(Math.floor(containerWidth / columns), minBoxSize), desiredSize);
+  const columns = Math.max(1, Math.round(containerWidth / desiredSize));
+  const colWidth = Math.max(containerWidth / columns, minBoxSize);
   return Number.isNaN(colWidth) ? desiredSize : colWidth;
 };
 
@@ -123,14 +123,6 @@ export const findPositionForItemInGrid = ({
   return false;
 };
 
-export const findFallbackPosition = ({ layout }: { layout: GridContent }): GridPosition => {
-  const numberOfColumns = Math.max(...layout.map((w) => w.x + w.width), 0);
-  return {
-    x: numberOfColumns,
-    y: 0,
-  };
-};
-
 const distanceBetweenPoints = (p1: GridPixelPosition, p2: GridPixelPosition) => {
   return Math.hypot(p2.x - p1.x, p2.y - p1.y);
 };
@@ -155,8 +147,6 @@ export const snapToSector = ({ grid, position }: { grid: GridDimensions; positio
     return distanceBetweenPoints(a.pixelPosition, position) - distanceBetweenPoints(b.pixelPosition, position);
   });
 };
-
-export const GRID_DRAG_EXTEND_SLOTS = 2;
 
 export const snapPixelPositionToGrid = ({
   grid,

@@ -32,6 +32,15 @@ export const computeDisplacedMoves = (
   }
   rects.set(item.instanceId, { x: position.x, y: position.y, width: item.width, height: item.height });
 
+  if (
+    position.x < 0 ||
+    position.y < 0 ||
+    position.x + item.width > gridDimensions.columns ||
+    position.y + item.height > gridDimensions.rows
+  ) {
+    return null;
+  }
+
   // First preference: shift every overlapped widget as one block by the opposite of the drag vector,
   // into the space the dragged widget vacated — the whole group keeps its arrangement. Valid only when
   // each shifted widget stays in bounds and neither its destination nor its travel path crosses a
@@ -137,6 +146,14 @@ export const computeDisplacedMoves = (
           else rect.y = p.y + p.height;
           overlapping = true;
         }
+      }
+      if (
+        rect.x < 0 ||
+        rect.y < 0 ||
+        rect.x + rect.width > gridDimensions.columns ||
+        rect.y + rect.height > gridDimensions.rows
+      ) {
+        return null;
       }
     }
     placed.push(rect);

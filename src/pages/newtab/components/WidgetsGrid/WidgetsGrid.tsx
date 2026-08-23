@@ -2,7 +2,7 @@ import { Onboarding } from "@anori/components/Onboarding";
 import { WidgetCard } from "@anori/components/WidgetCard/WidgetCard";
 import { MotionScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
 import type { GridDimensions, GridItemSize, GridPosition } from "@anori/utils/grid/types";
-import { canPlaceItemInGrid, GRID_DRAG_EXTEND_SLOTS, positionToPixelPosition } from "@anori/utils/grid/utils";
+import { canPlaceItemInGrid, positionToPixelPosition } from "@anori/utils/grid/utils";
 import type { Mapping } from "@anori/utils/types";
 import type { WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { AnimatePresence, m } from "motion/react";
@@ -89,20 +89,20 @@ export const WidgetsGrid = memo(function WidgetsGrid({
       item: widget,
       layout: layout.filter((w) => w.instanceId !== widget.instanceId),
       position,
-      allowOutOfBounds: true,
+      allowOutOfBounds: false,
     });
     if (canPlaceThere) {
       onLayoutUpdate([{ type: "change-position", instanceId: widget.instanceId, newPosition: position }]);
     }
   };
 
-  const clampSizeToExtendedGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => ({
-    width: Math.min(size.width, gridDimensions.columns + GRID_DRAG_EXTEND_SLOTS - widget.x),
-    height: Math.min(size.height, gridDimensions.rows + GRID_DRAG_EXTEND_SLOTS - widget.y),
+  const clampSizeToGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => ({
+    width: Math.min(size.width, gridDimensions.columns - widget.x),
+    height: Math.min(size.height, gridDimensions.rows - widget.y),
   });
 
   const tryResizeWidget = (widget: WidgetInFolderWithMeta, widthInBoxes: number, heightInBoxes: number) => {
-    ({ width: widthInBoxes, height: heightInBoxes } = clampSizeToExtendedGrid(widget, {
+    ({ width: widthInBoxes, height: heightInBoxes } = clampSizeToGrid(widget, {
       width: widthInBoxes,
       height: heightInBoxes,
     }));
@@ -164,9 +164,6 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     }
     return resizeMoves?.find((m) => m.instanceId === instanceId)?.position;
   };
-  const effectivePosition = (w: WidgetInFolderWithMeta): GridPosition => snapOverrideFor(w.instanceId) ?? w;
-  const effectiveSize = (w: WidgetInFolderWithMeta): GridItemSize =>
-    resizePreview && resizePreview.instanceId === w.instanceId ? resizePreview : w;
   const draggedItem = snap ? layout.find((w) => w.instanceId === snap.instanceId) : undefined;
 
   const ghost =
@@ -176,16 +173,8 @@ export const WidgetsGrid = memo(function WidgetsGrid({
         ? { position: { x: resizeItem.x, y: resizeItem.y }, width: resizePreview.width, height: resizePreview.height }
         : null;
 
-  const maxWidthPx =
-    convertUnitsToPixels(
-      Math.max(0, ...layout.map((w) => Math.max(w.x + w.width, effectivePosition(w).x + effectiveSize(w).width))),
-    ) +
-    gapSize * 2;
-  const maxHeightPx =
-    convertUnitsToPixels(
-      Math.max(0, ...layout.map((w) => Math.max(w.y + w.height, effectivePosition(w).y + effectiveSize(w).height))),
-    ) +
-    gapSize * 2;
+  const maxWidthPx = convertUnitsToPixels(gridDimensions.columns) + gapSize * 2;
+  const maxHeightPx = convertUnitsToPixels(gridDimensions.rows) + gapSize * 2;
 
   return (
     <MotionScrollArea
@@ -231,7 +220,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
                   onResize={(width, height) => tryResizeWidget(w, width, height)}
                   onResizePreview={(previewSize) =>
                     setResizePreview(
-                      previewSize ? { instanceId: w.instanceId, ...clampSizeToExtendedGrid(w, previewSize) } : null,
+                      previewSize ? { instanceId: w.instanceId, ...clampSizeToGrid(w, previewSize) } : null,
                     )
                   }
                   onMoveToFolder={(folderId) =>

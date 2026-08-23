@@ -1,11 +1,6 @@
 import { useParentFolder } from "@anori/utils/FolderContentContext";
 import type { GridDimensions, GridPosition } from "@anori/utils/grid/types";
-import {
-  canPlaceItemInGrid,
-  GRID_DRAG_EXTEND_SLOTS,
-  positionToPixelPosition,
-  snapPixelPositionToGrid,
-} from "@anori/utils/grid/utils";
+import { canPlaceItemInGrid, positionToPixelPosition, snapPixelPositionToGrid } from "@anori/utils/grid/utils";
 import { useMirrorStateToRef } from "@anori/utils/hooks";
 import type { WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { useDragDropMonitor } from "@dnd-kit/react";
@@ -36,12 +31,12 @@ export const useDragSnapPosition = (
   useDragDropMonitor({
     onDragStart(event) {
       const { source } = event.operation;
-      if (!source || source.type !== "widget") return;
+      if (source?.type !== "widget") return;
       dragStartRect.current = gridRef.current?.getBoundingClientRect() ?? null;
     },
     onDragMove(event) {
       const { source, target } = event.operation;
-      if (!source || source.type !== "widget") return;
+      if (source?.type !== "widget") return;
       const item = layout.find((w) => w.instanceId === source.id);
       if (!item || !gridRef.current) return;
 
@@ -64,17 +59,13 @@ export const useDragSnapPosition = (
         x: storedPixel.x + current.x - initial.x - scrollShift.x,
         y: storedPixel.y + current.y - initial.y - scrollShift.y,
       };
-      const snapPosition = snapPixelPositionToGrid({
-        grid: gridDimensions,
-        position: virtualCorner,
-        extend: GRID_DRAG_EXTEND_SLOTS,
-      });
+      const snapPosition = snapPixelPositionToGrid({ grid: gridDimensions, position: virtualCorner });
       const canPlace = canPlaceItemInGrid({
         grid: gridDimensions,
         item,
         layout: layout.filter((w) => w.instanceId !== item.instanceId),
         position: snapPosition,
-        allowOutOfBounds: true,
+        allowOutOfBounds: false,
       });
       let preview: DragPreview | null = null;
       if (canPlace) {
@@ -96,7 +87,7 @@ export const useDragSnapPosition = (
       dragStartRect.current = null;
       if (event.canceled) return;
       const { source, target } = event.operation;
-      if (!source || source.type !== "widget" || target?.type === "folder") return;
+      if (source?.type !== "widget" || target?.type === "folder") return;
       if (lastSnap && lastSnap.instanceId === source.id) {
         onDrop([{ instanceId: lastSnap.instanceId, position: lastSnap.position }, ...lastSnap.displaced]);
       }

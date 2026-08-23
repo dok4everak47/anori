@@ -8,7 +8,7 @@ import { Modal } from "@anori/design-system/components/Modal/Modal";
 import { MotionScrollArea, ScrollArea } from "@anori/design-system/components/ScrollArea/ScrollArea";
 import { availablePluginsWithWidgets } from "@anori/plugins/all";
 import type { GridContent, GridDimensions } from "@anori/utils/grid/types";
-import { findFallbackPosition, findPositionForItemInGrid } from "@anori/utils/grid/utils";
+import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import type { SomePlugin, SomeWidget } from "@anori/utils/plugins/types";
 import { isWidgetNonConfigurable } from "@anori/utils/plugins/widget";
 import type { Mapping } from "@anori/utils/types";
@@ -60,16 +60,17 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
   const searchQuery = useDeferredValue(_searchQuery).toLowerCase();
   const [selectedPlugin, setSelectedPlugin] = useState<SomePlugin | undefined>(undefined);
   const [selectedWidget, setSelectedWidget] = useState<SomeWidget | undefined>(undefined);
-  const [addFailed, setAddFailed] = useState(false);
+  const [addFailed, setAddFailed] = useState<null | "invalid" | "no-space">(null);
   const { t } = useTranslation();
   const dir = useDirection();
   const pluginSectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const tryAddWidget = useCallback(
     async (plugin: SomePlugin, widget: SomeWidget, config: Mapping) => {
-      let position = findPositionForItemInGrid({ grid: gridDimensions, layout, item: widget.appearance.size });
+      const position = findPositionForItemInGrid({ grid: gridDimensions, layout, item: widget.appearance.size });
       if (!position) {
-        position = findFallbackPosition({ layout });
+        setAddFailed("no-space");
+        return;
       }
       try {
         const { instanceId } = await addWidget({ plugin, widget, config, position });
@@ -84,7 +85,7 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
       } catch (e) {
         // Write was blocked (config failed validation) — keep the wizard open instead of persisting bad config.
         console.error("Failed to add widget", e);
-        setAddFailed(true);
+        setAddFailed("invalid");
       }
     },
     [gridDimensions, layout, addWidget, onClose],
@@ -92,7 +93,7 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
 
   const onWidgetClick = useCallback(
     (widget: SomeWidget, plugin: SomePlugin) => {
-      setAddFailed(false);
+      setAddFailed(null);
       if (isWidgetNonConfigurable(widget)) {
         tryAddWidget(plugin, widget, {});
       } else {
@@ -155,7 +156,11 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
             animate={{ translateX: "0%", opacity: 1 }}
             exit={{ translateX: "-50%", opacity: 0 }}
           >
-            {addFailed && <Alert variant="danger">{t("addWidgetConfigInvalid")}</Alert>}
+            {addFailed && (
+              <Alert variant="danger">
+                {addFailed === "no-space" ? t("addWidgetNoSpace") : t("addWidgetConfigInvalid")}
+              </Alert>
+            )}
             <selectedWidget.configurationScreen
               widgetId={selectedWidget.id}
               saveConfiguration={(config) => tryAddWidget(selectedPlugin, selectedWidget, config as Mapping)}
@@ -179,6 +184,12 @@ export const NewWidgetWizard = ({ onClose, folder, gridDimensions, layout }: New
               placeholder={t("search")}
               autoFocus
             />
+
+            {addFailed && (
+              <Alert variant="danger">
+                {addFailed === "no-space" ? t("addWidgetNoSpace") : t("addWidgetConfigInvalid")}
+              </Alert>
+            )}
 
             {pluginsList.length === 0 ? (
               <EmptyState title={t("noResults")} />

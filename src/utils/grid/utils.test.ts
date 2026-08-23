@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { GridDimensions } from "./types";
-import { canPlaceItemInGrid, findFallbackPosition, findPositionForItemInGrid } from "./utils";
+import { canPlaceItemInGrid, findPositionForItemInGrid } from "./utils";
 
 const grid = (columns: number, rows = 10): GridDimensions => ({
   boxSize: 100,
@@ -53,16 +53,5 @@ describe("findPositionForItemInGrid", () => {
   it("returns false when no cell fits", () => {
     const layout = [{ x: 0, y: 0, width: 12, height: 10 }];
     expect(findPositionForItemInGrid({ grid: grid(12), layout, item: { width: 1, height: 1 } })).toBe(false);
-  });
-});
-
-describe("findFallbackPosition", () => {
-  it("appends past the rightmost widget", () => {
-    const layout = [{ x: 0, y: 0, width: 2, height: 1 }];
-    expect(findFallbackPosition({ layout })).toEqual({ x: 2, y: 0 });
-  });
-
-  it("starts at column 0 for an empty grid", () => {
-    expect(findFallbackPosition({ layout: [] })).toEqual({ x: 0, y: 0 });
   });
 });

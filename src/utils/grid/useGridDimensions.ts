@@ -1,14 +1,9 @@
-import type { GridContent, GridDimensions, GridItemSize, GridPixelPosition } from "@anori/utils/grid/types";
+import type { GridDimensions, GridItemSize, GridPixelPosition } from "@anori/utils/grid/types";
 import { calculateColumnWidth } from "@anori/utils/grid/utils";
 import isEqual from "lodash/isEqual";
 import { type RefObject, useCallback, useLayoutEffect, useState } from "react";
 
-export const useGridDimensions = (
-  ref: RefObject<HTMLElement | null>,
-  desiredSize: number,
-  minSize: number,
-  layout: GridContent,
-) => {
+export const useGridDimensions = (ref: RefObject<HTMLElement | null>, desiredSize: number, minSize: number) => {
   const calculateDimensions = useCallback(
     (el: HTMLElement) => {
       const box = el.getBoundingClientRect();
@@ -18,11 +13,8 @@ export const useGridDimensions = (
       const minColumns = Math.floor(box.width / boxSize);
       const minRows = Math.floor(box.height / boxSize);
 
-      const maxColOccupied = Math.max(...layout.map((i) => i.x + i.width));
-      const maxRowOccupied = Math.max(...layout.map((i) => i.y + i.height));
-
-      const columns = Math.max(minColumns, maxColOccupied);
-      const rows = Math.max(minRows, maxRowOccupied);
+      const columns = minColumns;
+      const rows = minRows;
 
       return {
         boxSize,
@@ -40,7 +32,7 @@ export const useGridDimensions = (
         },
       };
     },
-    [desiredSize, minSize, layout],
+    [desiredSize, minSize],
   );
 
   const [dimensions, _setDimensions] = useState<

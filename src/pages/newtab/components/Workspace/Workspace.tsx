@@ -3,6 +3,7 @@ import { Modal } from "@anori/design-system/components/Modal/Modal";
 import { useSizeSettings } from "@anori/utils/compact";
 import { FolderContentContext } from "@anori/utils/FolderContentContext";
 import { useGridDimensions } from "@anori/utils/grid/useGridDimensions";
+import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import { useHotkeys } from "@anori/utils/hooks";
 import { useOverlayLayers } from "@anori/utils/overlay-layers";
 import { anoriSchema } from "@anori/utils/storage";
@@ -10,7 +11,7 @@ import { useStorageValue } from "@anori/utils/storage-lib";
 import { tryMoveWidgetToFolder, useFolderWidgets } from "@anori/utils/user-data/hooks";
 import type { Folder, WidgetInFolderWithMeta } from "@anori/utils/user-data/types";
 import { AnimatePresence, m } from "motion/react";
-import { type CSSProperties, useCallback, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useMeasure from "react-use-motion-measure";
 import { css, cva } from "styled-system/css";
@@ -82,8 +83,35 @@ export const Workspace = ({
   const { blockSize, minBlockSize } = useSizeSettings();
   const mainRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const gridDimensions = useGridDimensions(scrollAreaRef, blockSize, minBlockSize, widgets);
+  const gridDimensions = useGridDimensions(scrollAreaRef, blockSize, minBlockSize);
   const [panelRef, panelBounds] = useMeasure();
+
+  useEffect(() => {
+    if (!gridDimensions.isMeasured) return;
+    for (const widget of widgets) {
+      const inBounds =
+        widget.x >= 0 &&
+        widget.y >= 0 &&
+        widget.x + widget.width <= gridDimensions.columns &&
+        widget.y + widget.height <= gridDimensions.rows;
+      if (inBounds) continue;
+      const position = findPositionForItemInGrid({
+        grid: gridDimensions,
+        layout: widgets.filter((w) => w.instanceId !== widget.instanceId),
+        item: widget,
+      });
+      if (position && (position.x !== widget.x || position.y !== widget.y)) {
+        void moveWidget(widget.instanceId, position);
+        continue;
+      }
+      if (widget.width > gridDimensions.columns || widget.height > gridDimensions.rows) {
+        void resizeWidget(widget.instanceId, {
+          width: Math.min(widget.width, gridDimensions.columns),
+          height: Math.min(widget.height, gridDimensions.rows),
+        });
+      }
+    }
+  }, [gridDimensions, widgets, moveWidget, resizeWidget]);
 
   const handleLayoutUpdate = useCallback(
     (changes: LayoutChange[]) => {

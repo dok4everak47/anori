@@ -5,7 +5,7 @@ import {
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { allPlugins, availablePluginsWithWidgets } from "@anori/plugins/all";
 import type { GridDimensions, GridItemSize, GridPosition } from "@anori/utils/grid/types";
-import { findFallbackPosition, findPositionForItemInGrid } from "@anori/utils/grid/utils";
+import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import { useLocationHash } from "@anori/utils/hooks";
 import { guid } from "@anori/utils/misc";
 import type { SomePlugin, SomeWidget } from "@anori/utils/plugins/types";
@@ -295,10 +295,8 @@ export const tryMoveWidgetToFolder = async (
   if (!widgetInfo) return false;
 
   const toFolderLayout = toFolderDetails.widgets;
-  let newPosition = findPositionForItemInGrid({ grid: currentGrid, layout: toFolderLayout, item: widgetInfo });
-  if (!newPosition) {
-    newPosition = findFallbackPosition({ layout: toFolderLayout });
-  }
+  const newPosition = findPositionForItemInGrid({ grid: currentGrid, layout: toFolderLayout, item: widgetInfo });
+  if (!newPosition) return false;
 
   const updatedFromDetails = {
     ...fromFolderDetails,
