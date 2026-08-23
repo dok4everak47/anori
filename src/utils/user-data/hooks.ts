@@ -201,14 +201,14 @@ export const useFolderWidgets = (folder: Folder) => {
   );
 
   const resizeWidget = useCallback(
-    async (id: ID, size: GridItemSize) => {
+    async (id: ID, size: GridItemSize, position?: GridPosition) => {
       await setDetails((p) => {
         const prev = p ?? { widgets: [] };
         return {
           ...prev,
           widgets: prev.widgets.map((w) => {
             if (w.instanceId === id) {
-              return { ...w, width: size.width, height: size.height };
+              return { ...w, width: size.width, height: size.height, ...(position ?? {}) };
             }
             return w;
           }),

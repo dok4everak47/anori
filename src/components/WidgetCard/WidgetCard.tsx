@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { mergeRefs } from "react-merge-refs";
 import { css, cva, cx } from "styled-system/css";
 import { WidgetCardContext } from "./context";
-import { useWidgetResize } from "./use-widget-resize";
+import { type ResizeCorner, useWidgetResize } from "./use-widget-resize";
 import { WidgetErrorBoundary, WidgetRenderError } from "./WidgetErrorBoundary";
 
 const EMPTY_CONFIG: Mapping = {};
@@ -86,19 +86,41 @@ const control = cva({
   base: { position: "absolute", zIndex: 1, boxShadow: "raised" },
   variants: {
     position: {
-      remove: { top: "-14px", right: "-14px", _compact: { top: "-8px", right: "-4px" } },
+      remove: { top: "-14px", right: "18px", _compact: { top: "-8px", right: "8px" } },
       edit: { top: "30px", right: "-14px", _compact: { right: "-4px" } },
       drag: {
         top: "-14px",
-        left: "-14px",
+        left: "18px",
         cursor: "grab!",
         touchAction: "none",
+        _compact: { top: "-8px", left: "8px" },
+      },
+      resizeNw: {
+        top: "-14px",
+        left: "-14px",
+        cursor: "nwse-resize!",
+        touchAction: "none",
+        _nestedSvgIcon: { transform: "rotate(90deg)" },
         _compact: { top: "-8px", left: "-4px" },
       },
-      resize: {
+      resizeNe: {
+        top: "-14px",
+        right: "-14px",
+        cursor: "nesw-resize!",
+        touchAction: "none",
+        _compact: { top: "-8px", right: "-4px" },
+      },
+      resizeSw: {
+        bottom: "-14px",
+        left: "-14px",
+        cursor: "nesw-resize!",
+        touchAction: "none",
+        _compact: { bottom: "-8px", left: "-4px" },
+      },
+      resizeSe: {
         bottom: "-14px",
         right: "-14px",
-        cursor: "grab!",
+        cursor: "nwse-resize!",
         touchAction: "none",
         _nestedSvgIcon: { transform: "rotate(90deg)" },
         _compact: { bottom: "-8px", right: "-4px" },
@@ -136,8 +158,8 @@ type WidgetCardProps = {
       onUpdateConfig: (instanceId: string, config: Partial<Mapping>) => void;
       onRemove?: () => void;
       onEdit?: () => void;
-      onResize?: (newWidth: number, newHeight: number) => boolean | undefined;
-      onResizePreview?: (size: GridItemSize | null) => void;
+      onResize?: (newWidth: number, newHeight: number, newPosition?: Partial<GridPosition>) => boolean | undefined;
+      onResizePreview?: (size: (GridItemSize & Partial<GridPosition>) | null) => void;
       onPositionChange?: (newPosition: GridPosition) => void;
       onMoveToFolder?: (folderId: string) => void;
       dragSnapPosition?: GridPosition;
@@ -248,7 +270,7 @@ export const WidgetCard = ({
           : false
       }
       animate={
-        type === "widget" && !isDragging
+        type === "widget" && !isDragging && !resize.isResizing
           ? {
               top: pixelPosition.y + gapSize,
               left: pixelPosition.x + gapSize,
@@ -286,6 +308,7 @@ export const WidgetCard = ({
         margin: type === "widget" ? 0 : gapSize,
         position: type === "widget" ? "absolute" : undefined,
         ...(type === "widget" && isDragging ? { top: pixelPosition.y + gapSize, left: pixelPosition.x + gapSize } : {}),
+        ...(type === "widget" && resize.isResizing ? { top: resize.y, left: resize.x } : {}),
         ...style,
       }}
       {...props}
@@ -315,15 +338,25 @@ export const WidgetCard = ({
           onClick={onEdit}
         />
       )}
-      {isEditing && !otherWidgetDragging && type === "widget" && !isDragging && (
-        <IconButton
-          className={cx("widget-control", control({ position: "resize" }))}
-          icon={builtinIcons.resize}
-          label={t("resizeWidget")}
-          showTooltip={!resize.isResizing}
-          {...resize.handleProps}
-        />
-      )}
+      {isEditing &&
+        !otherWidgetDragging &&
+        type === "widget" &&
+        !isDragging &&
+        (["nw", "ne", "sw", "se"] as ResizeCorner[]).map((corner) => (
+          <IconButton
+            key={corner}
+            className={cx(
+              "widget-control",
+              control({
+                position: ({ nw: "resizeNw", ne: "resizeNe", sw: "resizeSw", se: "resizeSe" } as const)[corner],
+              }),
+            )}
+            icon={builtinIcons.resize}
+            label={t("resizeWidget")}
+            showTooltip={!resize.isResizing}
+            {...resize.handleProps[corner]}
+          />
+        ))}
       <WidgetErrorBoundary>
         <div className={overflowProtectionCss} style={{ borderRadius: withPadding ? 0 : "inherit" }}>
           {children}

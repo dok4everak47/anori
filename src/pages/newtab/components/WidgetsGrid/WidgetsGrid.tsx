@@ -54,6 +54,7 @@ export type LayoutChange =
       instanceId: string;
       width: number;
       height: number;
+      position?: GridPosition;
     };
 
 export type WidgetsGridProps = {
@@ -96,25 +97,42 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     }
   };
 
-  const clampSizeToGrid = (widget: WidgetInFolderWithMeta, size: GridItemSize): GridItemSize => ({
-    width: Math.min(size.width, gridDimensions.columns - widget.x),
-    height: Math.min(size.height, gridDimensions.rows - widget.y),
+  const clampResizeToGrid = (
+    widget: WidgetInFolderWithMeta,
+    size: GridItemSize,
+    position?: GridPosition,
+  ): GridItemSize & GridPosition => ({
+    width: Math.min(size.width, gridDimensions.columns - (position?.x ?? widget.x)),
+    height: Math.min(size.height, gridDimensions.rows - (position?.y ?? widget.y)),
+    x: position?.x ?? widget.x,
+    y: position?.y ?? widget.y,
   });
 
-  const tryResizeWidget = (widget: WidgetInFolderWithMeta, widthInBoxes: number, heightInBoxes: number) => {
-    ({ width: widthInBoxes, height: heightInBoxes } = clampSizeToGrid(widget, {
-      width: widthInBoxes,
-      height: heightInBoxes,
-    }));
+  const tryResizeWidget = (
+    widget: WidgetInFolderWithMeta,
+    widthInBoxes: number,
+    heightInBoxes: number,
+    positionInBoxes?: Partial<GridPosition>,
+  ) => {
+    const targetPosition = { x: positionInBoxes?.x ?? widget.x, y: positionInBoxes?.y ?? widget.y };
+    const clamped = clampResizeToGrid(widget, { width: widthInBoxes, height: heightInBoxes }, targetPosition);
+    const finalPosition = { x: clamped.x, y: clamped.y };
+    widthInBoxes = clamped.width;
+    heightInBoxes = clamped.height;
 
-    if (widget.width === widthInBoxes && widget.height === heightInBoxes) {
+    if (
+      widget.width === widthInBoxes &&
+      widget.height === heightInBoxes &&
+      widget.x === finalPosition.x &&
+      widget.y === finalPosition.y
+    ) {
       return false;
     }
     const moves = computeDisplacedMoves(
       gridDimensions,
       layout,
       { ...widget, width: widthInBoxes, height: heightInBoxes },
-      { x: widget.x, y: widget.y },
+      finalPosition,
       resizePushDirection(widget, { width: widthInBoxes, height: heightInBoxes }),
     );
     if (!moves) return false;
@@ -124,6 +142,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
         instanceId: widget.instanceId,
         width: widthInBoxes,
         height: heightInBoxes,
+        position: finalPosition,
       },
       ...moves.map((move) => ({
         type: "change-position" as const,
@@ -141,9 +160,9 @@ export const WidgetsGrid = memo(function WidgetsGrid({
       moves.map((move) => ({ type: "change-position", instanceId: move.instanceId, newPosition: move.position })),
     );
   });
-  const [resizePreview, setResizePreview] = useState<{ instanceId: string; width: number; height: number } | null>(
-    null,
-  );
+  const [resizePreview, setResizePreview] = useState<
+    ({ instanceId: string } & GridItemSize & Partial<GridPosition>) | null
+  >(null);
   const resizeItem = resizePreview ? layout.find((w) => w.instanceId === resizePreview.instanceId) : undefined;
   const resizeMoves =
     resizePreview && resizeItem
@@ -151,7 +170,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
           gridDimensions,
           layout,
           { ...resizeItem, width: resizePreview.width, height: resizePreview.height },
-          { x: resizeItem.x, y: resizeItem.y },
+          { x: resizePreview.x ?? resizeItem.x, y: resizePreview.y ?? resizeItem.y },
           resizePushDirection(resizeItem, resizePreview),
         )
       : null;
@@ -170,7 +189,11 @@ export const WidgetsGrid = memo(function WidgetsGrid({
     snap && draggedItem
       ? { position: snap.position, width: draggedItem.width, height: draggedItem.height }
       : resizePreview && resizeItem
-        ? { position: { x: resizeItem.x, y: resizeItem.y }, width: resizePreview.width, height: resizePreview.height }
+        ? {
+            position: { x: resizePreview.x ?? resizeItem.x, y: resizePreview.y ?? resizeItem.y },
+            width: resizePreview.width,
+            height: resizePreview.height,
+          }
         : null;
 
   const maxWidthPx = convertUnitsToPixels(gridDimensions.columns) + gapSize * 2;
@@ -217,10 +240,18 @@ export const WidgetsGrid = memo(function WidgetsGrid({
                   onUpdateConfig={onUpdateWidgetConfig}
                   onRemove={() => onLayoutUpdate([{ type: "remove", instanceId: w.instanceId }])}
                   onEdit={w.widget.configurationScreen ? () => onEditWidget(w) : undefined}
-                  onResize={(width, height) => tryResizeWidget(w, width, height)}
+                  onResize={(width, height, newPosition) => tryResizeWidget(w, width, height, newPosition)}
                   onResizePreview={(previewSize) =>
                     setResizePreview(
-                      previewSize ? { instanceId: w.instanceId, ...clampSizeToGrid(w, previewSize) } : null,
+                      previewSize
+                        ? {
+                            instanceId: w.instanceId,
+                            ...clampResizeToGrid(w, previewSize, {
+                              x: previewSize.x ?? w.x,
+                              y: previewSize.y ?? w.y,
+                            }),
+                          }
+                        : null,
                     )
                   }
                   onMoveToFolder={(folderId) =>

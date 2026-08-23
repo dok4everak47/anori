@@ -123,7 +123,7 @@ export const Workspace = ({
         } else if (ch.type === "move-to-folder") {
           tryMoveWidgetToFolder(activeFolder.id, ch.folderId, ch.instanceId, gridDimensions);
         } else if (ch.type === "resize") {
-          resizeWidget(ch.instanceId, { width: ch.width, height: ch.height });
+          resizeWidget(ch.instanceId, { width: ch.width, height: ch.height }, ch.position);
         }
       });
     },

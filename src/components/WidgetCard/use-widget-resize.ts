@@ -11,6 +11,9 @@ import { type PointerEvent as ReactPointerEvent, type RefObject, useEffect, useR
 const AUTOSCROLL_ZONE_PX = 80;
 const AUTOSCROLL_MAX_SPEED_PX_PER_FRAME = 12;
 
+export type ResizeCorner = "nw" | "ne" | "sw" | "se";
+export type ResizePreview = GridItemSize & Partial<GridPosition>;
+
 const autoscrollVelocity = (pos: number, start: number, end: number) => {
   if (pos < start + AUTOSCROLL_ZONE_PX) {
     return -AUTOSCROLL_MAX_SPEED_PX_PER_FRAME * minmax((start + AUTOSCROLL_ZONE_PX - pos) / AUTOSCROLL_ZONE_PX, 0, 1);
@@ -34,8 +37,8 @@ export type UseWidgetResizeOptions = {
   size: GridItemSize;
   position?: GridPosition;
   cardRef: RefObject<HTMLDivElement | null>;
-  onResize?: (newWidth: number, newHeight: number) => boolean | undefined;
-  onResizePreview?: (size: GridItemSize | null) => void;
+  onResize?: (newWidth: number, newHeight: number, newPosition?: Partial<GridPosition>) => boolean | undefined;
+  onResizePreview?: (size: ResizePreview | null) => void;
 };
 
 export const useWidgetResize = ({
@@ -50,14 +53,20 @@ export const useWidgetResize = ({
   const { gapSize } = useSizeSettings();
 
   const convertUnitsToPixels = (unit: number) => unit * grid.boxSize - gapSize * 2;
-  const convertPixelsToUnits = (px: number) => Math.round((px + gapSize * 2) / grid.boxSize);
 
-  const startResize = (e: ReactPointerEvent<HTMLButtonElement>) => {
+  const startResize = (corner: ResizeCorner) => (e: ReactPointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.currentTarget.setPointerCapture(e.pointerId);
     resizeActive.current = true;
-    resizeStart.current = { x: e.clientX, y: e.clientY };
+    resizeCorner.current = corner;
+    resizeStartPointer.current = { x: e.clientX, y: e.clientY };
     resizePointer.current = { x: e.clientX, y: e.clientY };
+    resizeStartRect.current = {
+      left: (position?.x ?? 0) * grid.boxSize + gapSize,
+      top: (position?.y ?? 0) * grid.boxSize + gapSize,
+      right: ((position?.x ?? 0) + size.width) * grid.boxSize - gapSize,
+      bottom: ((position?.y ?? 0) + size.height) * grid.boxSize - gapSize,
+    };
     resizeScrollContainer.current = findScrollContainer(cardRef.current);
     resizeScrollStart.current = {
       left: resizeScrollContainer.current?.scrollLeft ?? 0,
@@ -65,7 +74,8 @@ export const useWidgetResize = ({
     };
     startResizeAutoscroll();
     setIsResizing(true);
-    onResizePreview?.({ width: size.width, height: size.height });
+    setActiveCorner(corner);
+    onResizePreview?.({ width: size.width, height: size.height, x: position?.x, y: position?.y });
   };
 
   const startResizeAutoscroll = () => {
@@ -96,38 +106,78 @@ export const useWidgetResize = ({
   };
 
   const applyResize = () => {
-    if (!resizeActive.current || !resizable) return;
+    if (!resizeActive.current || !resizable || !position) return;
     const minWidth = resizable === true ? 1 : (resizable.min?.width ?? 1);
     const minHeight = resizable === true ? 1 : (resizable.min?.height ?? 1);
-    const maxWidth = position ? grid.columns - position.x : 999;
-    const maxHeight = position ? grid.rows - position.y : 999;
+    const minWidthPx = convertUnitsToPixels(minWidth);
+    const minHeightPx = convertUnitsToPixels(minHeight);
     const scrollDriftX = (resizeScrollContainer.current?.scrollLeft ?? 0) - resizeScrollStart.current.left;
     const scrollDriftY = (resizeScrollContainer.current?.scrollTop ?? 0) - resizeScrollStart.current.top;
-    const offsetX = resizePointer.current.x - resizeStart.current.x + scrollDriftX;
-    const offsetY = resizePointer.current.y - resizeStart.current.y + scrollDriftY;
-    const newWidth = minmax(
-      convertUnitsToPixels(size.width) + offsetX,
-      convertUnitsToPixels(minWidth),
-      convertUnitsToPixels(maxWidth),
-    );
-    const newHeight = minmax(
-      convertUnitsToPixels(size.height) + offsetY,
-      convertUnitsToPixels(minHeight),
-      convertUnitsToPixels(maxHeight),
-    );
-    const newWidthUnits = convertPixelsToUnits(newWidth);
-    if (widthUnits !== newWidthUnits) setWidthUnits(newWidthUnits);
-    const newHeightUnits = convertPixelsToUnits(newHeight);
-    if (heightUnits !== newHeightUnits) setHeightUnits(newHeightUnits);
-    if (widthUnits !== newWidthUnits || heightUnits !== newHeightUnits) {
-      onResizePreview?.({ width: newWidthUnits, height: newHeightUnits });
+    const deltaX = resizePointer.current.x - resizeStartPointer.current.x + scrollDriftX;
+    const deltaY = resizePointer.current.y - resizeStartPointer.current.y + scrollDriftY;
+    const corner = resizeCorner.current;
+    let left = resizeStartRect.current.left;
+    let top = resizeStartRect.current.top;
+    let right = resizeStartRect.current.right;
+    let bottom = resizeStartRect.current.bottom;
+
+    if (corner === "nw" || corner === "ne") top = resizeStartRect.current.top + deltaY;
+    if (corner === "sw" || corner === "se") bottom = resizeStartRect.current.bottom + deltaY;
+    if (corner === "nw" || corner === "sw") left = resizeStartRect.current.left + deltaX;
+    if (corner === "ne" || corner === "se") right = resizeStartRect.current.right + deltaX;
+
+    if (right - left < minWidthPx) {
+      if (corner === "nw" || corner === "sw") left = right - minWidthPx;
+      else right = left + minWidthPx;
     }
-    resizeWidth.set(newWidth);
-    resizeHeight.set(newHeight);
+    if (bottom - top < minHeightPx) {
+      if (corner === "nw" || corner === "ne") top = bottom - minHeightPx;
+      else bottom = top + minHeightPx;
+    }
+
+    const minEdge = gapSize;
+    const maxRight = grid.columns * grid.boxSize - gapSize;
+    const maxBottom = grid.rows * grid.boxSize - gapSize;
+    left = minmax(left, minEdge, right - minWidthPx);
+    top = minmax(top, minEdge, bottom - minHeightPx);
+    right = minmax(right, left + minWidthPx, maxRight);
+    bottom = minmax(bottom, top + minHeightPx, maxBottom);
+
+    const xUnits = minmax(Math.round((left - gapSize) / grid.boxSize), 0, grid.columns - minWidth);
+    const yUnits = minmax(Math.round((top - gapSize) / grid.boxSize), 0, grid.rows - minHeight);
+    const rightUnits = Math.min(grid.columns, Math.round((right - gapSize) / grid.boxSize));
+    const bottomUnits = Math.min(grid.rows, Math.round((bottom - gapSize) / grid.boxSize));
+    const newWidthUnits = minmax(rightUnits - xUnits, minWidth, grid.columns - xUnits);
+    const newHeightUnits = minmax(bottomUnits - yUnits, minHeight, grid.rows - yUnits);
+    const newX = corner === "nw" || corner === "sw" ? xUnits : position.x;
+    const newY = corner === "nw" || corner === "ne" ? yUnits : position.y;
+
+    if (xUnits !== positionXUnits) setPositionXUnits(xUnits);
+    if (yUnits !== positionYUnits) setPositionYUnits(yUnits);
+    if (widthUnits !== newWidthUnits) setWidthUnits(newWidthUnits);
+    if (heightUnits !== newHeightUnits) setHeightUnits(newHeightUnits);
+    if (
+      xUnits !== positionXUnits ||
+      yUnits !== positionYUnits ||
+      widthUnits !== newWidthUnits ||
+      heightUnits !== newHeightUnits
+    ) {
+      onResizePreview?.({
+        width: newWidthUnits,
+        height: newHeightUnits,
+        ...((corner === "nw" || corner === "sw") && { x: newX }),
+        ...((corner === "nw" || corner === "ne") && { y: newY }),
+      });
+    }
+    resizeX.set(left);
+    resizeY.set(top);
+    resizeWidth.set(right - left);
+    resizeHeight.set(bottom - top);
   };
 
   const finishResize = (e: ReactPointerEvent<HTMLButtonElement>) => {
     if (!resizeActive.current) return;
+    const corner = resizeCorner.current;
     resizeActive.current = false;
     if (autoscrollFrame.current !== null) {
       cancelAnimationFrame(autoscrollFrame.current);
@@ -135,22 +185,39 @@ export const useWidgetResize = ({
     }
     e.currentTarget.releasePointerCapture(e.pointerId);
     setIsResizing(false);
+    setActiveCorner(null);
     onResizePreview?.(null);
     let shouldReset = true;
+    const finalPosition = position
+      ? {
+          ...(corner === "nw" || corner === "sw" ? { x: positionXUnits } : {}),
+          ...(corner === "nw" || corner === "ne" ? { y: positionYUnits } : {}),
+        }
+      : undefined;
     if (onResize) {
-      shouldReset = !onResize(widthUnits, heightUnits);
+      shouldReset = !onResize(
+        widthUnits,
+        heightUnits,
+        Object.keys(finalPosition ?? {}).length ? finalPosition : undefined,
+      );
     }
     if (shouldReset) {
+      resizeX.set(position ? position.x * grid.boxSize + gapSize : 0);
+      resizeY.set(position ? position.y * grid.boxSize + gapSize : 0);
       resizeWidth.set(convertUnitsToPixels(size.width));
       resizeHeight.set(convertUnitsToPixels(size.height));
+      setPositionXUnits(position?.x ?? 0);
+      setPositionYUnits(position?.y ?? 0);
       setWidthUnits(size.width);
       setHeightUnits(size.height);
     }
   };
 
   const resizeActive = useRef(false);
-  const resizeStart = useRef({ x: 0, y: 0 });
+  const resizeCorner = useRef<ResizeCorner>("se");
   const resizePointer = useRef({ x: 0, y: 0 });
+  const resizeStartPointer = useRef({ x: 0, y: 0 });
+  const resizeStartRect = useRef({ left: 0, top: 0, right: 0, bottom: 0 });
   const resizeScrollContainer = useRef<HTMLElement | null>(null);
   const resizeScrollStart = useRef({ left: 0, top: 0 });
   const autoscrollFrame = useRef<number | null>(null);
@@ -162,34 +229,56 @@ export const useWidgetResize = ({
     };
   }, []);
 
+  const resizeX = useMotionValue(position ? position.x * grid.boxSize : 0);
+  const resizeY = useMotionValue(position ? position.y * grid.boxSize : 0);
   const resizeWidth = useMotionValue(convertUnitsToPixels(size.width));
   const resizeHeight = useMotionValue(convertUnitsToPixels(size.height));
-  // We need a derived/readonly value to block framer motion from messing with value after initial render
-  // More info: https://github.com/OlegWock/anori/issues/115
+  const x = useDerivedMotionValue(resizeX, (v) => v);
+  const y = useDerivedMotionValue(resizeY, (v) => v);
   const width = useDerivedMotionValue(resizeWidth, (v) => v);
   const height = useDerivedMotionValue(resizeHeight, (v) => v);
   const [isResizing, setIsResizing] = useState(false);
+  const [activeCorner, setActiveCorner] = useState<ResizeCorner | null>(null);
+  const [positionXUnits, setPositionXUnits] = useState(position?.x ?? 0);
+  const [positionYUnits, setPositionYUnits] = useState(position?.y ?? 0);
   const [widthUnits, setWidthUnits] = useState(size.width);
   const [heightUnits, setHeightUnits] = useState(size.height);
 
   useOnChangeLayoutEffect(() => {
+    resizeX.set(position ? position.x * grid.boxSize + gapSize : 0);
+    resizeY.set(position ? position.y * grid.boxSize + gapSize : 0);
     resizeWidth.set(convertUnitsToPixels(size.width));
     resizeHeight.set(convertUnitsToPixels(size.height));
+    setPositionXUnits(position?.x ?? 0);
+    setPositionYUnits(position?.y ?? 0);
     setWidthUnits(size.width);
     setHeightUnits(size.height);
     setIsResizing(false);
-  }, [size.width, size.height, grid.boxSize, gapSize]);
+    setActiveCorner(null);
+  }, [size.width, size.height, position?.x, position?.y, grid.boxSize, gapSize]);
+
+  const createHandleProps = (corner: ResizeCorner) => ({
+    onPointerDown: startResize(corner),
+    onPointerMove: updateResize,
+    onPointerUp: finishResize,
+  });
 
   return {
     isResizing,
+    activeCorner,
+    x,
+    y,
     width,
     height,
+    xUnits: positionXUnits,
+    yUnits: positionYUnits,
     widthUnits,
     heightUnits,
     handleProps: {
-      onPointerDown: startResize,
-      onPointerMove: updateResize,
-      onPointerUp: finishResize,
+      nw: createHandleProps("nw"),
+      ne: createHandleProps("ne"),
+      sw: createHandleProps("sw"),
+      se: createHandleProps("se"),
     },
   };
 };
