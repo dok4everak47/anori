@@ -151,11 +151,17 @@ export const applyTheme = async (theme: Theme, mode: Mode, wallpaperId?: string)
   let prom = Promise.resolve();
   if (theme.type === "builtin") {
     setPageBackground(browser.runtime.getURL(`/assets/images/backgrounds/${theme.background[mode]}`));
+    if (currentBackgroundBlobUrl) {
+      URL.revokeObjectURL(currentBackgroundBlobUrl);
+      currentBackgroundBlobUrl = null;
+    }
   } else {
     const wallpaper = getThemeWallpaper(theme, wallpaperId);
     prom = getThemeBackgroundImpl(theme.name, wallpaper.id).then((blob) => {
       const url = URL.createObjectURL(blob);
-      setPageBackground(url);
+      const previous = currentBackgroundBlobUrl;
+      setPageBackground(url, previous);
+      currentBackgroundBlobUrl = url;
     });
   }
 
@@ -255,3 +261,5 @@ export const registerThemeBackgroundResolver = (resolver: ThemeBackgroundResolve
   g.__anoriThemeBgResolver = resolver;
   g.__anoriThemeBgResolverReady?.(resolver);
 };
+
+let currentBackgroundBlobUrl: string | null = null;

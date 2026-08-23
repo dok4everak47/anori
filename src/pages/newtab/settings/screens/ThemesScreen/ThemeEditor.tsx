@@ -210,6 +210,8 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
   const [currentTheme, setCurrentTheme] = useCurrentTheme();
   const currentThemeRef = useMirrorStateToRef(currentTheme);
   const colorSchemeRef = useMirrorStateToRef(colorScheme);
+  const [selections] = useStorageValue(anoriSchema.themeWallpaperSelections);
+  const selectionsRef = useMirrorStateToRef(selections);
   const savedRef = useRef(false);
   const gamut = useMemo(() => detectGamut(), []);
 
@@ -243,7 +245,11 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
 
   useEffect(() => {
     return () => {
-      if (!savedRef.current) applyTheme(currentThemeRef.current, resolveColorScheme(colorSchemeRef.current));
+      if (!savedRef.current) {
+        const revertTo = currentThemeRef.current;
+        const revertWallpaperId = revertTo.type === "custom" ? selectionsRef.current[revertTo.name] : undefined;
+        applyTheme(revertTo, resolveColorScheme(colorSchemeRef.current), revertWallpaperId);
+      }
     };
   }, []);
 
