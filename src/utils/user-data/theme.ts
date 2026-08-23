@@ -169,6 +169,14 @@ export const ensureInitialWallpaper = async (storage: AnoriStorage) => {
   const theme = customThemes.find((t) => t.name === themeName);
   if (!theme || theme.wallpapers.length === 0) return;
 
+  const preloadId = typeof window !== "undefined" ? window.__anoriPreloadWallpaperId : undefined;
+  if (preloadId && theme.wallpapers.some((w) => w.id === preloadId)) {
+    const stored = getSelectedWallpaperId(storage, theme.name);
+    if (stored !== preloadId) await setSelectedWallpaperId(storage, theme.name, preloadId);
+    await applyTheme(theme, resolveColorScheme(storage.get(anoriSchema.colorScheme)), preloadId);
+    return;
+  }
+
   const stored = getSelectedWallpaperId(storage, theme.name);
   if (stored && theme.wallpapers.some((w) => w.id === stored)) {
     await applyTheme(theme, resolveColorScheme(storage.get(anoriSchema.colorScheme)), stored);

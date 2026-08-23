@@ -29,6 +29,7 @@ browser.storage.local.get({
             }
             wallpaperId = resolvedTheme.wallpapers[idx].id;
         }
+        window.__anoriPreloadWallpaperId = wallpaperId;
     }
 
     window.__anoriThemeReady = applyTheme(resolvedTheme, resolveColorScheme(colorScheme.value || "dark"), wallpaperId);
