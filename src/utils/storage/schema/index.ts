@@ -582,6 +582,7 @@ export type {
 export type {
   BookmarkWidgetStore,
   NotesWidgetStore,
+  PinnedSite,
   RssFeed,
   RssPost,
   RssWidgetStore,

@@ -50,8 +50,18 @@ export const WeatherForecastWidgetStoreSchema = z.object({
 
 export type WeatherForecastWidgetStore = z.infer<typeof WeatherForecastWidgetStoreSchema>;
 
+export const PinnedSiteSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+  title: z.string().optional(),
+  iconUrl: z.string().optional(),
+});
+
+export type PinnedSite = z.infer<typeof PinnedSiteSchema>;
+
 export const TopSitesWidgetStoreSchema = z.object({
   blacklist: z.array(z.string()),
+  pinned: z.array(PinnedSiteSchema).default([]),
 });
 
 export type TopSitesWidgetStore = z.infer<typeof TopSitesWidgetStoreSchema>;

@@ -8,6 +8,7 @@ export {
   type Folder,
   type FolderDetails,
   type NotesWidgetStore,
+  type PinnedSite,
   type RssFeed,
   type RssPost,
   type RssWidgetStore,
