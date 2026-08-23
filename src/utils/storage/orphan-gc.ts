@@ -44,9 +44,7 @@ export async function runOrphanGc(storage: AnoriStorage): Promise<GcResult> {
 
   const validPluginIds = new Set(allPlugins.map((p) => p.id));
 
-  // Valid custom theme names (for theme background reachability)
   const customThemes = storage.get(anoriSchema.customThemes) ?? [];
-  const validThemeNames = new Set(customThemes.map((t) => t.name));
 
   // ── 2. Remove orphaned collection records ────────────────────────
 
@@ -81,13 +79,17 @@ export async function runOrphanGc(storage: AnoriStorage): Promise<GcResult> {
   // Track OPFS paths referenced by live file metadata records
   const referencedOpfsPaths = new Set<string>();
 
-  // Theme backgrounds — key format is "{themeName}:{variant}"
+  // Theme backgrounds — key format is "{themeName}:{wallpaperId}:{variant}"
   const allThemeBgMeta = storage.files.getMeta(anoriSchema.themeBackgrounds.all());
   for (const [key, meta] of Object.entries(allThemeBgMeta)) {
-    // Extract theme name: everything before the last ":" (variant is "original" or "blurred")
     const lastColon = key.lastIndexOf(":");
-    const themeName = lastColon > 0 ? key.substring(0, lastColon) : key;
-    if (!validThemeNames.has(themeName)) {
+    const secondLastColon = key.lastIndexOf(":", lastColon - 1);
+    const themeName = secondLastColon >= 0 ? key.slice(0, secondLastColon) : "";
+    const wallpaperId = secondLastColon >= 0 ? key.slice(secondLastColon + 1, lastColon) : undefined;
+    const theme = customThemes.find((t) => t.name === themeName);
+    const wallpaperValid =
+      !!theme && (theme.wallpapers.length === 0 || (wallpaperId && theme.wallpapers.some((w) => w.id === wallpaperId)));
+    if (!wallpaperValid) {
       await storage.files.delete(anoriSchema.themeBackgrounds.byId(key));
       result.removedKvRecords++;
     } else {

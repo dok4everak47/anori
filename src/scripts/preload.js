@@ -8,8 +8,32 @@ browser.storage.local.get({
     theme: { value: defaultTheme.name },
     customThemes: { value: [] },
     colorScheme: { value: "dark" },
-}).then(({ theme, customThemes, colorScheme }) => {
+    themeWallpaperSelections: { value: {} },
+}).then(({ theme, customThemes, colorScheme, themeWallpaperSelections }) => {
     const themeName = theme.value;
-    const activeTheme = [...themes, ...(customThemes.value || [])].find((t) => t.name === themeName && t.accent);
-    window.__anoriThemeReady = applyTheme(activeTheme || defaultTheme, resolveColorScheme(colorScheme.value || "dark"));
+    const allCustom = customThemes.value || [];
+    const activeTheme = [...themes, ...allCustom].find((t) => t.name === themeName && t.accent);
+    const resolvedTheme = activeTheme || defaultTheme;
+
+    let wallpaperId;
+    if (resolvedTheme.type === "custom" && Array.isArray(resolvedTheme.wallpapers) && resolvedTheme.wallpapers.length > 0) {
+        const selections = themeWallpaperSelections.value || {};
+        const previous = selections[themeName];
+        if (resolvedTheme.wallpapers.length === 1) {
+            wallpaperId = resolvedTheme.wallpapers[0].id;
+        } else {
+            const avoidIndex = previous ? resolvedTheme.wallpapers.findIndex((w) => w.id === previous) : -1;
+            let idx = Math.floor(Math.random() * resolvedTheme.wallpapers.length);
+            if (avoidIndex >= 0 && resolvedTheme.wallpapers.length > 1) {
+                while (idx === avoidIndex) idx = Math.floor(Math.random() * resolvedTheme.wallpapers.length);
+            }
+            wallpaperId = resolvedTheme.wallpapers[idx].id;
+        }
+        if (selections[themeName] !== wallpaperId) {
+            const updated = { ...selections, [themeName]: wallpaperId };
+            browser.storage.local.set({ themeWallpaperSelections: { value: updated, hlc: themeWallpaperSelections.hlc } }).catch(() => {});
+        }
+    }
+
+    window.__anoriThemeReady = applyTheme(resolvedTheme, resolveColorScheme(colorScheme.value || "dark"), wallpaperId);
 });

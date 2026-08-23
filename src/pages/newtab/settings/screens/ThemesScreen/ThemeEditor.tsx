@@ -4,6 +4,9 @@ import { Checkbox } from "@anori/design-system/components/Checkbox/Checkbox";
 import { Field } from "@anori/design-system/components/Field/Field";
 import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { HueChromaPicker } from "@anori/design-system/components/HueChromaPicker/HueChromaPicker";
+import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
+import { Icon } from "@anori/design-system/components/Icon/Icon";
+import { IconButton } from "@anori/design-system/components/IconButton/IconButton";
 import { Select } from "@anori/design-system/components/Select/Select";
 import { Slider } from "@anori/design-system/components/Slider/Slider";
 import { showOpenFilePicker } from "@anori/utils/files";
@@ -19,14 +22,15 @@ import {
   BACKGROUND_ANCHOR_CSS,
   type BackgroundAnchor,
   type BackgroundFit,
+  deleteThemeWallpaperFiles,
   getThemeBackground,
   getThemeBackgroundOriginal,
-  type PartialCustomTheme,
   resolveColorScheme,
   saveThemeBackground,
+  type ThemeWallpaper,
 } from "@anori/utils/user-data/theme";
 import { useCurrentTheme } from "@anori/utils/user-data/theme-hooks";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { css, cva, cx } from "styled-system/css";
 
@@ -66,22 +70,55 @@ const BACKGROUND_ANCHOR_LABEL_KEY: Record<BackgroundAnchor, string> = {
   "bottom-right": "settings.theme.anchorBottomRight",
 };
 
+const DEFAULT_FILL = "#121615";
+const FILL_PRESETS = ["#000000", DEFAULT_FILL, "#6e7a7f", "#f4f7f5", "#ffffff"];
+
 const editorPanel = css({ display: "flex", flexDirection: "column", gap: "4" });
 const preview = css({
   position: "relative",
   overflow: "hidden",
   height: "160px",
   borderRadius: "md",
-  // Tiny checkerboard placeholder, shown until an image is selected.
   background: "repeating-conic-gradient(var(--ds-frosted-strong) 0% 25%, transparent 0% 50%) 50% / 18px 18px",
 });
-
 const previewImage = css({ position: "absolute" });
 const backgroundSection = css({ display: "flex", flexDirection: "column", gap: "2" });
 const editorActions = css({ display: "flex", justifyContent: "flex-end", gap: "3" });
+const wallpaperStrip = css({ display: "flex", gap: "2", flexWrap: "wrap" });
 
-const DEFAULT_FILL = "#121615";
-const FILL_PRESETS = ["#000000", DEFAULT_FILL, "#6e7a7f", "#f4f7f5", "#ffffff"];
+const wallpaperThumb = cva({
+  base: {
+    position: "relative",
+    width: "3.5rem",
+    height: "3.5rem",
+    padding: 0,
+    borderRadius: "md",
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderColor: "transparent",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundColor: "frosted.strong",
+    cursor: "pointer",
+    overflow: "hidden",
+  },
+  variants: { active: { true: { borderColor: "accent" } } },
+});
+
+const wallpaperThumbAdd = css({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "text.subtle",
+  borderStyle: "dashed",
+  borderColor: "frosted.strong",
+});
+
+const wallpaperThumbRemove = css({
+  position: "absolute",
+  top: "0.5",
+  right: "0.5",
+});
 
 const fillSwatches = css({ display: "flex", alignItems: "center", gap: "2", flexWrap: "wrap" });
 const fillSwatch = cva({
@@ -112,98 +149,61 @@ const fillColorInput = css({
   cursor: "pointer",
 });
 
-export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: CustomTheme; onClose: VoidFunction }) => {
-  const loadBackground = async () => {
-    const files = await showOpenFilePicker(false, ".jpg,.jpeg,.png");
-    if (!files[0]) return;
-    const background = files[0];
-    originalBackgroundBlob.current = background;
-    backgroundPickedRef.current = true;
-    setOriginalUrl(URL.createObjectURL(background));
-    applyBlur(theme.blur);
-  };
+type DraftWallpaper = ThemeWallpaper & {
+  originalBlob?: Blob;
+  blurredBlob?: Blob;
+  originalUrl?: string;
+  blurredUrl?: string;
+  dirtyImage?: boolean;
+};
 
-  const applyBlur = useCallback((blur: number) => {
-    if (!originalBackgroundBlob.current) return;
-    const bgUrl = URL.createObjectURL(originalBackgroundBlob.current);
+const bakeBlur = (source: Blob, blur: number): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const bgUrl = URL.createObjectURL(source);
     const img = new Image();
-    img.src = bgUrl;
     img.onload = () => {
-      const PADDING = blur * 2;
+      const padding = blur * 2;
       const canvas = document.createElement("canvas");
-      canvas.width = img.width + PADDING * 2;
-      canvas.height = img.height + PADDING * 2;
+      canvas.width = img.width + padding * 2;
+      canvas.height = img.height + padding * 2;
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        throw new Error(`couldn't get 2D context from canvas`);
+        URL.revokeObjectURL(bgUrl);
+        reject(new Error("couldn't get 2D context from canvas"));
+        return;
       }
       ctx.filter = `blur(${blur}px)`;
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      const croppedCanvas = document.createElement("canvas");
-      croppedCanvas.width = img.width;
-      croppedCanvas.height = img.height;
-      const croppedCtx = croppedCanvas.getContext("2d");
+      const cropped = document.createElement("canvas");
+      cropped.width = img.width;
+      cropped.height = img.height;
+      const croppedCtx = cropped.getContext("2d");
       if (!croppedCtx) {
-        throw new Error(`couldn't get 2D context from canvas`);
-      }
-      croppedCtx.drawImage(canvas, PADDING, PADDING, img.width, img.height, 0, 0, img.width, img.height);
-
-      croppedCanvas.toBlob((blob) => {
-        if (!blob) return;
-        blurredBackgroundBlob.current = blob;
-        const url = URL.createObjectURL(blurredBackgroundBlob.current);
-        const previousUrl = backgroundUrlRef.current;
-        setBackgroundUrl(url);
-        setPageBackground(url, previousUrl);
         URL.revokeObjectURL(bgUrl);
+        reject(new Error("couldn't get 2D context from canvas"));
+        return;
+      }
+      croppedCtx.drawImage(canvas, padding, padding, img.width, img.height, 0, 0, img.width, img.height);
+      URL.revokeObjectURL(bgUrl);
+      cropped.toBlob((blob) => {
+        if (!blob) {
+          reject(new Error("canvas.toBlob returned null"));
+          return;
+        }
+        resolve(blob);
       }, "image/png");
     };
-  }, []);
-
-  const applyPreview = (accent = theme.accent) => {
-    runAfterRender(() => applyThemeColors(accent, previewMode));
-  };
-
-  const saveTheme = async () => {
-    const id = theme.name;
-    const hasBlobs = !!originalBackgroundBlob.current && !!blurredBackgroundBlob.current;
-    if (!themeFromProps && !hasBlobs) return;
-
-    const backgroundChanged = !themeFromProps || backgroundPickedRef.current;
-    const blurChanged = themeFromProps != null && theme.blur !== themeFromProps.blur;
-    if (backgroundChanged && originalBackgroundBlob.current && blurredBackgroundBlob.current) {
-      await saveThemeBackground(id, "original", originalBackgroundBlob.current);
-      await saveThemeBackground(id, "blurred", blurredBackgroundBlob.current);
-    } else if (blurChanged && blurredBackgroundBlob.current) {
-      await saveThemeBackground(id, "blurred", blurredBackgroundBlob.current);
-    }
-
-    const toSave: CustomTheme = {
-      name: theme.name,
-      type: "custom",
-      blur: theme.blur,
-      accent: theme.accent,
-      hideDotPattern: theme.hideDotPattern,
-      backgroundFit: theme.backgroundFit ?? "cover",
-      backgroundAnchor: theme.backgroundAnchor ?? "center",
-      backgroundColor: theme.backgroundColor,
+    img.onerror = () => {
+      URL.revokeObjectURL(bgUrl);
+      reject(new Error("image failed to load"));
     };
-    const storage = await getAnoriStorage();
-    let customThemes = storage.get(anoriSchema.customThemes);
-    if (themeFromProps) {
-      customThemes = customThemes.map((t) => (t.name === id ? toSave : t));
-    } else {
-      customThemes.push(toSave);
-    }
-    await storage.set(anoriSchema.customThemes, customThemes);
-    savedRef.current = true;
-    setCurrentTheme(theme.name);
-    applyThemeColors(theme.accent, resolveColorScheme(colorScheme));
-    applyThemeDecorations(toSave);
-    onClose();
-  };
+    img.src = bgUrl;
+  });
+};
 
+export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: CustomTheme; onClose: VoidFunction }) => {
+  const { t } = useTranslation();
   const [colorScheme] = useStorageValue(anoriSchema.colorScheme);
   const [previewMode, setPreviewMode] = useState<Mode>(() => resolveColorScheme(colorScheme));
   const previewModeRef = useMirrorStateToRef(previewMode);
@@ -213,55 +213,87 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
   const savedRef = useRef(false);
   const gamut = useMemo(() => detectGamut(), []);
 
-  // The editor previews colors/background by mutating CSS variables and the page background directly.
-  // Restore the user's actual theme whenever the editor is left without saving.
+  const [accent, setAccent] = useState(themeFromProps?.accent ?? currentTheme.accent);
+  const accentRef = useMirrorStateToRef(accent);
+  const [hideDotPattern, setHideDotPattern] = useState(!!themeFromProps?.hideDotPattern);
+
+  const [wallpapers, setWallpapers] = useState<DraftWallpaper[]>(() => {
+    if (themeFromProps && themeFromProps.wallpapers.length > 0) {
+      return themeFromProps.wallpapers.map((w) => ({ ...w }));
+    }
+    if (themeFromProps) {
+      return [
+        {
+          id: guid(),
+          blur: themeFromProps.blur,
+          fit: themeFromProps.backgroundFit ?? "cover",
+          anchor: themeFromProps.backgroundAnchor ?? "center",
+          fillColor: themeFromProps.backgroundColor,
+        },
+      ];
+    }
+    return [];
+  });
+
+  const [activeWallpaperId, setActiveWallpaperId] = useState<string | null>(wallpapers[0]?.id ?? null);
+  const activeWallpaper = wallpapers.find((w) => w.id === activeWallpaperId) ?? wallpapers[0];
+  const hasAnyImage = wallpapers.some((w) => !!w.blurredUrl);
+
+  const runAfterRender = useRunAfterNextRender();
+
   useEffect(() => {
     return () => {
       if (!savedRef.current) applyTheme(currentThemeRef.current, resolveColorScheme(colorSchemeRef.current));
     };
   }, []);
 
-  const [theme, setTheme] = useState<PartialCustomTheme>(() => {
-    if (themeFromProps) return themeFromProps;
-    return {
-      name: guid(),
-      type: "custom",
-      blur: 5,
-      accent: currentTheme.accent,
-    };
-  });
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: load + bake once per theme; later blur changes bake via the slider's onCommit, not every drag
+  const wallpapersRef = useRef<DraftWallpaper[]>(wallpapers);
+  wallpapersRef.current = wallpapers;
   useEffect(() => {
-    const main = async () => {
-      try {
-        const original = await getThemeBackgroundOriginal(theme.name);
-        const blurred = await getThemeBackground(theme.name);
-        originalBackgroundBlob.current = original;
-        blurredBackgroundBlob.current = blurred;
-        setOriginalUrl(URL.createObjectURL(original));
-        applyBlur(theme.blur);
-      } catch (err) {
-        console.log("Error while trying to load background", err);
+    return () => {
+      for (const w of wallpapersRef.current) {
+        if (w.originalUrl) URL.revokeObjectURL(w.originalUrl);
+        if (w.blurredUrl) URL.revokeObjectURL(w.blurredUrl);
       }
     };
+  }, []);
 
-    main();
-  }, [applyBlur, theme.name]);
+  const themeNameRef = useRef(themeFromProps?.name ?? guid());
+  const themeId = themeNameRef.current;
 
-  const { t } = useTranslation();
-  const originalBackgroundBlob = useRef<Blob | null>(null);
-  const blurredBackgroundBlob = useRef<Blob | null>(null);
-  const backgroundPickedRef = useRef(false);
-  const [backgroundUrl, setBackgroundUrl] = useState<string | null>(null);
-  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
   useEffect(() => {
-    return () => (originalUrl ? URL.revokeObjectURL(originalUrl) : undefined);
-  }, [originalUrl]);
+    if (!themeFromProps) return;
+    let cancelled = false;
+    const loaded: string[] = [];
+    (async () => {
+      for (const wp of themeFromProps.wallpapers) {
+        try {
+          const original = await getThemeBackgroundOriginal(themeFromProps.name, wp.id);
+          const blurred = await getThemeBackground(themeFromProps.name, wp.id);
+          if (cancelled) return;
+          loaded.push(wp.id);
+          setWallpapers((prev) =>
+            prev.map((w) => {
+              if (w.id !== wp.id) return w;
+              return {
+                ...w,
+                originalBlob: original,
+                blurredBlob: blurred,
+                originalUrl: URL.createObjectURL(original),
+                blurredUrl: URL.createObjectURL(blurred),
+              };
+            }),
+          );
+        } catch (err) {
+          console.log("Error while loading theme background", err);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [themeFromProps]);
 
-  // The preview box is far smaller than the full-screen background, so the same px blur reads much
-  // stronger here than the baked image does behind the page. Scale the live CSS blur by the box's
-  // width relative to the viewport (both cover) so the preview approximates the real background.
   const previewRef = useRef<HTMLDivElement>(null);
   const [previewScale, setPreviewScale] = useState(1);
   useEffect(() => {
@@ -278,29 +310,194 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
     };
   }, []);
 
-  const accentRef = useMirrorStateToRef(theme.accent);
-  const backgroundUrlRef = useMirrorStateToRef(backgroundUrl);
-  // Flipping the color scheme makes the global theme watcher re-apply the *active* theme; re-assert
-  // the editor's draft preview so the in-progress accent (and background) isn't lost. Refs keep this
-  // tied to scheme changes only.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: colorScheme is the trigger, not a read value — everything is read via refs so this fires on scheme changes only
+  const backgroundUrlRef = useRef<string | null>(null);
+  const blurredUrlForRef = activeWallpaper?.blurredUrl ?? null;
+  useEffect(() => {
+    backgroundUrlRef.current = blurredUrlForRef;
+  }, [blurredUrlForRef]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: colorScheme flips global theme, re-assert draft preview via refs
   useEffect(() => {
     applyThemeColors(accentRef.current, previewModeRef.current);
     if (backgroundUrlRef.current) setPageBackground(backgroundUrlRef.current);
   }, [colorScheme]);
 
-  const runAfterRender = useRunAfterNextRender();
-  const previewBlur = theme.blur * previewScale;
+  const applyPreview = (nextAccent = accent) => {
+    runAfterRender(() => applyThemeColors(nextAccent, previewMode));
+  };
 
-  const setFillColor = (color: string | undefined) => {
-    setTheme((p) => ({ ...p, backgroundColor: color }));
+  const applyDecorationsPreview = (wp: DraftWallpaper) => {
     applyThemeDecorations({
-      hideDotPattern: theme.hideDotPattern,
-      fit: theme.backgroundFit ?? "cover",
-      anchor: theme.backgroundAnchor ?? "center",
-      backgroundColor: color,
+      hideDotPattern,
+      fit: wp.fit,
+      anchor: wp.anchor,
+      backgroundColor: wp.fillColor,
     });
   };
+
+  const selectWallpaper = (wp: DraftWallpaper) => {
+    setActiveWallpaperId(wp.id);
+    applyDecorationsPreview(wp);
+    if (wp.blurredUrl) setPageBackground(wp.blurredUrl);
+  };
+
+  const addWallpaper = async () => {
+    const files = await showOpenFilePicker(false, ".jpg,.jpeg,.png");
+    if (!files[0]) return;
+    const original = files[0];
+    const wp: DraftWallpaper = {
+      id: guid(),
+      blur: 5,
+      fit: "cover",
+      anchor: "center",
+      originalBlob: original,
+      originalUrl: URL.createObjectURL(original),
+    };
+    try {
+      const blurred = await bakeBlur(original, wp.blur);
+      wp.blurredBlob = blurred;
+      wp.blurredUrl = URL.createObjectURL(blurred);
+    } catch (err) {
+      console.log("Error while baking blur", err);
+    }
+    setWallpapers((prev) => [...prev, wp]);
+    setActiveWallpaperId(wp.id);
+    applyDecorationsPreview(wp);
+    if (wp.blurredUrl) setPageBackground(wp.blurredUrl);
+  };
+
+  const updateWallpaper = (id: string, patch: Partial<DraftWallpaper>) => {
+    setWallpapers((prev) => prev.map((w) => (w.id === id ? { ...w, ...patch } : w)));
+  };
+
+  const rebakeWallpaperBlur = async (wp: DraftWallpaper, blur: number) => {
+    if (!wp.originalBlob) return;
+    try {
+      const blob = await bakeBlur(wp.originalBlob, blur);
+      const previousUrl = wp.blurredUrl;
+      const url = URL.createObjectURL(blob);
+      updateWallpaper(wp.id, { blur, blurredBlob: blob, blurredUrl: url, dirtyImage: true });
+      if (activeWallpaperId === wp.id) setPageBackground(url, previousUrl);
+      if (previousUrl) URL.revokeObjectURL(previousUrl);
+    } catch (err) {
+      console.log("Error while applying blur", err);
+    }
+  };
+
+  const replaceWallpaperImage = async (wp: DraftWallpaper) => {
+    const files = await showOpenFilePicker(false, ".jpg,.jpeg,.png");
+    if (!files[0]) return;
+    const original = files[0];
+    const originalUrl = URL.createObjectURL(original);
+    try {
+      const blurred = await bakeBlur(original, wp.blur);
+      const blurredUrl = URL.createObjectURL(blurred);
+      if (wp.originalUrl) URL.revokeObjectURL(wp.originalUrl);
+      if (wp.blurredUrl && wp.blurredUrl !== blurredUrl) URL.revokeObjectURL(wp.blurredUrl);
+      updateWallpaper(wp.id, {
+        originalBlob: original,
+        blurredBlob: blurred,
+        originalUrl,
+        blurredUrl,
+        dirtyImage: true,
+      });
+      if (activeWallpaperId === wp.id) setPageBackground(blurredUrl);
+    } catch (err) {
+      URL.revokeObjectURL(originalUrl);
+      console.log("Error while changing background", err);
+    }
+  };
+
+  const removeWallpaper = async (wp: DraftWallpaper) => {
+    if (themeFromProps) {
+      try {
+        await deleteThemeWallpaperFiles(themeFromProps.name, wp.id);
+      } catch (err) {
+        console.log("Error while removing wallpaper files", err);
+      }
+    }
+    if (wp.originalUrl) URL.revokeObjectURL(wp.originalUrl);
+    if (wp.blurredUrl) URL.revokeObjectURL(wp.blurredUrl);
+    setWallpapers((prev) => {
+      const next = prev.filter((w) => w.id !== wp.id);
+      if (activeWallpaperId === wp.id) {
+        const fallback = next[0];
+        setActiveWallpaperId(fallback?.id ?? null);
+        if (fallback) {
+          applyDecorationsPreview(fallback);
+          if (fallback.blurredUrl) setPageBackground(fallback.blurredUrl);
+        }
+      }
+      return next;
+    });
+  };
+
+  const saveTheme = async () => {
+    const valid = wallpapers.filter((w): w is DraftWallpaper & { blurredBlob: Blob; originalBlob: Blob } => {
+      return !!w.originalBlob && !!w.blurredBlob;
+    });
+    if (valid.length === 0) return;
+
+    const storage = await getAnoriStorage();
+    const existing = themeFromProps ? storage.get(anoriSchema.customThemes).find((t) => t.name === themeId) : undefined;
+    const existingIds = new Set(existing?.wallpapers.map((w) => w.id) ?? []);
+
+    for (const wp of valid) {
+      const isNew = !existingIds.has(wp.id);
+      const imageChanged = isNew || wp.dirtyImage;
+      await saveThemeBackground(themeId, wp.id, "original", wp.originalBlob);
+      if (imageChanged || isNew) {
+        await saveThemeBackground(themeId, wp.id, "blurred", wp.blurredBlob);
+      }
+    }
+
+    const removedIds = existing
+      ? existing.wallpapers.filter((w) => !valid.some((v) => v.id === w.id)).map((w) => w.id)
+      : [];
+    for (const id of removedIds) {
+      await deleteThemeWallpaperFiles(themeId, id);
+    }
+
+    const toSave: CustomTheme = {
+      name: themeId,
+      type: "custom",
+      blur: valid[0].blur,
+      accent,
+      hideDotPattern,
+      wallpapers: valid.map((w) => ({
+        id: w.id,
+        blur: w.blur,
+        fit: w.fit,
+        anchor: w.anchor,
+        fillColor: w.fillColor,
+      })),
+    };
+
+    let customThemes = storage.get(anoriSchema.customThemes);
+    if (themeFromProps) {
+      customThemes = customThemes.map((t) => (t.name === themeId ? toSave : t));
+    } else {
+      customThemes.push(toSave);
+    }
+    await storage.set(anoriSchema.customThemes, customThemes);
+
+    savedRef.current = true;
+    setCurrentTheme(themeId);
+    applyThemeColors(accent, resolveColorScheme(colorScheme));
+    const selected = activeWallpaper ?? toSave.wallpapers[0];
+    if (selected) {
+      applyThemeDecorations({
+        hideDotPattern,
+        fit: selected.fit,
+        anchor: selected.anchor,
+        backgroundColor: selected.fillColor,
+      });
+      await applyTheme(toSave, resolveColorScheme(colorScheme), selected.id);
+    }
+    onClose();
+  };
+
+  const previewBlur = activeWallpaper ? activeWallpaper.blur * previewScale : 0;
 
   return (
     <div className={editorPanel}>
@@ -312,136 +509,168 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
           value={previewMode}
           onChange={(mode) => {
             setPreviewMode(mode);
-            applyThemeColors(theme.accent, mode);
+            applyThemeColors(accent, mode);
           }}
           getOptionKey={(m) => m}
           getOptionLabel={(m) => t(PREVIEW_MODE_LABEL_KEY[m])}
         />
       </Field>
 
-      <Field label={`${t("settings.theme.colorBackground")}:`}>
-        <div className={backgroundSection}>
-          <div ref={previewRef} className={preview}>
-            {originalUrl && (
-              <div
-                className={previewImage}
-                style={{
-                  inset: `-${previewBlur * 2}px`,
-                  backgroundImage: `url(${originalUrl})`,
-                  filter: `blur(${previewBlur}px)`,
-                  backgroundSize:
-                    (theme.backgroundFit ?? "cover") === "tile" ? "auto" : (theme.backgroundFit ?? "cover"),
-                  backgroundPosition: BACKGROUND_ANCHOR_CSS[theme.backgroundAnchor ?? "center"],
-                  backgroundRepeat: (theme.backgroundFit ?? "cover") === "tile" ? "repeat" : "no-repeat",
-                }}
+      <Field label={`${t("settings.theme.wallpapers")}:`} description={t("settings.theme.wallpapersHint")}>
+        <div className={wallpaperStrip}>
+          {wallpapers.map((wp) => (
+            <div key={wp.id} className={css({ position: "relative" })}>
+              <button
+                type="button"
+                className={wallpaperThumb({ active: wp.id === activeWallpaperId })}
+                style={{ backgroundImage: wp.blurredUrl ? `url(${wp.blurredUrl})` : undefined }}
+                onClick={() => selectWallpaper(wp)}
+                aria-label={t("settings.theme.selectWallpaper", { index: wallpapers.indexOf(wp) + 1 })}
               />
-            )}
-          </div>
-
-          <DSButton variant="secondary" onClick={loadBackground}>
-            {backgroundUrl ? t("settings.theme.changeBackground") : t("settings.theme.selectBackground")}
-          </DSButton>
-        </div>
-      </Field>
-
-      <Field label={`${t("settings.theme.blur")}:`}>
-        <Slider
-          value={theme.blur}
-          min={0}
-          max={50}
-          onChange={(val) => setTheme((p) => ({ ...p, blur: val }))}
-          onCommit={(val) => applyBlur(val)}
-        />
-      </Field>
-
-      <Field label={`${t("settings.theme.fit")}:`}>
-        <Select<BackgroundFit>
-          options={BACKGROUND_FITS}
-          value={theme.backgroundFit ?? "cover"}
-          onChange={(fit) => {
-            setTheme((p) => ({ ...p, backgroundFit: fit }));
-            applyThemeDecorations({
-              hideDotPattern: theme.hideDotPattern,
-              fit,
-              anchor: theme.backgroundAnchor ?? "center",
-              backgroundColor: theme.backgroundColor,
-            });
-          }}
-          getOptionKey={(o) => o}
-          getOptionLabel={(o) => t(BACKGROUND_FIT_LABEL_KEY[o])}
-        />
-      </Field>
-
-      <Field label={`${t("settings.theme.anchor")}:`}>
-        <Select<BackgroundAnchor>
-          options={BACKGROUND_ANCHORS}
-          value={theme.backgroundAnchor ?? "center"}
-          onChange={(anchor) => {
-            setTheme((p) => ({ ...p, backgroundAnchor: anchor }));
-            applyThemeDecorations({
-              hideDotPattern: theme.hideDotPattern,
-              fit: theme.backgroundFit ?? "cover",
-              anchor,
-              backgroundColor: theme.backgroundColor,
-            });
-          }}
-          getOptionKey={(o) => o}
-          getOptionLabel={(o) => t(BACKGROUND_ANCHOR_LABEL_KEY[o])}
-        />
-      </Field>
-
-      <Field label={`${t("settings.theme.fillColor")}:`} description={t("settings.theme.fillColorHint")}>
-        <div className={fillSwatches}>
-          <button
-            type="button"
-            className={cx(fillSwatch({ active: !theme.backgroundColor }), fillNoneSwatch)}
-            onClick={() => setFillColor(undefined)}
-            aria-label={t("settings.theme.fillColorNone")}
-          />
-          {FILL_PRESETS.map((color) => (
-            <button
-              key={color}
-              type="button"
-              className={fillSwatch({ active: theme.backgroundColor === color })}
-              style={{ backgroundColor: color }}
-              onClick={() => setFillColor(color)}
-              aria-label={color}
-            />
+              {wallpapers.length > 1 && (
+                <div className={wallpaperThumbRemove}>
+                  <IconButton
+                    variant="secondary"
+                    size="compact"
+                    icon={builtinIcons.trash}
+                    label={t("settings.theme.removeWallpaper")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeWallpaper(wp);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
           ))}
-          <div
-            className={cx(
-              fillSwatch({ active: !!theme.backgroundColor && !FILL_PRESETS.includes(theme.backgroundColor) }),
-            )}
-            style={{ backgroundColor: theme.backgroundColor ?? DEFAULT_FILL }}
-          >
-            <input
-              type="color"
-              className={fillColorInput}
-              value={theme.backgroundColor ?? DEFAULT_FILL}
-              onChange={(e) => setFillColor(e.target.value)}
-            />
-          </div>
+          <button type="button" className={cx(wallpaperThumb(), wallpaperThumbAdd)} onClick={addWallpaper}>
+            <Icon icon={builtinIcons.add} />
+          </button>
         </div>
       </Field>
+
+      {activeWallpaper && (
+        <>
+          <Field label={`${t("settings.theme.colorBackground")}:`}>
+            <div className={backgroundSection}>
+              <div ref={previewRef} className={preview}>
+                {activeWallpaper.originalUrl && (
+                  <div
+                    className={previewImage}
+                    style={{
+                      inset: `-${previewBlur * 2}px`,
+                      backgroundImage: `url(${activeWallpaper.originalUrl})`,
+                      filter: `blur(${previewBlur}px)`,
+                      backgroundSize: activeWallpaper.fit === "tile" ? "auto" : activeWallpaper.fit,
+                      backgroundPosition: BACKGROUND_ANCHOR_CSS[activeWallpaper.anchor],
+                      backgroundRepeat: activeWallpaper.fit === "tile" ? "repeat" : "no-repeat",
+                    }}
+                  />
+                )}
+              </div>
+              <DSButton variant="secondary" onClick={() => replaceWallpaperImage(activeWallpaper)}>
+                {activeWallpaper.blurredUrl
+                  ? t("settings.theme.changeBackground")
+                  : t("settings.theme.selectBackground")}
+              </DSButton>
+            </div>
+          </Field>
+
+          <Field label={`${t("settings.theme.blur")}:`}>
+            <Slider
+              value={activeWallpaper.blur}
+              min={0}
+              max={50}
+              onChange={(val) => updateWallpaper(activeWallpaper.id, { blur: val })}
+              onCommit={(val) => rebakeWallpaperBlur(activeWallpaper, val)}
+            />
+          </Field>
+
+          <Field label={`${t("settings.theme.fit")}:`}>
+            <Select<BackgroundFit>
+              options={BACKGROUND_FITS}
+              value={activeWallpaper.fit}
+              onChange={(fit) => {
+                updateWallpaper(activeWallpaper.id, { fit });
+                applyDecorationsPreview({ ...activeWallpaper, fit });
+              }}
+              getOptionKey={(o) => o}
+              getOptionLabel={(o) => t(BACKGROUND_FIT_LABEL_KEY[o])}
+            />
+          </Field>
+
+          <Field label={`${t("settings.theme.anchor")}:`}>
+            <Select<BackgroundAnchor>
+              options={BACKGROUND_ANCHORS}
+              value={activeWallpaper.anchor}
+              onChange={(anchor) => {
+                updateWallpaper(activeWallpaper.id, { anchor });
+                applyDecorationsPreview({ ...activeWallpaper, anchor });
+              }}
+              getOptionKey={(o) => o}
+              getOptionLabel={(o) => t(BACKGROUND_ANCHOR_LABEL_KEY[o])}
+            />
+          </Field>
+
+          <Field label={`${t("settings.theme.fillColor")}:`} description={t("settings.theme.fillColorHint")}>
+            <div className={fillSwatches}>
+              <button
+                type="button"
+                className={cx(fillSwatch({ active: !activeWallpaper.fillColor }), fillNoneSwatch)}
+                onClick={() => {
+                  updateWallpaper(activeWallpaper.id, { fillColor: undefined });
+                  applyDecorationsPreview({ ...activeWallpaper, fillColor: undefined });
+                }}
+                aria-label={t("settings.theme.fillColorNone")}
+              />
+              {FILL_PRESETS.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className={fillSwatch({ active: activeWallpaper.fillColor === color })}
+                  style={{ backgroundColor: color }}
+                  onClick={() => {
+                    updateWallpaper(activeWallpaper.id, { fillColor: color });
+                    applyDecorationsPreview({ ...activeWallpaper, fillColor: color });
+                  }}
+                  aria-label={color}
+                />
+              ))}
+              <div
+                className={cx(
+                  fillSwatch({
+                    active: !!activeWallpaper.fillColor && !FILL_PRESETS.includes(activeWallpaper.fillColor),
+                  }),
+                )}
+                style={{ backgroundColor: activeWallpaper.fillColor ?? DEFAULT_FILL }}
+              >
+                <input
+                  type="color"
+                  className={fillColorInput}
+                  value={activeWallpaper.fillColor ?? DEFAULT_FILL}
+                  onChange={(e) => {
+                    updateWallpaper(activeWallpaper.id, { fillColor: e.target.value });
+                    applyDecorationsPreview({ ...activeWallpaper, fillColor: e.target.value });
+                  }}
+                />
+              </div>
+            </div>
+          </Field>
+        </>
+      )}
 
       <HueChromaPicker
         label={`${t("settings.theme.colorAccent")}:`}
-        value={theme.accent}
+        value={accent}
         mode={previewMode}
         gamut={gamut}
-        onChange={(accent) => {
-          setTheme((p) => ({ ...p, accent }));
-          applyPreview(accent);
+        onChange={(next) => {
+          setAccent(next);
+          applyPreview(next);
         }}
       />
 
-      <Checkbox
-        checked={!!theme.hideDotPattern}
-        onChange={(v) => {
-          setTheme((p) => ({ ...p, hideDotPattern: v }));
-          applyThemeDecorations({ ...theme, hideDotPattern: v });
-        }}
-      >
+      <Checkbox checked={hideDotPattern} onChange={(v) => setHideDotPattern(v)}>
         {t("settings.theme.hideDotPattern")}
       </Checkbox>
 
@@ -449,7 +678,7 @@ export const ThemeEditor = ({ theme: themeFromProps, onClose }: { theme?: Custom
         <DSButton variant="secondary" onClick={onClose}>
           {t("back")}
         </DSButton>
-        <DSButton disabled={!backgroundUrl && !themeFromProps} onClick={saveTheme}>
+        <DSButton disabled={!hasAnyImage} onClick={saveTheme}>
           {t("save")}
         </DSButton>
       </div>

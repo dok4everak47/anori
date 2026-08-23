@@ -5,6 +5,7 @@ import {
   runMigrations,
   setStoredSchemaVersion,
 } from "@anori/utils/storage-lib/migrations/runner";
+import { rekeyLegacyThemeBackgrounds } from "@anori/utils/storage-lib/migrations/theme-background-rekey";
 import { createStorage, type Storage } from "@anori/utils/storage-lib/storage";
 
 export type AnoriStorage = Storage<typeof anoriVersionedSchema>;
@@ -56,6 +57,11 @@ async function finishInit(): Promise<AnoriStorage> {
 async function initAnoriStorage(): Promise<AnoriStorage> {
   if (await isLegacyStorage()) {
     await migrateFromLegacy();
+    try {
+      await rekeyLegacyThemeBackgrounds();
+    } catch (err) {
+      console.error("[Storage] Failed to rekey legacy theme backgrounds", err);
+    }
     return finishInit();
   }
 
@@ -71,6 +77,17 @@ async function initAnoriStorage(): Promise<AnoriStorage> {
   if (!result.success) {
     console.error("Storage migration failed", result.error);
     throw result.error;
+  }
+
+  if (result.migrationsRun > 0) {
+    try {
+      const rekeyed = await rekeyLegacyThemeBackgrounds();
+      if (rekeyed > 0) {
+        console.log(`[Storage] Rekeyed ${rekeyed} theme background files to wallpaper keys`);
+      }
+    } catch (err) {
+      console.error("[Storage] Failed to rekey theme background files", err);
+    }
   }
 
   return finishInit();

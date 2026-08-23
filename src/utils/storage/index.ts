@@ -19,6 +19,7 @@ export {
   type StashLinkEntry,
   type Task,
   type TasksWidgetStore,
+  type ThemeWallpaperSettings,
   type TopSitesWidgetStore,
   type WeatherCurrentWidgetStore,
   type WeatherForecastWidgetStore,

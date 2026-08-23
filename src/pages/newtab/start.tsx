@@ -16,12 +16,13 @@ import { watchForPermissionChanges } from "@anori/utils/permissions";
 import { anoriSchema, getAnoriStorage } from "@anori/utils/storage";
 import { StorageContext, useStorageValue } from "@anori/utils/storage-lib";
 import { useFolders } from "@anori/utils/user-data/hooks";
-import { watchForThemeUpdates } from "@anori/utils/user-data/theme";
+import { ensureInitialWallpaper, watchForThemeUpdates } from "@anori/utils/user-data/theme";
 import type { Folder } from "@anori/utils/user-data/types";
 import { DirectionProvider } from "@radix-ui/react-direction";
 import { AnimatePresence, domMax, LazyMotion, MotionConfig, m } from "motion/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { css } from "styled-system/css";
+import { WallpaperSwitcher } from "./components/WallpaperSwitcher/WallpaperSwitcher";
 import { Workspace } from "./components/Workspace/Workspace";
 import { scheduleLazyComponentsPreload } from "./lazy-components";
 
@@ -102,6 +103,7 @@ const Start = () => {
                   animationDirection={animationDirection}
                   onFolderClick={onFolderClick}
                 />
+                <WallpaperSwitcher />
               </m.div>
             </AnimatePresence>
           </AppDragDropProvider>
@@ -167,6 +169,7 @@ getAnoriStorage().then(async (storage) => {
   const div = document.querySelector(".loading-cover");
 
   watchForThemeUpdates(storage);
+  void ensureInitialWallpaper(storage);
 
   const removeCover = () => {
     if (!div) return;

@@ -93,7 +93,22 @@ const CustomThemeSchemaV4 = CustomThemeSchema.extend({
   backgroundColor: z.string().optional(),
 });
 
-export type CustomTheme = z.infer<typeof CustomThemeSchemaV4>;
+const ThemeWallpaperSettingsSchema = z.object({
+  id: z.string(),
+  blur: z.number(),
+  fit: BackgroundFitSchema,
+  anchor: BackgroundAnchorSchema,
+  fillColor: z.string().optional(),
+});
+
+export type ThemeWallpaperSettings = z.infer<typeof ThemeWallpaperSettingsSchema>;
+
+const CustomThemeSchemaV6 = CustomThemeSchema.extend({
+  backgroundColor: z.string().optional(),
+  wallpapers: z.array(ThemeWallpaperSettingsSchema).default([]),
+});
+
+export type CustomTheme = z.infer<typeof CustomThemeSchemaV6>;
 
 const ColorSchemeSchema = z.enum(["light", "dark", "system"]);
 export type ColorScheme = z.infer<typeof ColorSchemeSchema>;
@@ -490,9 +505,69 @@ const migrateV4ToV5 = createMigration(schemaV4, schemaV5, async (ctx) => {
   ctx.to.set(ctx.to.schema.crtEffect, false);
 });
 
+export const schemaV6 = defineSchemaVersion(6, {
+  ...schemaV5.definition,
+  customThemes: cell({
+    key: "customThemes",
+    schema: z.array(CustomThemeSchemaV6),
+    defaultValue: [],
+    sync: "profile",
+    includedInBackup: true,
+  }),
+  themeWallpaperSelections: cell({
+    key: "themeWallpaperSelections",
+    schema: z.record(z.string(), z.string()),
+    defaultValue: {},
+    sync: "off",
+    includedInBackup: true,
+  }),
+});
+
+export type AnoriSchemaV6 = typeof schemaV6.definition;
+
+const DEFAULT_THEME_WALLPAPER_ID = "default";
+
+const migrateV5ToV6 = createMigration(schemaV5, schemaV6, async (ctx) => {
+  const oldThemes = (ctx.from.get(ctx.from.schema.customThemes) ?? []) as Array<{
+    name: string;
+    type: "custom";
+    blur: number;
+    accent: { l: number; c: number; h: number };
+    hideDotPattern?: boolean;
+    backgroundFit?: z.infer<typeof BackgroundFitSchema>;
+    backgroundAnchor?: z.infer<typeof BackgroundAnchorSchema>;
+    backgroundColor?: string;
+  }>;
+
+  ctx.to.set(
+    ctx.to.schema.customThemes,
+    oldThemes.map((theme) => ({
+      name: theme.name,
+      type: "custom" as const,
+      blur: theme.blur,
+      accent: theme.accent,
+      hideDotPattern: theme.hideDotPattern,
+      backgroundFit: theme.backgroundFit,
+      backgroundAnchor: theme.backgroundAnchor,
+      backgroundColor: theme.backgroundColor,
+      wallpapers: [
+        {
+          id: DEFAULT_THEME_WALLPAPER_ID,
+          blur: theme.blur,
+          fit: theme.backgroundFit ?? "cover",
+          anchor: theme.backgroundAnchor ?? "center",
+          fillColor: theme.backgroundColor,
+        },
+      ],
+    })),
+  );
+
+  ctx.to.set(ctx.to.schema.themeWallpaperSelections, {});
+});
+
 export const anoriVersionedSchema = defineVersionedSchema({
-  versions: [schemaV1, schemaV2, schemaV3, schemaV4, schemaV5],
-  migrations: [migrateV1ToV2, migrateV2ToV3, migrateV3ToV4, migrateV4ToV5],
+  versions: [schemaV1, schemaV2, schemaV3, schemaV4, schemaV5, schemaV6],
+  migrations: [migrateV1ToV2, migrateV2ToV3, migrateV3ToV4, migrateV4ToV5, migrateV5ToV6],
 });
 
 export const anoriSchema = anoriVersionedSchema.latestSchema.definition;

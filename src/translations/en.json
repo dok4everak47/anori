@@ -143,7 +143,12 @@
                 "colorSchemeLight": "Light",
                 "colorSchemeDark": "Dark",
                 "widgetBackgroundOpacity": "Widget glass frost",
-                "widgetBackgroundOpacityHint": "Slide toward 0% for liquid glass (glossy, clear) or 100% for frosted glass (matte, blurred). Text and icons stay opaque."
+                "widgetBackgroundOpacityHint": "Slide toward 0% for liquid glass (glossy, clear) or 100% for frosted glass (matte, blurred). Text and icons stay opaque.",
+                "wallpapers": "Wallpapers",
+                "wallpapersHint": "Add multiple images. Each new tab picks one at random, and the button in the corner of the new tab cycles to the next.",
+                "selectWallpaper": "Wallpaper {{index}}",
+                "removeWallpaper": "Remove wallpaper",
+                "nextWallpaper": "Next wallpaper"
             },
             "importExport": {
                 "title": "Import & export",

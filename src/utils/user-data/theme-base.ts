@@ -25,15 +25,27 @@ export type BackgroundAnchor =
   | "bottom-center"
   | "bottom-right";
 
+export type ThemeWallpaper = {
+  id: string;
+  blur: number;
+  fit: BackgroundFit;
+  anchor: BackgroundAnchor;
+  fillColor?: string;
+};
+
 export type CustomTheme = {
   name: string;
   type: "custom";
   blur: number;
   accent: OklchColor;
   hideDotPattern?: boolean;
+  /** @deprecated Use wallpapers[].fit instead. Kept for migrated themes without a wallpapers array. */
   backgroundFit?: BackgroundFit;
+  /** @deprecated Use wallpapers[].anchor instead. */
   backgroundAnchor?: BackgroundAnchor;
+  /** @deprecated Use wallpapers[].fillColor instead. */
   backgroundColor?: string;
+  wallpapers: ThemeWallpaper[];
 };
 
 export type PartialCustomTheme = {
@@ -45,6 +57,7 @@ export type PartialCustomTheme = {
   backgroundFit?: BackgroundFit;
   backgroundAnchor?: BackgroundAnchor;
   backgroundColor?: string;
+  wallpapers?: ThemeWallpaper[];
   background?: string;
   originalBackground?: string;
 };
@@ -115,34 +128,49 @@ export const resolveColorScheme = (scheme: ColorScheme): Mode => {
   return prefersLight ? "light" : "dark";
 };
 
+export const getThemeWallpaper = (theme: CustomTheme, wallpaperId?: string): ThemeWallpaper => {
+  if (theme.wallpapers.length === 0) {
+    return {
+      id: "default",
+      blur: theme.blur,
+      fit: theme.backgroundFit ?? "cover",
+      anchor: theme.backgroundAnchor ?? "center",
+      fillColor: theme.backgroundColor,
+    };
+  }
+  return theme.wallpapers.find((w) => w.id === wallpaperId) ?? theme.wallpapers[0];
+};
+
 export const applyBuiltinTheme = (themeName: Theme["name"], mode: Mode) => {
   const theme = themes.find((t) => t.name === themeName);
   if (!theme) return;
   applyTheme(theme, mode);
 };
 
-export const applyTheme = async (theme: Theme, mode: Mode) => {
+export const applyTheme = async (theme: Theme, mode: Mode, wallpaperId?: string) => {
   let prom = Promise.resolve();
   if (theme.type === "builtin") {
     setPageBackground(browser.runtime.getURL(`/assets/images/backgrounds/${theme.background[mode]}`));
   } else {
-    prom = getThemeBackgroundImpl(theme.name).then((blob) => {
+    const wallpaper = getThemeWallpaper(theme, wallpaperId);
+    prom = getThemeBackgroundImpl(theme.name, wallpaper.id).then((blob) => {
       const url = URL.createObjectURL(blob);
       setPageBackground(url);
     });
   }
 
   applyThemeColors(theme.accent, mode);
-  applyThemeDecorations(
-    theme.type === "custom"
-      ? {
-          hideDotPattern: theme.hideDotPattern,
-          fit: theme.backgroundFit,
-          anchor: theme.backgroundAnchor,
-          backgroundColor: theme.backgroundColor,
-        }
-      : {},
-  );
+  if (theme.type === "custom") {
+    const wallpaper = getThemeWallpaper(theme, wallpaperId);
+    applyThemeDecorations({
+      hideDotPattern: theme.hideDotPattern,
+      fit: wallpaper.fit,
+      anchor: wallpaper.anchor,
+      backgroundColor: wallpaper.fillColor,
+    });
+  } else {
+    applyThemeDecorations({});
+  }
   await prom;
 };
 
@@ -201,7 +229,7 @@ export const applyThemeColors = (accent: OklchColor, mode: Mode) => {
   meta.content = tokens.surface;
 };
 
-type ThemeBackgroundResolver = (themeName: string) => Promise<Blob>;
+type ThemeBackgroundResolver = (themeName: string, wallpaperId: string) => Promise<Blob>;
 
 const g = self as typeof self & {
   __anoriThemeBgResolver?: ThemeBackgroundResolver;
@@ -218,9 +246,9 @@ const getResolverPromise = (): Promise<ThemeBackgroundResolver> => {
   return g.__anoriThemeBgResolverPromise;
 };
 
-const getThemeBackgroundImpl: ThemeBackgroundResolver = (themeName) => {
-  if (g.__anoriThemeBgResolver) return g.__anoriThemeBgResolver(themeName);
-  return getResolverPromise().then((resolver) => resolver(themeName));
+const getThemeBackgroundImpl: ThemeBackgroundResolver = (themeName, wallpaperId) => {
+  if (g.__anoriThemeBgResolver) return g.__anoriThemeBgResolver(themeName, wallpaperId);
+  return getResolverPromise().then((resolver) => resolver(themeName, wallpaperId));
 };
 
 export const registerThemeBackgroundResolver = (resolver: ThemeBackgroundResolver) => {

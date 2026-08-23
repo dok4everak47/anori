@@ -5,14 +5,16 @@ import { Heading } from "@anori/design-system/components/Heading/Heading";
 import { builtinIcons } from "@anori/design-system/components/Icon/builtin-icons";
 import { Select } from "@anori/design-system/components/Select/Select";
 import { Slider } from "@anori/design-system/components/Slider/Slider";
-import { anoriSchema, type CustomTheme } from "@anori/utils/storage";
+import { anoriSchema, type CustomTheme, getAnoriStorage } from "@anori/utils/storage";
 import { useStorageValue } from "@anori/utils/storage-lib";
 import {
   applyTheme,
   type ColorScheme,
   defaultTheme,
   deleteThemeBackgrounds,
+  pickWallpaperForTheme,
   resolveColorScheme,
+  setSelectedWallpaperId,
   themes,
 } from "@anori/utils/user-data/theme";
 import { m } from "motion/react";
@@ -50,6 +52,22 @@ export const ThemesScreen = (props: ComponentProps<typeof m.div>) => {
     setEditorActive(true);
   };
 
+  const selectTheme = async (themeName: string) => {
+    const storage = await getAnoriStorage();
+    const t = [...themes, ...customThemes].find((x) => x.name === themeName);
+    if (!t) return;
+    let wallpaperId: string | undefined;
+    if (t.type === "custom" && t.wallpapers.length > 1) {
+      const picked = pickWallpaperForTheme(t);
+      if (picked) {
+        wallpaperId = picked.id;
+        await setSelectedWallpaperId(storage, t.name, picked.id);
+      }
+    }
+    setTheme(themeName);
+    await applyTheme(t, mode, wallpaperId);
+  };
+
   return (
     <m.div {...props} className={screen}>
       <div className={header}>
@@ -76,8 +94,7 @@ export const ThemesScreen = (props: ComponentProps<typeof m.div>) => {
                 gamut={gamut}
                 mode={mode}
                 onSelect={() => {
-                  setTheme(theme.name);
-                  applyTheme(theme, mode);
+                  selectTheme(theme.name);
                 }}
                 onEdit={theme.type === "custom" ? () => openEditor(theme) : undefined}
                 onDelete={

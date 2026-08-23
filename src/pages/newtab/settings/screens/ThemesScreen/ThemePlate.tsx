@@ -44,6 +44,18 @@ const colorCircle = css({
   backgroundOrigin: "border-box",
 });
 const plateActions = css({ position: "absolute", top: "1", right: "1", display: "flex", gap: "1" });
+const multiBadge = css({
+  position: "absolute",
+  top: "1",
+  left: "1",
+  paddingX: "1.5",
+  paddingY: "0.5",
+  borderRadius: "full",
+  background: "frosted.strong",
+  color: "text.primary",
+  fontSize: "xs",
+  lineHeight: "none",
+});
 
 export const ThemePlate = ({
   theme,
@@ -69,22 +81,33 @@ export const ThemePlate = ({
   }, [theme.accent, mode, gamut]);
   const [customBackgroundUrl, setCustomBackgroundUrl] = useState<string | null>(null);
 
+  const wallpaperId = theme.type === "custom" && theme.wallpapers.length > 0 ? theme.wallpapers[0].id : "default";
+
   useEffect(() => {
     if (theme.type !== "custom") return;
     let objectUrl: string | null = null;
-    getThemeBackground(theme.name).then((blob) => {
-      objectUrl = URL.createObjectURL(blob);
-      setCustomBackgroundUrl(objectUrl);
-    });
+    let cancelled = false;
+    getThemeBackground(theme.name, wallpaperId)
+      .then((blob) => {
+        if (cancelled) return;
+        objectUrl = URL.createObjectURL(blob);
+        setCustomBackgroundUrl(objectUrl);
+      })
+      .catch(() => {
+        if (!cancelled) setCustomBackgroundUrl(null);
+      });
     return () => {
+      cancelled = true;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [theme]);
+  }, [theme, wallpaperId]);
 
   const backgroundUrl =
     theme.type === "builtin"
       ? browser.runtime.getURL(`/assets/images/backgrounds/previews/${theme.background[mode]}`)
       : customBackgroundUrl;
+
+  const wallpaperCount = theme.type === "custom" ? theme.wallpapers.length : 0;
 
   return (
     <div className={plate}>
@@ -94,6 +117,7 @@ export const ThemePlate = ({
         style={{ backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : undefined }}
         onClick={onSelect}
       >
+        {wallpaperCount > 1 && <span className={multiBadge}>{wallpaperCount}</span>}
         <div
           className={colorCircle}
           style={{
