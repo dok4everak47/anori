@@ -197,7 +197,7 @@ export const WidgetsGrid = memo(function WidgetsGrid({
       direction="both"
       type="hover"
       color="translucent"
-      ref={scrollAreaRef}
+      viewportRef={scrollAreaRef}
     >
       <div className={relativeWrapper({ onboarding: showOnboarding })} ref={gridRef}>
         <AnimatePresence initial={false}>
