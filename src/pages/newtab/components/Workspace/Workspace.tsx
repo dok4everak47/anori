@@ -2,6 +2,7 @@ import { ShortcutsHelp } from "@anori/components/ShortcutsHelp";
 import { Modal } from "@anori/design-system/components/Modal/Modal";
 import { useSizeSettings } from "@anori/utils/compact";
 import { FolderContentContext } from "@anori/utils/FolderContentContext";
+import type { GridPosition } from "@anori/utils/grid/types";
 import { useGridDimensions } from "@anori/utils/grid/useGridDimensions";
 import { findPositionForItemInGrid } from "@anori/utils/grid/utils";
 import { useHotkeys } from "@anori/utils/hooks";
@@ -86,32 +87,66 @@ export const Workspace = ({
   const gridDimensions = useGridDimensions(scrollAreaRef, blockSize, minBlockSize);
   const [panelRef, panelBounds] = useMeasure();
 
+  const prevGridDimsRef = useRef<{ columns: number; rows: number } | null>(null);
+  const widgetsRef = useRef(widgets);
+  widgetsRef.current = widgets;
+  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (!gridDimensions.isMeasured) return;
-    for (const widget of widgets) {
-      const inBounds =
-        widget.x >= 0 &&
-        widget.y >= 0 &&
-        widget.x + widget.width <= gridDimensions.columns &&
-        widget.y + widget.height <= gridDimensions.rows;
-      if (inBounds) continue;
-      const position = findPositionForItemInGrid({
-        grid: gridDimensions,
-        layout: widgets.filter((w) => w.instanceId !== widget.instanceId),
-        item: widget,
-      });
-      if (position && (position.x !== widget.x || position.y !== widget.y)) {
-        void moveWidget(widget.instanceId, position);
-        continue;
-      }
-      if (widget.width > gridDimensions.columns || widget.height > gridDimensions.rows) {
-        void resizeWidget(widget.instanceId, {
-          width: Math.min(widget.width, gridDimensions.columns),
-          height: Math.min(widget.height, gridDimensions.rows),
+
+    const prev = prevGridDimsRef.current;
+    const isFirst = prev === null;
+    prevGridDimsRef.current = { columns: gridDimensions.columns, rows: gridDimensions.rows };
+
+    if (isFirst) return;
+    if (prev && prev.columns === gridDimensions.columns && prev.rows === gridDimensions.rows) return;
+
+    if (settleTimerRef.current) clearTimeout(settleTimerRef.current);
+    settleTimerRef.current = setTimeout(() => {
+      settleTimerRef.current = null;
+      const snapshot = widgetsRef.current;
+      const moves: { instanceId: string; position: GridPosition }[] = [];
+      const occupied = snapshot.map((w) => ({ ...w }));
+
+      for (const widget of snapshot) {
+        const inBounds =
+          widget.x >= 0 &&
+          widget.y >= 0 &&
+          widget.x + widget.width <= gridDimensions.columns &&
+          widget.y + widget.height <= gridDimensions.rows;
+        if (inBounds) continue;
+
+        const others = occupied.filter((w) => w.instanceId !== widget.instanceId);
+        const position = findPositionForItemInGrid({
+          grid: gridDimensions,
+          layout: others,
+          item: widget,
         });
+        if (position && (position.x !== widget.x || position.y !== widget.y)) {
+          const idx = occupied.findIndex((w) => w.instanceId === widget.instanceId);
+          if (idx >= 0) occupied[idx] = { ...occupied[idx], ...position };
+          moves.push({ instanceId: widget.instanceId, position });
+          continue;
+        }
+        if (widget.width > gridDimensions.columns || widget.height > gridDimensions.rows) {
+          void resizeWidget(widget.instanceId, {
+            width: Math.min(widget.width, gridDimensions.columns),
+            height: Math.min(widget.height, gridDimensions.rows),
+          });
+        }
       }
-    }
-  }, [gridDimensions, widgets, moveWidget, resizeWidget]);
+
+      moves.forEach((m) => void moveWidget(m.instanceId, m.position));
+    }, 250);
+
+    return () => {
+      if (settleTimerRef.current) {
+        clearTimeout(settleTimerRef.current);
+        settleTimerRef.current = null;
+      }
+    };
+  }, [gridDimensions, moveWidget, resizeWidget]);
 
   const handleLayoutUpdate = useCallback(
     (changes: LayoutChange[]) => {
